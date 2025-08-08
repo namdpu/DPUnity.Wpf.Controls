@@ -51,14 +51,22 @@ jobs:
       shell: pwsh
       run: |
         echo "Using package: $env:NUPKG_PATH"
-        $pushResult = dotnet nuget push "$env:NUPKG_PATH" `
+        $output = dotnet nuget push "$env:NUPKG_PATH" `
           --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
           --api-key "${{ secrets.GIT_TOKEN }}" `
-          --skip-duplicate
+          --skip-duplicate 2>&1
         
-        if ($LASTEXITCODE -ne 0) {
+        echo $output
+        
+        # Check if it's a duplicate package - fail the workflow to trigger Discord notification
+        if ($output -match "already exists") {
+          echo "::error::Package version already exists in GitHub Packages. Please increment the version number."
+          exit 1
+        } elseif ($LASTEXITCODE -ne 0) {
           echo "::error::Failed to push NuGet package. Exit code: $LASTEXITCODE"
           exit $LASTEXITCODE
+        } else {
+          echo "::notice::Package pushed successfully"
         }
 
     - name: Get package info
@@ -91,8 +99,25 @@ jobs:
       if: failure()
       shell: pwsh
       run: |
-        $payload = @{
-          content = ":x: **Build & Publish Failed** - DPU Wpf Controls`n:boom: NuGet package build and publish failed`n:link: Repository: ${{ github.repository }}`n:bust_in_silhouette: Author: ${{ github.actor }}`n:pencil: Commit: ``${{ github.sha }}```n:mag: Check logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        } | ConvertTo-Json
+        # Check if failure was due to duplicate package
+        $isDuplicateError = $false
+        try {
+          $logs = Get-Content -Path "$env:GITHUB_WORKSPACE/logs.txt" -ErrorAction SilentlyContinue
+          if ($logs -match "already exists") {
+            $isDuplicateError = $true
+          }
+        } catch {
+          # Ignore errors reading logs
+        }
+        
+        if ($isDuplicateError) {
+          $payload = @{
+            content = ":warning: **Package Already Exists** - DPU Wpf Controls`n:package: The package version already exists in GitHub Packages`n:exclamation: Please increment the version number in the .csproj file`n:link: Repository: ${{ github.repository }}`n:bust_in_silhouette: Author: ${{ github.actor }}`n:mag: Check logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } | ConvertTo-Json
+        } else {
+          $payload = @{
+            content = ":x: **Build & Publish Failed** - DPU Wpf Controls`n:boom: NuGet package build and publish failed`n:link: Repository: ${{ github.repository }}`n:bust_in_silhouette: Author: ${{ github.actor }}`n:pencil: Commit: ``${{ github.sha }}```n:mag: Check logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } | ConvertTo-Json
+        }
         
         Invoke-RestMethod -Uri "${{ env.DISCORD_WEBHOOK }}" -Method Post -Body $payload -ContentType "application/json"
