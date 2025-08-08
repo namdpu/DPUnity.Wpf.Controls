@@ -125,70 +125,45 @@
                                             <Setter Property="Background"
                                                     TargetName="Bd"
                                                     Value="{DynamicResource ThirdlyRegionBrush}" />
-
                                         </Trigger>
-
                                         <Trigger Property="IsSelected"
                                                  Value="true">
-
                                             <Setter Property="Background"
                                                     TargetName="Bd"
                                                     Value="{DynamicResource RegionBrush}" />
-
                                             <Setter Property="Foreground"
                                                     Value="{DynamicResource PrimaryBrush}" />
-
                                         </Trigger>
-
                                         <MultiTrigger>
-
                                             <MultiTrigger.Conditions>
-
                                                 <Condition Property="IsSelected"
                                                            Value="true" />
-
                                                 <Condition Property="Selector.IsSelectionActive"
                                                            Value="false" />
-
                                             </MultiTrigger.Conditions>
 
                                             <Setter Property="Background"
                                                     TargetName="Bd"
                                                     Value="{DynamicResource RegionBrush}" />
-
                                         </MultiTrigger>
-
                                     </ControlTemplate.Triggers>
-
                                 </ControlTemplate>
-
                             </Setter.Value>
-
                         </Setter>
-
                         <Style.Triggers>
-
                             <DataTrigger Binding="{Binding IsChecked}"
                                          Value="True">
                             </DataTrigger>
-
                         </Style.Triggers>
-
                     </Style>
-
                 </Style.Resources>
-
             </Style>
-
         </ResourceDictionary>
-
     </UserControl.Resources>
 
     <DockPanel LastChildFill="True">
-
         <GroupBox Header="Dự án hiện tại"
                   DockPanel.Dock="Top">
-
             <TextBlock Text="Revit-Test"
                        HorizontalAlignment="Center"
                        Foreground="{DynamicResource DarkDangerBrush}"
@@ -198,9 +173,7 @@
 
         <GroupBox Header="Danh sách thiết lập"
                   Margin="0 8 0 0">
-
             <DockPanel LastChildFill="True">
-
                 <Button Style="{DynamicResource DP_ButtonContainIcon}"
                         Content="Thêm mới"
                         Tag="Plus"
@@ -209,29 +182,20 @@
                         HorizontalAlignment="Left"
                         DockPanel.Dock="Top"
                         Command="{Binding AddNewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-
                 <ListView Margin="0 8 0 0"
                           Style="{DynamicResource ListViewWithoutBorder}"
                           ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                           SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
-
                     <ListView.ItemTemplate>
-
                         <DataTemplate>
-
                             <Grid>
                                 <Grid.ColumnDefinitions>
-
                                     <ColumnDefinition Width="Auto" />
-
                                     <ColumnDefinition Width="*" />
-
                                     <ColumnDefinition Width="Auto" />
-
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Orientation="Vertical">
-
                                     <icons:PackIcon Kind="Ticket"
                                                     Height="24"
                                                     Width="14"
@@ -252,15 +216,10 @@
                                                                 <icons:PackIcon Kind="ContentSave"
                                                                                 Height="14"
                                                                                 Width="14" />
-
                                                             </Grid>
-
                                                         </ControlTemplate>
-
                                                     </Setter.Value>
-
                                                 </Setter>
-
                                                 <Setter Property="Foreground"
                                                         Value="{DynamicResource PrimaryTextBrush}" />
 
@@ -271,23 +230,15 @@
                                                         Value="Collapsed" />
 
                                                 <Style.Triggers>
-
                                                     <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
                                                                  Value="True">
-
                                                         <Setter Property="Visibility"
                                                                 Value="Visible" />
-
                                                     </DataTrigger>
-
                                                 </Style.Triggers>
-
                                             </Style>
-
                                         </Button.Style>
-
                                     </Button>
-
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1"
@@ -296,39 +247,25 @@
 
                                     <TextBlock Text="{Binding Name}"
                                                TextTrimming="CharacterEllipsis">
-
                                         <TextBlock.Style>
-
                                             <Style TargetType="TextBlock">
-
                                                 <Setter Property="Foreground"
                                                         Value="{DynamicResource PrimaryTextBrush}" />
-
                                                 <Style.Triggers>
-
                                                     <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
                                                                  Value="True">
-
                                                         <Setter Property="FontWeight"
                                                                 Value="Bold" />
-
                                                     </DataTrigger>
-
                                                     <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
                                                                  Value="True">
-
                                                         <Setter Property="FontWeight"
                                                                 Value="Bold" />
-
                                                         <Setter Property="Foreground"
                                                                 Value="{DynamicResource PrimaryBrush}" />
-
                                                     </DataTrigger>
-
                                                 </Style.Triggers>
-
                                             </Style>
-
                                         </TextBlock.Style>
                                     </TextBlock>
 
