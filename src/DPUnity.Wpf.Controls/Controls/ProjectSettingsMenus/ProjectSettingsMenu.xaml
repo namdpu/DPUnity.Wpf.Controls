@@ -244,17 +244,11 @@
                                             CommandParameter="{Binding}">
 
                                         <Button.Style>
-
                                             <Style TargetType="Button">
-
                                                 <Setter Property="Template">
-
                                                     <Setter.Value>
-
                                                         <ControlTemplate TargetType="Button">
-
                                                             <Grid>
-
                                                                 <icons:PackIcon Kind="ContentSave"
                                                                                 Height="14"
                                                                                 Width="14" />
