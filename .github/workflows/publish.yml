@@ -27,7 +27,7 @@ jobs:
         dotnet nuget remove source github || echo "No existing 'github' source found."
         dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
           --name github `
-          --username "${{ github.actor }}" `
+          --username "${{ github.repository_owner }}" `
           --password "${{ secrets.GIT_TOKEN }}" `
           --store-password-in-clear-text
 
