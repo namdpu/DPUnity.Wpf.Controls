@@ -51,10 +51,15 @@ jobs:
       shell: pwsh
       run: |
         echo "Using package: $env:NUPKG_PATH"
-        dotnet nuget push "$env:NUPKG_PATH" `
+        $pushResult = dotnet nuget push "$env:NUPKG_PATH" `
           --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
           --api-key "${{ secrets.GIT_TOKEN }}" `
           --skip-duplicate
+        
+        if ($LASTEXITCODE -ne 0) {
+          echo "::error::Failed to push NuGet package. Exit code: $LASTEXITCODE"
+          exit $LASTEXITCODE
+        }
 
     - name: Get package info
       id: package_info
