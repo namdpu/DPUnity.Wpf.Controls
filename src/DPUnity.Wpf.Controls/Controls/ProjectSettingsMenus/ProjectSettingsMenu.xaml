@@ -8,22 +8,35 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
+
     <UserControl.Resources>
+
         <ResourceDictionary>
+
             <ResourceDictionary.MergedDictionaries>
+
                 <d:ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
+
             <Style x:Key="ListViewWithoutBorder"
                    TargetType="ListView">
+
                 <Setter Property="BorderThickness"
                         Value="1" />
+
                 <Setter Property="BorderBrush"
                         Value="{DynamicResource BorderBrush}" />
+
                 <Setter Property="Background"
                         Value="{DynamicResource SecondaryRegionBrush}" />
+
                 <Setter Property="Template">
+
                     <Setter.Value>
+
                         <ControlTemplate TargetType="ListView">
+
                             <Border x:Name="Bd"
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
@@ -31,27 +44,44 @@
                                     Padding="{TemplateBinding Padding}"
                                     SnapsToDevicePixels="true"
                                     CornerRadius="3">
+
                                 <ScrollViewer Focusable="false"
                                               Padding="{TemplateBinding Padding}"
                                               HorizontalScrollBarVisibility="Disabled">
+
                                     <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
                                 </ScrollViewer>
+
                             </Border>
+
                         </ControlTemplate>
+
                     </Setter.Value>
+
                 </Setter>
+
                 <Style.Resources>
+
                     <Style TargetType="{x:Type GridViewColumnHeader}">
+
                         <Setter Property="Visibility"
                                 Value="Collapsed" />
+
                     </Style>
+
                     <Style TargetType="ListViewItem">
+
                         <Setter Property="Height"
                                 Value="50" />
+
                         <Setter Property="ToolTip">
+
                             <Setter.Value>
+
                                 <StackPanel Orientation="Vertical"
                                             Margin="5">
+
                                     <TextBlock Text="{Binding Name, StringFormat='Name: {0}'}"
                                                FontWeight="Bold" />
                                     <TextBlock Text="{Binding Id, StringFormat='ID: {0}'}" />
@@ -61,75 +91,116 @@
                                     <TextBlock Text="{Binding UpdatedBy, StringFormat='Updated By: {0}'}" />
                                     <TextBlock Text="{Binding IsActivated, StringFormat='Activated: {0}'}" />
                                 </StackPanel>
+
                             </Setter.Value>
+
                         </Setter>
+
                         <Setter Property="Template">
+
                             <Setter.Value>
+
                                 <ControlTemplate TargetType="{x:Type ListViewItem}">
+
                                     <Border x:Name="Bd"
                                             SnapsToDevicePixels="true"
                                             BorderBrush="{DynamicResource BorderBrush}"
                                             BorderThickness="0 0.5 0 0.5"
                                             Background="{TemplateBinding Background}"
                                             Padding="{TemplateBinding Padding}">
+
                                         <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
                                                           Content="{TemplateBinding Content}"
                                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                           SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
                                     </Border>
+
                                     <ControlTemplate.Triggers>
+
                                         <Trigger Property="IsMouseOver"
                                                  Value="true">
+
                                             <Setter Property="Background"
                                                     TargetName="Bd"
                                                     Value="{DynamicResource ThirdlyRegionBrush}" />
+
                                         </Trigger>
+
                                         <Trigger Property="IsSelected"
                                                  Value="true">
+
                                             <Setter Property="Background"
                                                     TargetName="Bd"
                                                     Value="{DynamicResource RegionBrush}" />
+
                                             <Setter Property="Foreground"
                                                     Value="{DynamicResource PrimaryBrush}" />
+
                                         </Trigger>
+
                                         <MultiTrigger>
+
                                             <MultiTrigger.Conditions>
+
                                                 <Condition Property="IsSelected"
                                                            Value="true" />
+
                                                 <Condition Property="Selector.IsSelectionActive"
                                                            Value="false" />
+
                                             </MultiTrigger.Conditions>
+
                                             <Setter Property="Background"
                                                     TargetName="Bd"
                                                     Value="{DynamicResource RegionBrush}" />
+
                                         </MultiTrigger>
+
                                     </ControlTemplate.Triggers>
+
                                 </ControlTemplate>
+
                             </Setter.Value>
+
                         </Setter>
+
                         <Style.Triggers>
+
                             <DataTrigger Binding="{Binding IsChecked}"
                                          Value="True">
                             </DataTrigger>
+
                         </Style.Triggers>
+
                     </Style>
+
                 </Style.Resources>
+
             </Style>
+
         </ResourceDictionary>
+
     </UserControl.Resources>
+
     <DockPanel LastChildFill="True">
+
         <GroupBox Header="Dự án hiện tại"
                   DockPanel.Dock="Top">
+
             <TextBlock Text="Revit-Test"
                        HorizontalAlignment="Center"
                        Foreground="{DynamicResource DarkDangerBrush}"
                        FontWeight="Bold"
                        FontSize="18" />
         </GroupBox>
+
         <GroupBox Header="Danh sách thiết lập"
                   Margin="0 8 0 0">
+
             <DockPanel LastChildFill="True">
+
                 <Button Style="{DynamicResource DP_ButtonContainIcon}"
                         Content="Thêm mới"
                         Tag="Plus"
@@ -138,97 +209,149 @@
                         HorizontalAlignment="Left"
                         DockPanel.Dock="Top"
                         Command="{Binding AddNewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+
                 <ListView Margin="0 8 0 0"
                           Style="{DynamicResource ListViewWithoutBorder}"
                           ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                           SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+
                     <ListView.ItemTemplate>
+
                         <DataTemplate>
+
                             <Grid>
+
                                 <Grid.ColumnDefinitions>
+
                                     <ColumnDefinition Width="Auto" />
+
                                     <ColumnDefinition Width="*" />
+
                                     <ColumnDefinition Width="Auto" />
+
                                 </Grid.ColumnDefinitions>
+
                                 <StackPanel Orientation="Vertical">
+
                                     <icons:PackIcon Kind="Ticket"
                                                     Height="24"
                                                     Width="14"
                                                     Foreground="{DynamicResource PrimaryBrush}"
                                                     Visibility="{Binding IsActivated, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
                                     <Button Background="Transparent"
                                             Margin="0 -2 0 0"
                                             Command="{Binding SaveCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                             CommandParameter="{Binding}">
+
                                         <Button.Style>
+
                                             <Style TargetType="Button">
+
                                                 <Setter Property="Template">
+
                                                     <Setter.Value>
+
                                                         <ControlTemplate TargetType="Button">
+
                                                             <Grid>
+
                                                                 <icons:PackIcon Kind="ContentSave"
                                                                                 Height="14"
                                                                                 Width="14" />
+
                                                             </Grid>
+
                                                         </ControlTemplate>
+
                                                     </Setter.Value>
+
                                                 </Setter>
+
                                                 <Setter Property="Foreground"
                                                         Value="{DynamicResource PrimaryTextBrush}" />
+
                                                 <Setter Property="Padding"
                                                         Value="5" />
+
                                                 <Setter Property="Visibility"
                                                         Value="Collapsed" />
+
                                                 <Style.Triggers>
+
                                                     <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
                                                                  Value="True">
+
                                                         <Setter Property="Visibility"
                                                                 Value="Visible" />
+
                                                     </DataTrigger>
+
                                                 </Style.Triggers>
+
                                             </Style>
+
                                         </Button.Style>
+
                                     </Button>
+
                                 </StackPanel>
+
                                 <StackPanel Grid.Column="1"
                                             Orientation="Vertical"
                                             Margin="5">
+
                                     <TextBlock Text="{Binding Name}"
                                                TextTrimming="CharacterEllipsis">
+
                                         <TextBlock.Style>
+
                                             <Style TargetType="TextBlock">
+
                                                 <Setter Property="Foreground"
                                                         Value="{DynamicResource PrimaryTextBrush}" />
+
                                                 <Style.Triggers>
+
                                                     <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
                                                                  Value="True">
+
                                                         <Setter Property="FontWeight"
                                                                 Value="Bold" />
+
                                                     </DataTrigger>
+
                                                     <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
                                                                  Value="True">
+
                                                         <Setter Property="FontWeight"
                                                                 Value="Bold" />
+
                                                         <Setter Property="Foreground"
                                                                 Value="{DynamicResource PrimaryBrush}" />
+
                                                     </DataTrigger>
+
                                                 </Style.Triggers>
+
                                             </Style>
+
                                         </TextBlock.Style>
                                     </TextBlock>
+
                                     <TextBlock Margin="0 4 0 0">
-                                    <InlineUIContainer>
-                                        <icons:PackIcon Kind="Update"
-                                                        Height="14"
-                                                        Width="14"
-                                                        Foreground="{DynamicResource SecondaryTextBrush}" />
-                                    </InlineUIContainer>
-                                    <Run Text=":"
-                                         BaselineAlignment="Center" />
+                                        <InlineUIContainer>
+                                            <icons:PackIcon Kind="Update"
+                                                Height="14"
+                                                Width="14"
+                                                Foreground="{DynamicResource SecondaryTextBrush}" />
+                                        </InlineUIContainer>
+                                        <Run Text=":"
+                                             BaselineAlignment="Center" />
                                     <Run Text="{Binding UpdatedAt}"
-                                         FontSize="12"
-                                         Foreground="{DynamicResource SecondaryTextBrush}"
-                                         BaselineAlignment="Center" />
+                                        FontSize="12"
+                                        Foreground="{DynamicResource SecondaryTextBrush}"
+                                        BaselineAlignment="Center" />
                                     </TextBlock>
                                 </StackPanel>
                                 <Button Background="Transparent"
