@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>1.0.0.3</Version>
+    <Version>1.0.0.4</Version>
     <PackageId>DPUnity.Wpf.Controls</PackageId>
     <Title>DPUnity WPF Controls</Title>
     <Description>Custom WPF controls and components for enhanced user interface development</Description>
@@ -19,8 +19,15 @@
     <Folder Include="Themes\" />
   </ItemGroup>
 
+  <!--<ItemGroup>
+    <Reference Include="DPUnity.Wpf.UI">
+      <HintPath>..\..\..\DPUnity.Wpf.UI\bin\Debug\net8.0-windows\DPUnity.Wpf.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>-->
+
   <ItemGroup>
-    <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.8.2" />
+    <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.8.4" />
   </ItemGroup>
+
 
 </Project>
