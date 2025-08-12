@@ -25,7 +25,12 @@ namespace DPUnity.Wpf.Controls.Controls.ProjectSettingsMenus
         }
 
         public static readonly DependencyProperty SelectedItemProperty =
-            DependencyProperty.Register("SelectedItem", typeof(object), typeof(ProjectSettingsMenu));
+            DependencyProperty.Register(
+                "SelectedItem",
+                typeof(object),
+                typeof(ProjectSettingsMenu),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+            );
 
         public object SelectedItem
         {
@@ -49,6 +54,16 @@ namespace DPUnity.Wpf.Controls.Controls.ProjectSettingsMenus
         {
             get { return (ICommand)GetValue(SaveCommandProperty); }
             set { SetValue(SaveCommandProperty, value); }
+        }
+
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.ContextMenu != null)
+            {
+                button.ContextMenu.PlacementTarget = button;
+                button.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                button.ContextMenu.IsOpen = true;
+            }
         }
     }
 }
