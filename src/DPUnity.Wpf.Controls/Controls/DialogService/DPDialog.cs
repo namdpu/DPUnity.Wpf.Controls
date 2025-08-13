@@ -1,5 +1,4 @@
 using HandyControl.Controls;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService
@@ -87,11 +86,11 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             }
         }
 
-        private static bool? ShowNotification(string message, NotificationType type = NotificationType.Information, string? title = null)
+        private static bool? ShowNotification(string message, NotificationType type = NotificationType.Information, System.Windows.Window? owner = null, string? title = null)
         {
             var window = new Views.NotificationWindow(message, type, title)
             {
-                Owner = Application.Current.MainWindow
+                Owner = owner ?? Application.Current.MainWindow
             };
             window.ShowDialog();
             return window.DialogResult;
