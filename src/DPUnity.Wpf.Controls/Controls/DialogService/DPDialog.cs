@@ -31,29 +31,29 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
         }
 
 
-        public static bool? Info(string message, string? title = null)
+        public static bool? Info(string message, System.Windows.Window? owner = null, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Information, title);
+            return ShowNotification(message, NotificationType.Information, owner, title);
         }
 
-        public static bool? Success(string message, string? title = null)
+        public static bool? Success(string message, System.Windows.Window? owner = null, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Success, title);
+            return ShowNotification(message, NotificationType.Success, owner, title);
         }
 
-        public static bool? Error(string message, string? title = null)
+        public static bool? Error(string message, System.Windows.Window? owner = null, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Error, title);
+            return ShowNotification(message, NotificationType.Error, owner, title);
         }
 
-        public static bool? Warning(string message, string? title = null)
+        public static bool? Warning(string message, System.Windows.Window? owner = null, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Warning, title);
+            return ShowNotification(message, NotificationType.Warning, owner, title);
         }
 
-        public static bool? Ask(string message, string? title = null)
+        public static bool? Ask(string message, System.Windows.Window? owner = null, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Ask, title);
+            return ShowNotification(message, NotificationType.Ask, owner, title);
         }
 
         private static async Task<bool?> ShowWeakNotification(string message, NotificationType type = NotificationType.Information)
