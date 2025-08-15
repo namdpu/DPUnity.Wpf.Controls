@@ -1,3 +1,5 @@
+using DPUnity.Core.DependencyInjection;
+using DPUnity.Windows.Services;
 using HandyControl.Controls;
 using System.Windows;
 
@@ -88,16 +90,31 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
 
         private static bool? ShowNotification(string message, NotificationType type = NotificationType.Information, System.Windows.Window? owner = null, string? title = null)
         {
-            var temp = owner ?? Application.Current?.MainWindow;
             var window = new Views.NotificationWindow(message, type, title);
 
-            if (window.Owner == temp)
+            if (owner != null)
             {
-                window.Owner = null;
+                window.Owner = owner;
             }
             else
             {
-                window.Owner = owner;
+                var mainWindow = DIContainer.GetService<IWindowService>()?.CurrentWindow?.Window ?? null;
+                if (mainWindow != null)
+                {
+                    window.Owner = mainWindow;
+                }
+                else
+                {
+                    var temp = owner ?? Application.Current?.MainWindow;
+                    if (window.Owner != temp)
+                    {
+                        window.Owner = temp;
+                    }
+                    else
+                    {
+                        window.Owner = null;
+                    }
+                }
             }
 
             window.ShowDialog();
