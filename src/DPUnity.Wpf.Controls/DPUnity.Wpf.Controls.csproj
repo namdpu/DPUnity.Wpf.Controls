@@ -6,7 +6,7 @@
 		<UseWPF>true</UseWPF>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>1.0.10</Version>
+		<Version>1.0.11</Version>
 		<PackageId>DPUnity.Wpf.Controls</PackageId>
 		<Title>DPUnity WPF Controls</Title>
 		<Description>Custom WPF controls and components for enhanced user interface development</Description>
