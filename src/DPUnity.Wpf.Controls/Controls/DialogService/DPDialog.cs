@@ -109,11 +109,8 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error showing notification: {ex.Message}");
-                return null;
-            }
-            finally
-            {
                 window?.Close();
+                return null;
             }
         }
 
