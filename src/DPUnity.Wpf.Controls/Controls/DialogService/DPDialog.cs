@@ -1,5 +1,6 @@
 using HandyControl.Controls;
 using System.Windows;
+using System.Windows.Interop;
 using MessageBox = System.Windows.MessageBox;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService
@@ -57,6 +58,31 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             return ShowNotification(message, NotificationType.Ask, owner, title);
         }
 
+        public static bool? Info(string message, IntPtr intPtr, string? title = null)
+        {
+            return ShowNotification(message, NotificationType.Information, intPtr, title);
+        }
+
+        public static bool? Success(string message, IntPtr intPtr, string? title = null)
+        {
+            return ShowNotification(message, NotificationType.Success, intPtr, title);
+        }
+
+        public static bool? Error(string message, IntPtr intPtr, string? title = null)
+        {
+            return ShowNotification(message, NotificationType.Error, intPtr, title);
+        }
+
+        public static bool? Warning(string message, IntPtr intPtr, string? title = null)
+        {
+            return ShowNotification(message, NotificationType.Warning, intPtr, title);
+        }
+
+        public static bool? Ask(string message, IntPtr intPtr, string? title = null)
+        {
+            return ShowNotification(message, NotificationType.Ask, intPtr, title);
+        }
+
         private static async Task<bool?> ShowWeakNotification(string message, NotificationType type = NotificationType.Information)
         {
             switch (type)
@@ -105,6 +131,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                 if (wd != null && window != wd)
                 {
                     window.Owner = wd;
+
                 }
                 window.ShowDialog();
                 return window.DialogResult;
@@ -115,6 +142,18 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                 window?.Close();
                 return null;
             }
+        }
+
+        private static bool? ShowNotification(string message, NotificationType type, IntPtr intPtr, string? title = null)
+        {
+            var window = new Views.NotificationWindow(message, type, title);
+
+            var helper = new WindowInteropHelper(window)
+            {
+                Owner = intPtr
+            };
+            window.ShowDialog();
+            return window.DialogResult;
         }
 
         public enum NotificationType
