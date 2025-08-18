@@ -90,34 +90,17 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
 
         private static bool? ShowNotification(string message, NotificationType type = NotificationType.Information, System.Windows.Window? owner = null, string? title = null)
         {
-            var window = new Views.NotificationWindow(message, type, title);
+            var wd = Application.Current?.MainWindow;
 
             if (owner != null)
             {
-                window.Owner = owner;
-            }
-            else
-            {
-                var mainWindow = DIContainer.GetService<IWindowService>()?.CurrentWindow?.Window ?? null;
-                if (mainWindow != null)
-                {
-                    window.Owner = mainWindow;
-                }
-                else
-                {
-                    var temp = owner ?? Application.Current?.MainWindow;
-                    if (window.Owner != temp)
-                    {
-                        window.Owner = temp;
-                    }
-                    else
-                    {
-                        window.Owner = null;
-                    }
-                }
+                wd = owner;
             }
 
+            var window = new Views.NotificationWindow(message, type, title);
+            window.Owner = wd;
             window.ShowDialog();
+
             return window.DialogResult;
         }
     }
