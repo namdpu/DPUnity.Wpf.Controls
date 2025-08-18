@@ -92,26 +92,22 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             Views.NotificationWindow? window = null;
             try
             {
-                MessageBox.Show($"1");
+                WindowStartupLocation location = WindowStartupLocation.CenterOwner;
                 var wd = owner ?? Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w.IsActive) ?? Application.Current.MainWindow;
-                MessageBox.Show($"2");
-
-                window = new(message, type, title);
-                MessageBox.Show($"3");
 
                 if (wd == null || window == wd)
                 {
-                    MessageBox.Show($"41");
-                    window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    location = WindowStartupLocation.CenterScreen;
                 }
-                else
+
+
+                window = new(message, type, title);
+                window.WindowStartupLocation = location;
+                if (wd != null && window != wd)
                 {
-                    MessageBox.Show($"42");
                     window.Owner = wd;
                 }
-                MessageBox.Show($"5");
                 window.ShowDialog();
-                MessageBox.Show($"6");
                 return window.DialogResult;
             }
             catch (Exception ex)
