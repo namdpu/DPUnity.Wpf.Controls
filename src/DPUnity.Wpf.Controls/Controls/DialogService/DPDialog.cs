@@ -1,6 +1,7 @@
 using HandyControl.Controls;
 using System.Diagnostics;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService
 {
@@ -92,18 +93,26 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             Views.NotificationWindow? window = null;
             try
             {
+                MessageBox.Show($"1");
                 var wd = owner ?? Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w.IsActive) ?? Application.Current.MainWindow;
+                MessageBox.Show($"2");
+
                 window = new(message, type, title);
+                MessageBox.Show($"3");
 
                 if (wd == null || window == wd)
                 {
+                    MessageBox.Show($"41");
                     window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 }
                 else
                 {
+                    MessageBox.Show($"42");
                     window.Owner = wd;
                 }
+                MessageBox.Show($"5");
                 window.ShowDialog();
+                MessageBox.Show($"6");
                 return window.DialogResult;
             }
             catch (Exception ex)
