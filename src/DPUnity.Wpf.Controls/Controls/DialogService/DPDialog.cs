@@ -1,5 +1,3 @@
-using DPUnity.Core.DependencyInjection;
-using DPUnity.Windows.Services;
 using HandyControl.Controls;
 using System.Windows;
 
@@ -90,27 +88,39 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
 
         private static bool? ShowNotification(string message, NotificationType type = NotificationType.Information, System.Windows.Window? owner = null, string? title = null)
         {
-            var wd = Application.Current?.MainWindow;
-
-            if (owner != null)
+            Views.NotificationWindow? window = null;
+            try
             {
-                wd = owner;
+                var wd = owner ?? Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w.IsActive) ?? Application.Current.MainWindow;
+
+                window = new(message, type, title)
+                {
+                    Owner = wd
+                };
+                if (window.Owner == null)
+                {
+                    window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                }
+                window.ShowDialog();
+                return window.DialogResult;
             }
-
-            var window = new Views.NotificationWindow(message, type, title);
-            window.Owner = wd;
-            window.ShowDialog();
-
-            return window.DialogResult;
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                window?.Close();
+            }
         }
-    }
 
-    public enum NotificationType
-    {
-        Information,
-        Success,
-        Error,
-        Warning,
-        Ask
+        public enum NotificationType
+        {
+            Information,
+            Success,
+            Error,
+            Warning,
+            Ask
+        }
     }
 }

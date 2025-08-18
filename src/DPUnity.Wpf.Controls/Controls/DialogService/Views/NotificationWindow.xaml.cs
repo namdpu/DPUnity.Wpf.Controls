@@ -2,6 +2,7 @@ using DPUnity.Wpf.UI.Controls.PackIcon;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using static DPUnity.Wpf.Controls.Controls.DialogService.DPDialog;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
 {
