@@ -12,6 +12,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
     public partial class NotificationWindow : Window
     {
         private NotificationType _type;
+        public new bool? DialogResult { get; set; } = null;
 
         public NotificationWindow(string message, NotificationType type, string? title = null)
         {
