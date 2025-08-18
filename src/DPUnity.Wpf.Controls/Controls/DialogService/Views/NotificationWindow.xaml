@@ -17,14 +17,6 @@
         SizeToContent="Height"
         Topmost="True"
         MaxHeight="500">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/HandyResources.xaml" />
-                <ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Border CornerRadius="5"
             BorderThickness="1"
             BorderBrush="{DynamicResource BorderBrush}"

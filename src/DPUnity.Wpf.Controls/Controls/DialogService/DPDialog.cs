@@ -100,7 +100,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                     location = WindowStartupLocation.CenterScreen;
                 }
 
-
                 window = new(message, type, title);
                 window.WindowStartupLocation = location;
                 if (wd != null && window != wd)
