@@ -1,5 +1,4 @@
 using HandyControl.Controls;
-using System.Diagnostics;
 using System.Windows;
 using MessageBox = System.Windows.MessageBox;
 
@@ -117,7 +116,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error showing notification: {ex.Message}");
+                MessageBox.Show($"Error showing notification: {ex.Message}");
                 window?.Close();
                 return null;
             }
