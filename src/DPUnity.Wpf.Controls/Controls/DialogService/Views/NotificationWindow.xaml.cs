@@ -19,6 +19,9 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             try
             {
                 InitializeComponent();
+
+                LoadResourceDictionaries();
+
                 _type = type;
                 Message.Text = message;
                 if (!string.IsNullOrEmpty(title))
@@ -63,7 +66,32 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error initializing notification window: {ex.Message}");
-                this.Close();
+            }
+        }
+
+        private void LoadResourceDictionaries()
+        {
+            try
+            {
+                var resourceDict = new ResourceDictionary();
+
+                var handyResourcesDict = new ResourceDictionary
+                {
+                    Source = new Uri("/DPUnity.WPF.UI;component/Styles/HandyResources.xaml", UriKind.RelativeOrAbsolute)
+                };
+                resourceDict.MergedDictionaries.Add(handyResourcesDict);
+
+                var dpUnityResourcesDict = new ResourceDictionary
+                {
+                    Source = new Uri("/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml", UriKind.RelativeOrAbsolute)
+                };
+                resourceDict.MergedDictionaries.Add(dpUnityResourcesDict);
+
+                this.Resources = resourceDict;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Warning: Could not load resource dictionaries: {ex.Message}");
             }
         }
 
