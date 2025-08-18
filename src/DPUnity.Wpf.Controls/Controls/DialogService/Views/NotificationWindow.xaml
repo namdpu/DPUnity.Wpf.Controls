@@ -20,7 +20,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/HandyResources.xaml" />              
+                <ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/HandyResources.xaml" />
                 <ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -105,20 +105,22 @@
                        FontWeight="Bold"
                        Foreground="{DynamicResource PrimaryTextBrush}" />
             <!--Message-->
-            <hc:ScrollViewer Grid.Row="2"
-                             Grid.ColumnSpan="2"
-                             Margin="20 0"
-                             VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Disabled">
-                <DockPanel LastChildFill="True">
-                    <icons:PackIcon x:Name="NotificationIcon"
-                                    Kind="Information"
-                                    Width="16"
-                                    Height="16"
-                                    VerticalAlignment="Center"
-                                    DockPanel.Dock="Left"
-                                    Margin="10 0 10 0"
-                                    Foreground="{DynamicResource InfoBrush}" />
+
+            <DockPanel LastChildFill="True"
+                       Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       Margin="20 0">
+
+                <icons:PackIcon x:Name="NotificationIcon"
+                                Kind="Information"
+                                Width="16"
+                                Height="16"
+                                VerticalAlignment="Center"
+                                DockPanel.Dock="Left"
+                                Margin="10 0 10 0"
+                                Foreground="{DynamicResource InfoBrush}" />
+                <hc:ScrollViewer VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Disabled">
                     <TextBlock x:Name="Message"
                                Text="This is a notification message."
                                ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"
@@ -127,8 +129,8 @@
                                Margin="10"
                                FontSize="14"
                                Foreground="{DynamicResource SecondaryTextBrush}" />
-                </DockPanel>
-            </hc:ScrollViewer>
+                </hc:ScrollViewer>
+            </DockPanel>
             <!--Buttons-->
             <hc:UniformSpacingPanel Orientation="Horizontal"
                                     Grid.Column="1"

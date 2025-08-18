@@ -1,4 +1,5 @@
 using HandyControl.Controls;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService
@@ -92,20 +93,22 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             try
             {
                 var wd = owner ?? Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w.IsActive) ?? Application.Current.MainWindow;
+                window = new(message, type, title);
 
-                window = new(message, type, title)
-                {
-                    Owner = wd
-                };
-                if (window.Owner == null)
+                if (wd == null || window == wd)
                 {
                     window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                }
+                else
+                {
+                    window.Owner = wd;
                 }
                 window.ShowDialog();
                 return window.DialogResult;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Error showing notification: {ex.Message}");
                 return null;
             }
             finally
