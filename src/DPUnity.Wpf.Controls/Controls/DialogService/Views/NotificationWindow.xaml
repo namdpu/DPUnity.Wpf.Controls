@@ -18,7 +18,12 @@
         Topmost="True"
         MaxHeight="500">
     <Window.Resources>
-        <hc:IntellisenseResources Source="/HandyControl;Component/DesignTime/DesignTimeResources.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/HandyResources.xaml" />              
+                <ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Border CornerRadius="5"
             BorderThickness="1"
@@ -65,9 +70,11 @@
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Grid Background="Transparent">
-                            <icons:PackIcon x:Name="Cross" Kind="Close"
-                                            Foreground="{DynamicResource DangerBrush}" 
-                                            Height="15" Width="15"/>
+                            <icons:PackIcon x:Name="Cross"
+                                            Kind="Close"
+                                            Foreground="{DynamicResource DangerBrush}"
+                                            Height="15"
+                                            Width="15" />
                         </Grid>
                         <!-- Trigger hiệu ứng hover -->
                         <ControlTemplate.Triggers>
@@ -123,23 +130,24 @@
                 </DockPanel>
             </hc:ScrollViewer>
             <!--Buttons-->
-            <hc:SimpleStackPanel Orientation="Horizontal"
-                                 Grid.Column="1"
-                                 Grid.Row="3">
-                <Button x:Name="CancelButton"
-                        Width="80"
-                        Margin="10 0 5 10"
-                        Content="No"
-                        Style="{DynamicResource ButtonDanger}"
-                        Visibility="Hidden"
-                        Click="CancelButton_Click" />
+            <hc:UniformSpacingPanel Orientation="Horizontal"
+                                    Grid.Column="1"
+                                    Grid.Row="3"
+                                    HorizontalAlignment="Right"
+                                    Spacing="10"
+                                    Margin="0 0 20 10">
                 <Button x:Name="OKButton"
                         Width="80"
                         Content="OK"
                         Style="{DynamicResource ButtonPrimary}"
-                        Margin="5 0 5 10"
                         Click="OKButton_Click" />
-            </hc:SimpleStackPanel>
+                <Button x:Name="CancelButton"
+                        Width="80"
+                        Content="No"
+                        Style="{DynamicResource ButtonDanger}"
+                        Visibility="Collapsed"
+                        Click="CancelButton_Click" />
+            </hc:UniformSpacingPanel>
         </Grid>
     </Border>
 </Window>

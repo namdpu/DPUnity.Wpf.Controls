@@ -11,21 +11,24 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-    
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <d:ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
             <Style x:Key="ListViewWithoutBorder"
                    TargetType="ListView">
                 <Setter Property="BorderThickness"
-                        Value="1" />
+                        Value="0" />
                 <Setter Property="BorderBrush"
                         Value="{DynamicResource BorderBrush}" />
                 <Setter Property="Background"
                         Value="{DynamicResource SecondaryRegionBrush}" />
+                <Setter Property="Margin"
+                        Value="0" />
+                <Setter Property="Padding"
+                        Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListView">
@@ -33,11 +36,11 @@
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
-                                    Padding="{TemplateBinding Padding}"
+                                    Padding="0"
                                     SnapsToDevicePixels="true"
                                     CornerRadius="3">
                                 <ScrollViewer Focusable="false"
-                                              Padding="{TemplateBinding Padding}"
+                                              Padding="0"
                                               HorizontalScrollBarVisibility="Disabled">
                                     <ItemsPresenter />
                                 </ScrollViewer>
@@ -123,12 +126,11 @@
             </Style>
             <converters:BooleanToHiddenVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" />
             <local:StringToHasValueConverter x:Key="StringToHasValueConverter" />
-
             <SolidColorBrush x:Key="DarkPrimaryBrush"
                              Color="#03AB54" />
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <DockPanel LastChildFill="True">
         <GroupBox Header="Dự án hiện tại"
                   DockPanel.Dock="Top">
@@ -138,8 +140,9 @@
                        FontWeight="Bold"
                        FontSize="18" />
         </GroupBox>
-        
-        <GroupBox Header="Danh sách thiết lập">
+
+        <GroupBox Header="Danh sách thiết lập"
+                  Margin="0">
             <DockPanel LastChildFill="True">
                 <Grid DockPanel.Dock="Top">
                     <Grid.ColumnDefinitions>
@@ -163,8 +166,8 @@
                                 Text="{Binding SearchText, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="Search_TextChanged" />
                 </Grid>
-                
-                <Grid>
+
+                <Grid Margin="0">
                     <ListView Style="{DynamicResource ListViewWithoutBorder}"
                               ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                               SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
@@ -317,43 +320,49 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    
+
                     <!-- Thông báo khi không tìm thấy kết quả -->
-                    <StackPanel Orientation="Vertical" 
-                                HorizontalAlignment="Center" 
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Margin="20">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
-                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasItems, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="False">
-                                        <Setter Property="Visibility" Value="Visible" />
+                                    <DataTrigger Binding="{Binding HasItems, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                 Value="False">
+                                        <Setter Property="Visibility"
+                                                Value="Visible" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        
-                        <icons:PackIcon Kind="DatabaseSearchOutline" 
-                                        Height="48" 
-                                        Width="48" 
-                                        Foreground="{DynamicResource SecondaryTextBrush}" 
+
+                        <icons:PackIcon Kind="DatabaseSearchOutline"
+                                        Height="48"
+                                        Width="48"
+                                        Foreground="{DynamicResource SecondaryTextBrush}"
                                         HorizontalAlignment="Center" />
-                        <TextBlock Text="Không tìm thấy dự án nào" 
-                                   Foreground="{DynamicResource SecondaryTextBrush}" 
-                                   FontSize="14" 
-                                   HorizontalAlignment="Center" 
+                        <TextBlock Text="Không tìm thấy dự án nào"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center"
                                    Margin="0 10 0 0" />
-                        <TextBlock Foreground="{DynamicResource ThirdlyTextBrush}" 
-                                   FontSize="10" 
-                                   HorizontalAlignment="Center" 
+                        <TextBlock Foreground="{DynamicResource ThirdlyTextBrush}"
+                                   FontSize="10"
+                                   HorizontalAlignment="Center"
                                    Margin="0 5 0 0">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SearchText, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={StaticResource StringToHasValueConverter}}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible" />
+                                        <DataTrigger Binding="{Binding SearchText, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={StaticResource StringToHasValueConverter}}"
+                                                     Value="True">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
