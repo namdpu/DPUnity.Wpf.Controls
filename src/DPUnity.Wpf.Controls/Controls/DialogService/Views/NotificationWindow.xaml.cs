@@ -16,46 +16,54 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
 
         public NotificationWindow(string message, NotificationType type, string? title = null)
         {
-            InitializeComponent();
-            _type = type;
-            Message.Text = message;
-            if (!string.IsNullOrEmpty(title))
+            try
             {
-                TitleText.Text = title;
+                InitializeComponent();
+                _type = type;
+                Message.Text = message;
+                if (!string.IsNullOrEmpty(title))
+                {
+                    TitleText.Text = title;
+                }
+                else
+                {
+                    TitleText.Visibility = Visibility.Collapsed;
+                }
+                switch (type)
+                {
+                    case NotificationType.Information:
+                        NotificationIcon.Kind = PackIconKind.Information;
+                        NotificationIcon.Foreground = FindResource("InfoBrush") as Brush;
+                        Message.Foreground = FindResource("InfoBrush") as Brush;
+                        break;
+                    case NotificationType.Success:
+                        NotificationIcon.Kind = PackIconKind.CheckCircle;
+                        NotificationIcon.Foreground = FindResource("SuccessBrush") as Brush;
+                        Message.Foreground = FindResource("SuccessBrush") as Brush;
+                        break;
+                    case NotificationType.Error:
+                        NotificationIcon.Kind = PackIconKind.CloseCircle;
+                        NotificationIcon.Foreground = FindResource("DangerBrush") as Brush;
+                        Message.Foreground = FindResource("DangerBrush") as Brush;
+                        break;
+                    case NotificationType.Warning:
+                        NotificationIcon.Kind = PackIconKind.AlertCircle;
+                        NotificationIcon.Foreground = FindResource("WarningBrush") as Brush;
+                        Message.Foreground = FindResource("WarningBrush") as Brush;
+                        break;
+                    case NotificationType.Ask:
+                        OKButton.Content = "Yes";
+                        NotificationIcon.Kind = PackIconKind.HelpCircle;
+                        NotificationIcon.Foreground = FindResource("PrimaryTextBrush") as Brush;
+                        Message.Foreground = FindResource("PrimaryTextBrush") as Brush;
+                        CancelButton.Visibility = Visibility.Visible;
+                        break;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TitleText.Visibility = Visibility.Collapsed;
-            }
-            switch (type)
-            {
-                case NotificationType.Information:
-                    NotificationIcon.Kind = PackIconKind.Information;
-                    NotificationIcon.Foreground = FindResource("InfoBrush") as Brush;
-                    Message.Foreground = FindResource("InfoBrush") as Brush;
-                    break;
-                case NotificationType.Success:
-                    NotificationIcon.Kind = PackIconKind.CheckCircle;
-                    NotificationIcon.Foreground = FindResource("SuccessBrush") as Brush;
-                    Message.Foreground = FindResource("SuccessBrush") as Brush;
-                    break;
-                case NotificationType.Error:
-                    NotificationIcon.Kind = PackIconKind.CloseCircle;
-                    NotificationIcon.Foreground = FindResource("DangerBrush") as Brush;
-                    Message.Foreground = FindResource("DangerBrush") as Brush;
-                    break;
-                case NotificationType.Warning:
-                    NotificationIcon.Kind = PackIconKind.AlertCircle;
-                    NotificationIcon.Foreground = FindResource("WarningBrush") as Brush;
-                    Message.Foreground = FindResource("WarningBrush") as Brush;
-                    break;
-                case NotificationType.Ask:
-                    OKButton.Content = "Yes";
-                    NotificationIcon.Kind = PackIconKind.HelpCircle;
-                    NotificationIcon.Foreground = FindResource("PrimaryTextBrush") as Brush;
-                    Message.Foreground = FindResource("PrimaryTextBrush") as Brush;
-                    CancelButton.Visibility = Visibility.Visible;
-                    break;
+                MessageBox.Show($"Error initializing notification window: {ex.Message}");
+                this.Close();
             }
         }
 
