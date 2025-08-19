@@ -181,7 +181,7 @@
                                         <ColumnDefinition Width="30" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Orientation="Vertical">
-                                        <icons:PackIcon Kind="Ticket"
+                                        <icons:PackIcon x:Name="activeIcon" Kind="Ticket"
                                                         Height="24"
                                                         Width="14"
                                                         Foreground="{DynamicResource PrimaryBrush}"
@@ -225,6 +225,10 @@
                                                                         <Setter TargetName="icon"
                                                                                 Property="Kind"
                                                                                 Value="ContentSave" />
+                                                                    </Trigger>
+                                                                    <Trigger   Property="Visibility"
+                                                                             Value="Hidden">
+                                                                        
                                                                     </Trigger>
                                                                 </ControlTemplate.Triggers>
                                                             </ControlTemplate>

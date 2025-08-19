@@ -1,3 +1,4 @@
+using DPUnity.Wpf.Controls.Interfaces;
 using HandyControl.Controls;
 using System.Windows;
 using System.Windows.Interop;
@@ -7,82 +8,185 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
 {
     public static class DPDialog
     {
+        #region Weak Notification
+        /// <summary>
+        /// Shows a weak notification with the specified message and type.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <returns> true </returns>
         public static async Task<bool?> WeakInfo(string message)
         {
             return await ShowWeakNotification(message, NotificationType.Information);
         }
 
+        /// <summary>
+        /// Shows a weak notification with the specified message and type.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <returns> true </returns>
         public static async Task<bool?> WeakSuccess(string message)
         {
             return await ShowWeakNotification(message, NotificationType.Success);
         }
 
+        /// <summary>
+        /// Shows a weak notification with the specified message and type.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <returns> true </returns>
         public static async Task<bool?> WeakError(string message)
         {
             return await ShowWeakNotification(message, NotificationType.Error);
         }
-
+        /// <summary>
+        /// Shows a weak notification with the specified message and type.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <returns> true </returns>
         public static async Task<bool?> WeakWarning(string message)
         {
             return await ShowWeakNotification(message, NotificationType.Warning);
         }
 
+        /// <summary>
+        /// Shows a weak notification with the specified message and type.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <returns> True if the user confirmed the action; null if the action was canceled, otherwise, false.</returns>
         public static async Task<bool?> WeakAsk(string message)
         {
             return await ShowWeakNotification(message, NotificationType.Ask);
         }
+        #endregion
 
 
+        #region Show Notification
+        /// <summary>
+        /// Shows a notification with a infomation message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
         public static bool? Info(string message, System.Windows.Window? owner = null, string? title = null)
         {
             return ShowNotification(message, NotificationType.Information, owner, title);
         }
 
+        /// <summary>
+        /// Shows a notification with a success message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
         public static bool? Success(string message, System.Windows.Window? owner = null, string? title = null)
         {
             return ShowNotification(message, NotificationType.Success, owner, title);
         }
 
+        /// <summary>
+        /// Shows a notification with a error message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
         public static bool? Error(string message, System.Windows.Window? owner = null, string? title = null)
         {
             return ShowNotification(message, NotificationType.Error, owner, title);
         }
 
+
+        /// <summary>
+        /// Shows a notification with a warning message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
         public static bool? Warning(string message, System.Windows.Window? owner = null, string? title = null)
         {
             return ShowNotification(message, NotificationType.Warning, owner, title);
         }
 
+        /// <summary>
+        /// Shows a notification asking the user to confirm an action.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True if the user confirmed the action; null if the action was canceled, otherwise, false.</returns>
         public static bool? Ask(string message, System.Windows.Window? owner = null, string? title = null)
         {
             return ShowNotification(message, NotificationType.Ask, owner, title);
         }
+        #endregion
 
-        public static bool? Info(string message, IntPtr intPtr, string? title = null)
+        #region Show Notification in CMD
+        /// <summary>
+        /// Shows a notification with a infomation message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="intPtr">The pointer to the owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
+        public static bool? CmdInfo(string message, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Information, intPtr, title);
+            return ShowCmdNotification(message, NotificationType.Information, title);
         }
 
-        public static bool? Success(string message, IntPtr intPtr, string? title = null)
+        /// <summary>
+        /// Shows a notification with a success message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="intPtr">The pointer to the owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
+        public static bool? CmdSuccess(string message, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Success, intPtr, title);
+            return ShowCmdNotification(message, NotificationType.Success, title);
         }
 
-        public static bool? Error(string message, IntPtr intPtr, string? title = null)
+        /// <summary>
+        /// Shows a notification with a error message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="intPtr">The pointer to the owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
+        public static bool? CmdError(string message, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Error, intPtr, title);
+            return ShowCmdNotification(message, NotificationType.Error, title);
         }
 
-        public static bool? Warning(string message, IntPtr intPtr, string? title = null)
+        /// <summary>
+        /// Shows a notification with a warning message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="intPtr">The pointer to the owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
+        public static bool? CmdWarning(string message, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Warning, intPtr, title);
+            return ShowCmdNotification(message, NotificationType.Warning, title);
         }
 
-        public static bool? Ask(string message, IntPtr intPtr, string? title = null)
+        /// <summary>
+        /// Shows a notification asking the user to confirm an action.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="intPtr"> The pointer to the owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns> True if the user confirmed the action; null if the action was canceled, otherwise, false.</returns>
+        public static bool? CmdAsk(string message, string? title = null)
         {
-            return ShowNotification(message, NotificationType.Ask, intPtr, title);
+            return ShowCmdNotification(message, NotificationType.Ask, title);
         }
+        #endregion
 
+
+        #region Private Methods
         private static async Task<bool?> ShowWeakNotification(string message, NotificationType type = NotificationType.Information)
         {
             switch (type)
@@ -113,25 +217,40 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             }
         }
 
-        private static bool? ShowNotification(string message, NotificationType type = NotificationType.Information, System.Windows.Window? owner = null, string? title = null)
+        private static bool? ShowNotification(string message, NotificationType type, System.Windows.Window? owner = null, string? title = null)
         {
             Views.NotificationWindow? window = null;
             try
             {
-                WindowStartupLocation location = WindowStartupLocation.CenterOwner;
-                var wd = owner ?? Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w.IsActive) ?? Application.Current.MainWindow;
-
-                if (wd == null || window == wd)
-                {
-                    location = WindowStartupLocation.CenterScreen;
-                }
-
                 window = new(message, type, title);
-                window.WindowStartupLocation = location;
-                if (wd != null && window != wd)
+
+                // Hierarchy of owner windows:
+                // 1. If owner is provided, use it.
+                // 2. If no owner is provided, find the active window that is visible and not the current window.
+                // 3. If no active window is found, use the main application window's handle if available.
+                var wd = owner ?? Application.Current.Windows
+                    .OfType<System.Windows.Window>()
+                    .FirstOrDefault(w => w.IsActive && w.Visibility == Visibility.Visible && w != window)
+                    ?? null;
+
+                if (wd != null)
                 {
                     window.Owner = wd;
-
+                }
+                else
+                {
+                    var hwnd = AppHwnd.Instance.Hwnd;
+                    if (hwnd is not null)
+                    {
+                        var helper = new WindowInteropHelper(window)
+                        {
+                            Owner = (IntPtr)hwnd
+                        };
+                    }
+                    else // If hwnd is not set, default to center screen
+                    {
+                        window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    }
                 }
                 window.ShowDialog();
                 return window.DialogResult;
@@ -144,17 +263,26 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             }
         }
 
-        private static bool? ShowNotification(string message, NotificationType type, IntPtr intPtr, string? title = null)
+        private static bool? ShowCmdNotification(string message, NotificationType type, string? title = null)
         {
             var window = new Views.NotificationWindow(message, type, title);
-
-            var helper = new WindowInteropHelper(window)
+            var hwnd = AppHwnd.Instance.Hwnd;
+            if (hwnd is not null)
             {
-                Owner = intPtr
-            };
+                var helper = new WindowInteropHelper(window)
+                {
+                    Owner = (IntPtr)hwnd
+                };
+            }
+            else
+            {
+                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
             window.ShowDialog();
             return window.DialogResult;
         }
+        #endregion
+
 
         public enum NotificationType
         {

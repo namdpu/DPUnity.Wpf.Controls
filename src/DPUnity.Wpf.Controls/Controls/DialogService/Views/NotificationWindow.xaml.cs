@@ -32,6 +32,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 {
                     TitleText.Visibility = Visibility.Collapsed;
                 }
+
                 switch (type)
                 {
                     case NotificationType.Information:
@@ -69,25 +70,23 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             }
         }
 
+        private static ResourceDictionary DPUDict { get; } = new ResourceDictionary
+        {
+            Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/HandyResources.xaml")
+        };
+        private static ResourceDictionary HandyDict { get; } = new ResourceDictionary
+        {
+            Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/HandyResources.xaml")
+        };
+
         private void LoadResourceDictionaries()
         {
             try
             {
-                var resourceDict = new ResourceDictionary();
+                this.Resources.MergedDictionaries.Clear();
 
-                var handyResourcesDict = new ResourceDictionary
-                {
-                    Source = new Uri("/DPUnity.WPF.UI;component/Styles/HandyResources.xaml", UriKind.RelativeOrAbsolute)
-                };
-                resourceDict.MergedDictionaries.Add(handyResourcesDict);
-
-                var dpUnityResourcesDict = new ResourceDictionary
-                {
-                    Source = new Uri("/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml", UriKind.RelativeOrAbsolute)
-                };
-                resourceDict.MergedDictionaries.Add(dpUnityResourcesDict);
-
-                this.Resources = resourceDict;
+                this.Resources.MergedDictionaries.Add(DPUDict);
+                this.Resources.MergedDictionaries.Add(HandyDict);
             }
             catch (Exception ex)
             {
