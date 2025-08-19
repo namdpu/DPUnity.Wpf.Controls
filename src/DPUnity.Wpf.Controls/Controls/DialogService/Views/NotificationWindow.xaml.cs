@@ -72,7 +72,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
 
         private static ResourceDictionary DPUDict { get; } = new ResourceDictionary
         {
-            Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/HandyResources.xaml")
+            Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml")
         };
         private static ResourceDictionary HandyDict { get; } = new ResourceDictionary
         {
@@ -85,8 +85,8 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             {
                 this.Resources.MergedDictionaries.Clear();
 
-                this.Resources.MergedDictionaries.Add(DPUDict);
                 this.Resources.MergedDictionaries.Add(HandyDict);
+                this.Resources.MergedDictionaries.Add(DPUDict);
             }
             catch (Exception ex)
             {
