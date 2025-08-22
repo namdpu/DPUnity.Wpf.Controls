@@ -29,35 +29,39 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 {
                     case NotificationType.Information:
                         NotificationIcon.Kind = PackIconKind.Information;
-                        BackgroundOverlay.Fill = FindResource("InfoBrush") as Brush;
+                        WindowBorder.BorderBrush = FindResource("InfoBrush") as Brush;
                         NotificationIcon.Foreground = FindResource("InfoBrush") as Brush;
                         TitleText.Text = title ?? "Thông tin";
+                        TitleText.Foreground = FindResource("InfoBrush") as Brush;
                         break;
                     case NotificationType.Success:
                         NotificationIcon.Kind = PackIconKind.CheckCircle;
-                        BackgroundOverlay.Fill = FindResource("SuccessBrush") as Brush;
-                        //NotificationIcon.Foreground = new SolidColorBrush(Color.FromArgb(255, 94, 232, 72));
+                        WindowBorder.BorderBrush = FindResource("SuccessBrush") as Brush;
                         NotificationIcon.Foreground = FindResource("PrimaryBrush") as Brush;
                         TitleText.Text = title ?? "Thành công";
+                        TitleText.Foreground = FindResource("PrimaryBrush") as Brush;
                         break;
                     case NotificationType.Error:
                         NotificationIcon.Kind = PackIconKind.CloseCircle;
-                        BackgroundOverlay.Fill = FindResource("DangerBrush") as Brush;
+                        WindowBorder.BorderBrush = FindResource("DangerBrush") as Brush;
                         NotificationIcon.Foreground = FindResource("DangerBrush") as Brush;
                         TitleText.Text = title ?? "Lỗi";
+                        TitleText.Foreground = FindResource("DangerBrush") as Brush;
                         break;
                     case NotificationType.Warning:
                         NotificationIcon.Kind = PackIconKind.AlertCircle;
-                        BackgroundOverlay.Fill = FindResource("WarningBrush") as Brush;
+                        WindowBorder.BorderBrush = FindResource("WarningBrush") as Brush;
                         NotificationIcon.Foreground = FindResource("WarningBrush") as Brush;
                         TitleText.Text = title ?? "Cảnh báo";
+                        TitleText.Foreground = FindResource("WarningBrush") as Brush;
                         break;
                     case NotificationType.Ask:
                         OKButton.Content = "Yes";
                         NotificationIcon.Kind = PackIconKind.HelpCircle;
-                        BackgroundOverlay.Fill = FindResource("AskBrush") as Brush;
+                        WindowBorder.BorderBrush = FindResource("AskBrush") as Brush;
                         NotificationIcon.Foreground = FindResource("AskBrush") as Brush;
                         TitleText.Text = title ?? "Xác nhận";
+                        TitleText.Foreground = FindResource("AskBrush") as Brush;
                         CancelButton.Visibility = Visibility.Visible;
                         OKButton.Visibility = Visibility.Visible;
                         break;
