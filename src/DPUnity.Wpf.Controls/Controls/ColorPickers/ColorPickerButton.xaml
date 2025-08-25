@@ -7,76 +7,54 @@
              mc:Ignorable="d"
              d:DesignHeight="32"
              d:DesignWidth="150">
-    <Grid>
-        <Button x:Name="MainButton"
-                Height="32"
-                HorizontalAlignment="Stretch"
-                Click="MainButton_Click"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="1"
-                Background="{DynamicResource RegionBrush}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="24" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                
-                <!-- Color Rectangle -->
-                <Border Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="1"
-                        VerticalAlignment="Center">
-                    <!-- Checkerboard background for transparency -->
-                    <Border.Background>
-                        <DrawingBrush Viewport="0,0,4,4"
-                                      ViewportUnits="Absolute"
-                                      TileMode="Tile">
-                            <DrawingBrush.Drawing>
-                                <DrawingGroup>
-                                    <GeometryDrawing Brush="White">
-                                        <GeometryDrawing.Geometry>
-                                            <RectangleGeometry Rect="0,0,4,4" />
-                                        </GeometryDrawing.Geometry>
-                                    </GeometryDrawing>
-                                    <GeometryDrawing Brush="{DynamicResource BorderBrush}">
-                                        <GeometryDrawing.Geometry>
-                                            <GeometryGroup>
-                                                <RectangleGeometry Rect="0,0,2,2" />
-                                                <RectangleGeometry Rect="2,2,2,2" />
-                                            </GeometryGroup>
-                                        </GeometryDrawing.Geometry>
-                                    </GeometryDrawing>
-                                </DrawingGroup>
-                            </DrawingBrush.Drawing>
-                        </DrawingBrush>
-                    </Border.Background>
-                    <Rectangle x:Name="ColorRectangle"
-                               Fill="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}, Converter={x:Static local:ColorToBrushConverter.Instance}}" />
-                </Border>
-            </Grid>
-        </Button>
-        
-        <!-- Popup -->
-        <Popup x:Name="ColorPickerPopup"
-               PlacementTarget="{Binding ElementName=MainButton}"
-               Placement="Bottom"
-               AllowsTransparency="True"
-               StaysOpen="False"
-               PopupAnimation="Fade">
-            <Border Background="{DynamicResource PopupBackgroundBrush}"
+    <Button x:Name="MainButton"
+            Height="20"
+            HorizontalAlignment="Stretch"
+            Click="MainButton_Click"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            Background="Transparent">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <!-- Color Rectangle -->
+            <Border Grid.Column="0"
+                    Width="14"
+                    Height="14"
                     BorderBrush="{DynamicResource BorderBrush}"
                     BorderThickness="1"
-                    CornerRadius="5"
-                    Effect="{DynamicResource EffectShadow2}">
-                <local:ColorPicker x:Name="ColorPickerControl"
-                                   Width="400"
-                                   Height="460"
-                                   Confirmed="ColorPicker_Confirmed"
-                                   Cancelled="ColorPicker_Cancelled"
-                                   ColorChanged="ColorPicker_ColorChanged" />
+                    VerticalAlignment="Center">
+                <!-- Checkerboard background for transparency -->
+                <Border.Background>
+                    <DrawingBrush Viewport="0,0,4,4"
+                                  ViewportUnits="Absolute"
+                                  TileMode="Tile">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <GeometryDrawing Brush="White">
+                                    <GeometryDrawing.Geometry>
+                                        <RectangleGeometry Rect="0,0,4,4" />
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{DynamicResource BorderBrush}">
+                                    <GeometryDrawing.Geometry>
+                                        <GeometryGroup>
+                                            <RectangleGeometry Rect="0,0,2,2" />
+                                            <RectangleGeometry Rect="2,2,2,2" />
+                                        </GeometryGroup>
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Border.Background>
+                <Rectangle x:Name="ColorRectangle"
+                           Fill="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}, Converter={x:Static local:ColorToBrushConverter.Instance}}" />
             </Border>
-        </Popup>
-    </Grid>
+        </Grid>
+        
+    </Button>
 </UserControl>

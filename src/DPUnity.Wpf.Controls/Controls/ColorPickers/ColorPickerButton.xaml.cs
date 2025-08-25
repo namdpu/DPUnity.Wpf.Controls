@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -23,16 +20,6 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             set { SetValue(SelectedColorProperty, value); }
         }
 
-        public static readonly DependencyProperty RecentColorsProperty =
-            DependencyProperty.Register("RecentColors", typeof(List<Color>), typeof(ColorPickerButton),
-                new PropertyMetadata(null));
-
-        public List<Color> RecentColors
-        {
-            get { return (List<Color>)GetValue(RecentColorsProperty); }
-            set { SetValue(RecentColorsProperty, value); }
-        }
-
         public static readonly DependencyProperty SelectedColorIndexProperty =
             DependencyProperty.Register("SelectedColorIndex", typeof(int?), typeof(ColorPickerButton),
                 new PropertyMetadata(0, OnSelectedColorIndexChanged));
@@ -44,18 +31,15 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         }
 
         public event EventHandler<Color>? ColorChanged;
-        public event EventHandler<int?>? ColorIndexChanged;
 
         private bool _isInternalUpdate = false;
         private Rectangle? colorRectangle;
-        private ColorPicker? colorPickerControl;
 
         public ColorPickerButton()
         {
             InitializeComponent();
 
             colorRectangle = FindName("ColorRectangle") as Rectangle;
-            colorPickerControl = FindName("ColorPickerControl") as ColorPicker;
 
             Loaded += ColorPickerButton_Loaded;
         }
@@ -63,14 +47,6 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         private void ColorPickerButton_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateBinding(); // Force update binding for initial color display
-            
-            if (colorPickerControl != null)
-            {
-                // Sync properties with ColorPicker (DefaultColors are always from ACItoRGBLookup)
-                colorPickerControl.SelectedColor = SelectedColor;
-                colorPickerControl.RecentColors = RecentColors;
-                colorPickerControl.SelectedColorIndex = SelectedColorIndex;
-            }
         }
 
         private void UpdateBinding()
@@ -87,17 +63,16 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         {
             var colorPickerButton = d as ColorPickerButton;
             if (colorPickerButton?._isInternalUpdate == true) return;
-            
-            colorPickerButton?.SyncWithColorPicker();
+
+            // No need to sync with ColorPicker since it's now in a separate window
         }
 
         private static void OnSelectedColorIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var colorPickerButton = d as ColorPickerButton;
             if (colorPickerButton?._isInternalUpdate == true) return;
-            
+
             colorPickerButton?.UpdateColorFromIndex();
-            colorPickerButton?.SyncWithColorPicker();
         }
 
         private void UpdateColorFromIndex()
@@ -388,82 +363,64 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
         private void SyncWithColorPicker()
         {
-            if (colorPickerControl != null)
-            {
-                colorPickerControl.SelectedColor = SelectedColor;
-                colorPickerControl.RecentColors = RecentColors;
-                colorPickerControl.SelectedColorIndex = SelectedColorIndex;
-            }
+            // No longer needed as ColorPicker is in a separate window
         }
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
         {
-            if (FindName("ColorPickerPopup") is not Popup popup) return;
-
-            // Sync properties before opening - ensure ColorPicker is loaded first
-            if (colorPickerControl != null)
+            // Create and show color picker window
+            var colorPickerWindow = new ColorPickerWindow();
+            
+            // Get the parent window
+            var parentWindow = Window.GetWindow(this);
+            
+            // Set up event handlers
+            colorPickerWindow.ColorSelected += (s, color) =>
             {
-                // Force update ColorPicker if it's loaded, or wait for its Loaded event
-                if (colorPickerControl.IsLoaded)
-                {
-                    SyncWithColorPicker();
-                }
-                else
-                {
-                    // Handle the case where ColorPicker is not yet loaded
-                    colorPickerControl.Loaded += (s, args) => 
-                    {
-                        SyncWithColorPicker();
-                    };
-                }
-            }
+                // Update selected color and index
+                _isInternalUpdate = true;
+                SelectedColor = color;
+                SelectedColorIndex = colorPickerWindow.SelectedColorIndex;
+                _isInternalUpdate = false;
 
-            // Open popup
-            popup.IsOpen = true;
+                // Thêm màu vào danh sách recent colors
+                RecentColorsManager.AddRecentColor(color);
+
+                // Fire events
+                ColorChanged?.Invoke(this, color);
+            };
+
+            colorPickerWindow.ColorSelectionCancelled += (s, args) =>
+            {
+                // Do nothing when cancelled
+            };
+
+            // Show the color picker window
+            colorPickerWindow.ShowColorPicker(SelectedColor, SelectedColorIndex, parentWindow);
         }
 
         private void ColorPicker_Confirmed(object sender, EventArgs e)
         {
-            if (colorPickerControl == null) return;
-
-            // Use internal update to prevent triggering sync loops
-            _isInternalUpdate = true;
-            
-            // Update selected color and index from ColorPicker
-            SelectedColor = colorPickerControl.SelectedColor;
-            SelectedColorIndex = colorPickerControl.SelectedColorIndex;
-
-            // Sync collections (DefaultColors are always from ACItoRGBLookup, no need to sync)
-            RecentColors = colorPickerControl.RecentColors;
-
-            _isInternalUpdate = false;
-
-            // Close popup
-            if (FindName("ColorPickerPopup") is Popup popup)
-            {
-                popup.IsOpen = false;
-            }
-
-            // Fire events
-            ColorChanged?.Invoke(this, SelectedColor);
-            ColorIndexChanged?.Invoke(this, SelectedColorIndex);
+            // This method is no longer used but kept for compatibility
         }
 
         private void ColorPicker_Cancelled(object sender, EventArgs e)
         {
-            // Close popup without saving changes
-            if (FindName("ColorPickerPopup") is Popup popup)
-            {
-                popup.IsOpen = false;
-            }
+            // This method is no longer used but kept for compatibility
         }
 
         private void ColorPicker_ColorChanged(object sender, Color e)
         {
-            // Optional: Update preview while selecting (can cause performance issues)
-            // Uncomment if you want real-time preview
-            // SelectedColor = e;
-            // ColorChanged?.Invoke(this, e);
+            // This method is no longer used but kept for compatibility
+        }
+
+        public CustomPopupPlacement[] CustomPopupPlacementCallback(Size popupSize, Size targetSize, Point offset)
+        {
+            // This method is no longer used but kept for compatibility
+            return new CustomPopupPlacement[]
+            {
+                new CustomPopupPlacement(new Point(0, targetSize.Height), PopupPrimaryAxis.Vertical)
+            };
         }
     }
 

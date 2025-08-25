@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -29,14 +30,10 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             get { return ACItoRGBLookup().Take(15).Select(t => t.Item2).ToList(); }
         }
 
-        public static readonly DependencyProperty RecentColorsProperty =
-            DependencyProperty.Register("RecentColors", typeof(List<Color>), typeof(ColorPicker),
-                new PropertyMetadata(null, OnRecentColorsChanged));
-
-        public List<Color> RecentColors
+        // RecentColors are now managed by the static RecentColorsManager
+        public IReadOnlyList<Color> RecentColors
         {
-            get { return (List<Color>)GetValue(RecentColorsProperty); }
-            set { SetValue(RecentColorsProperty, value); }
+            get { return RecentColorsManager.RecentColors; }
         }
 
         public static readonly DependencyProperty SelectedColorIndexProperty =
@@ -50,7 +47,6 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         }
 
         public event EventHandler<Color>? ColorChanged;
-        public event EventHandler<int?>? ColorIndexChanged;
         public event EventHandler? Confirmed;
         public event EventHandler? Cancelled;
 
@@ -106,25 +102,39 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             toggleModeButton = FindName("ToggleModeButton") as Button;
             colorIndexUpDown = FindName("ColorIndexUpDown") as HandyControl.Controls.NumericUpDown;
 
+            // Đăng ký event handler cho RecentColorsManager
+            RecentColorsManager.RecentColorsChanged += OnRecentColorsChanged;
+
             Loaded += UserControl_Loaded;
+            Unloaded += UserControl_Unloaded;
         }
 
         private void InitializeDefaultColors()
         {
             // DefaultColors are now always from ACItoRGBLookup, no need to set
-            RecentColors ??= new List<Color>();
+            // RecentColors are managed by the static RecentColorsManager
+        }
+
+        /// <summary>
+        /// Event handler cho khi danh sách recent colors thay đổi
+        /// </summary>
+        private void OnRecentColorsChanged(object? sender, EventArgs e)
+        {
+            // Update UI trên UI thread
+            if (Dispatcher.CheckAccess())
+            {
+                UpdateRecentColorsPanel();
+            }
+            else
+            {
+                Dispatcher.BeginInvoke(new Action(() => UpdateRecentColorsPanel()));
+            }
         }
 
         private static void OnSelectedColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var colorPicker = d as ColorPicker;
             colorPicker?.UpdateFromSelectedColor();
-        }
-
-        private static void OnRecentColorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var colorPicker = d as ColorPicker;
-            colorPicker?.UpdateRecentColorsPanel();
         }
 
         private static void OnSelectedColorIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -276,13 +286,10 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
             recentColorsPanel.Children.Clear();
 
-            if (RecentColors != null)
+            foreach (var color in RecentColors)
             {
-                foreach (var color in RecentColors)
-                {
-                    var button = CreateColorButton(color);
-                    recentColorsPanel.Children.Add(button);
-                }
+                var button = CreateColorButton(color);
+                recentColorsPanel.Children.Add(button);
             }
         }
 
@@ -296,6 +303,9 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
             button.Click += (s, e) =>
             {
+                // Mark event as handled to prevent DataGrid from interfering
+                e.Handled = true;
+                
                 // Find the exact index for this color from ACItoRGBLookup
                 var exactIndex = FindIndexByColor(color);
                 
@@ -327,8 +337,10 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
                     UpdateFromSelectedColor();
                 }
                 
+                // Thêm màu vào danh sách recent colors khi click
+                RecentColorsManager.AddRecentColor(color);
+                
                 ColorChanged?.Invoke(this, color);
-                ColorIndexChanged?.Invoke(this, SelectedColorIndex);
             };
 
             return button;
@@ -336,6 +348,7 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
         private void ColorCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true; // Prevent DataGrid from handling this event
             _isDragging = true;
             if (colorCanvas != null) colorCanvas.CaptureMouse();
             UpdateColorFromCanvas(e.GetPosition(colorCanvas));
@@ -345,12 +358,14 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         {
             if (_isDragging && e.LeftButton == MouseButtonState.Pressed)
             {
+                e.Handled = true; // Prevent DataGrid from handling this event
                 UpdateColorFromCanvas(e.GetPosition(colorCanvas));
             }
         }
 
         private void ColorCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true; // Prevent DataGrid from handling this event
             _isDragging = false;
             if (colorCanvas != null) colorCanvas.ReleaseMouseCapture();
             // Update index after mouse is released
@@ -375,6 +390,7 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
         private void HueCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true; // Prevent DataGrid from handling this event
             _isDragging = true;
             if (hueCanvas != null) hueCanvas.CaptureMouse();
             UpdateHueFromCanvas(e.GetPosition(hueCanvas));
@@ -384,12 +400,14 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         {
             if (_isDragging && e.LeftButton == MouseButtonState.Pressed)
             {
+                e.Handled = true; // Prevent DataGrid from handling this event
                 UpdateHueFromCanvas(e.GetPosition(hueCanvas));
             }
         }
 
         private void HueCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true; // Prevent DataGrid from handling this event
             _isDragging = false;
             if (hueCanvas != null) hueCanvas.ReleaseMouseCapture();
             // Update index after mouse is released
@@ -414,6 +432,7 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
         private void AlphaCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true; // Prevent DataGrid from handling this event
             _isDragging = true;
             if (alphaCanvas != null) alphaCanvas.CaptureMouse();
             UpdateAlphaFromCanvas(e.GetPosition(alphaCanvas));
@@ -423,12 +442,14 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         {
             if (_isDragging && e.LeftButton == MouseButtonState.Pressed)
             {
+                e.Handled = true; // Prevent DataGrid from handling this event
                 UpdateAlphaFromCanvas(e.GetPosition(alphaCanvas));
             }
         }
 
         private void AlphaCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true; // Prevent DataGrid from handling this event
             _isDragging = false;
             if (alphaCanvas != null) alphaCanvas.ReleaseMouseCapture();
             // Update index after mouse is released
@@ -456,6 +477,9 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             if (redTextBox == null || greenTextBox == null || blueTextBox == null || alphaTextBox == null) return;
 
             if (sender is not TextBox textBox) return;
+            
+            // Mark event as handled to prevent DataGrid interference
+            e.Handled = true;
 
             if (byte.TryParse(redTextBox.Text, out byte r) &&
                 byte.TryParse(greenTextBox.Text, out byte g) &&
@@ -479,6 +503,9 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         private void HexTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (_isUpdatingColor || hexTextBox == null) return;
+            
+            // Mark event as handled to prevent DataGrid interference
+            e.Handled = true;
 
             var hex = hexTextBox.Text.TrimStart('#');
             if (hex.Length == 8 && byte.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out byte a) &&
@@ -502,6 +529,7 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
         private void ToggleModeButton_Click(object sender, RoutedEventArgs e)
         {
+            e.Handled = true; // Prevent DataGrid from handling this event
             _isRgbaMode = !_isRgbaMode;
             if (rgbaGrid != null && hexGrid != null)
             {
@@ -513,22 +541,16 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            e.Handled = true; // Prevent DataGrid from handling this event
             Cancelled?.Invoke(this, EventArgs.Empty);
         }
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            // Add to recent colors
-            RecentColors ??= new List<Color>();
-
-            if (!RecentColors.Contains(SelectedColor))
-            {
-                RecentColors.Insert(0, SelectedColor);
-                if (RecentColors.Count > 10) // Limit recent colors
-                    RecentColors.RemoveAt(RecentColors.Count - 1);
-
-                UpdateRecentColorsPanel();
-            }
+            e.Handled = true; // Prevent DataGrid from handling this event
+            
+            // Thêm màu hiện tại vào danh sách recent colors
+            RecentColorsManager.AddRecentColor(SelectedColor);
 
             Confirmed?.Invoke(this, EventArgs.Empty);
         }
@@ -703,7 +725,7 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             // Fire event if index changed
             if (oldIndex != SelectedColorIndex)
             {
-                ColorIndexChanged?.Invoke(this, SelectedColorIndex);
+                // ColorIndexChanged event removed - no longer needed
             }
 
             _isUpdatingColor = false;
@@ -732,6 +754,42 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            // Ensure proper focus and input handling for DataGrid scenarios
+            this.Focusable = true;
+            this.IsTabStop = true;
+            
+            // Make all textboxes focusable and ensure they can receive input
+            if (redTextBox != null)
+            {
+                redTextBox.Focusable = true;
+                redTextBox.IsTabStop = true;
+            }
+            if (greenTextBox != null)
+            {
+                greenTextBox.Focusable = true;
+                greenTextBox.IsTabStop = true;
+            }
+            if (blueTextBox != null)
+            {
+                blueTextBox.Focusable = true;
+                blueTextBox.IsTabStop = true;
+            }
+            if (alphaTextBox != null)
+            {
+                alphaTextBox.Focusable = true;
+                alphaTextBox.IsTabStop = true;
+            }
+            if (hexTextBox != null)
+            {
+                hexTextBox.Focusable = true;
+                hexTextBox.IsTabStop = true;
+            }
+            if (colorIndexUpDown != null)
+            {
+                colorIndexUpDown.Focusable = true;
+                colorIndexUpDown.IsTabStop = true;
+            }
+            
             UpdateDefaultColorsPanel();
             UpdateRecentColorsPanel();
             
@@ -749,6 +807,12 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
                     SelectedColorIndex = 0;
                 }
             }
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            // Cleanup: unsubscribe từ RecentColorsManager event
+            RecentColorsManager.RecentColorsChanged -= OnRecentColorsChanged;
         }
 
         private static List<Tuple<int, Color>> ACItoRGBLookup()
@@ -1016,6 +1080,12 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         private void ColorIndexUpDown_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
         {
             if (_isUpdatingColor || colorIndexUpDown == null) return;
+            
+            // Ensure event handling for DataGrid scenarios
+            if (e is RoutedEventArgs routedE)
+            {
+                routedE.Handled = true;
+            }
 
             var index = (int)e.Info;
             var oldIndex = SelectedColorIndex;
@@ -1043,28 +1113,18 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
                     ColorChanged?.Invoke(this, color.Value);
 
-                    // Fire index changed event if needed
-                    if (oldIndex != SelectedColorIndex)
-                    {
-                        ColorIndexChanged?.Invoke(this, SelectedColorIndex);
-                    }
+                    // ColorIndexChanged event removed - no longer needed
                 }
                 else
                 {
                     SelectedColorIndex = null;
-                    if (oldIndex != SelectedColorIndex)
-                    {
-                        ColorIndexChanged?.Invoke(this, SelectedColorIndex);
-                    }
+                    // ColorIndexChanged event removed - no longer needed
                 }
             }
             else
             {
                 SelectedColorIndex = null;
-                if (oldIndex != SelectedColorIndex)
-                {
-                    ColorIndexChanged?.Invoke(this, SelectedColorIndex);
-                }
+                // ColorIndexChanged event removed - no longer needed
             }
         }
     }

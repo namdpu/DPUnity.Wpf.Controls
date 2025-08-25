@@ -1,0 +1,25 @@
+<Window x:Class="DPUnity.Wpf.Controls.Controls.ColorPickers.ColorPickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.ColorPickers"
+        Title="Color Picker"
+        Width="400"
+        Height="500"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        Topmost="True"
+        Background="Transparent"
+        AllowsTransparency="True">
+    <Border BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="14">
+        <local:ColorPicker x:Name="ColorPickerControl"
+                           Width="400"
+                           Height="500"
+                           Confirmed="ColorPicker_Confirmed"
+                           Cancelled="ColorPicker_Cancelled"
+                           ColorChanged="ColorPicker_ColorChanged" />
+    </Border>
+</Window>

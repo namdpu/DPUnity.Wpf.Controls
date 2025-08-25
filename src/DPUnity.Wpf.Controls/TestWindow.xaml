@@ -1,0 +1,33 @@
+<Window x:Class="DPUnity.Wpf.Controls.TestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Test Notification Centering" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Test Notification Centering" FontSize="20" FontWeight="Bold" 
+                       HorizontalAlignment="Center" Margin="0,0,0,20"/>
+            
+            <Button Name="BtnTestInfo" Content="Test Info Dialog" Margin="5" Padding="10" 
+                    Click="BtnTestInfo_Click"/>
+            
+            <Button Name="BtnTestSuccess" Content="Test Success Dialog" Margin="5" Padding="10"
+                    Click="BtnTestSuccess_Click"/>
+            
+            <Button Name="BtnTestWarning" Content="Test Warning Dialog" Margin="5" Padding="10"
+                    Click="BtnTestWarning_Click"/>
+            
+            <Button Name="BtnTestError" Content="Test Error Dialog" Margin="5" Padding="10"
+                    Click="BtnTestError_Click"/>
+            
+            <Button Name="BtnTestAsk" Content="Test Ask Dialog" Margin="5" Padding="10"
+                    Click="BtnTestAsk_Click"/>
+            
+            <Button Name="BtnTestAll" Content="Test All Types" Margin="5" Padding="10"
+                    Click="BtnTestAll_Click"/>
+            
+            <Button Name="BtnTestWithoutOwner" Content="Test Without Owner" Margin="5" Padding="10"
+                    Click="BtnTestWithoutOwner_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
