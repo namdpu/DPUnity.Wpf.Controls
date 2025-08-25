@@ -1,4 +1,5 @@
 ﻿using DPUnity.Wpf.UI.Controls.PackIcon;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -23,6 +24,32 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
         private double startTop;
         private ResizeDirection resizeDirection;
 
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MONITORINFO
+        {
+            public int cbSize;
+            public RECT rcMonitor;
+            public RECT rcWork;
+            public uint dwFlags;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr MonitorFromPoint(System.Drawing.Point pt, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
+
+        private const uint MONITOR_DEFAULTTONEAREST = 0x00000002;
+
         private enum ResizeDirection
         {
             None,
@@ -41,7 +68,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             try
             {
                 InitializeComponent();
-
                 LoadResourceDictionaries();
 
                 _type = type;
@@ -98,7 +124,14 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                         TitleText.Foreground = FindResource("AskBrush") as Brush;
                         CancelButton.Visibility = Visibility.Visible;
                         OKButton.Visibility = Visibility.Visible;
-                        this.Loaded += (s, e) => OKButton.Focus();
+
+                        // Focus vào button đầu tiên và thiết lập tab navigation
+                        this.Loaded += (s, e) =>
+                        {
+                            OKButton.Focus();
+                            // Đảm bảo keyboard navigation được kích hoạt
+                            KeyboardNavigation.SetTabNavigation(this, KeyboardNavigationMode.Cycle);
+                        };
                         break;
                 }
             }
@@ -107,15 +140,14 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 MessageBox.Show($"Error initializing notification window: {ex.Message}");
             }
         }
-
         private void NotificationWindow_Loaded(object sender, RoutedEventArgs e)
         {
             int newLineCount = _message.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
             double lineHeight = Message.FontSize * 1.5; // Ước tính chiều cao mỗi dòng
 
             double desiredHeight = Math.Min(600, 20 + newLineCount * lineHeight); // Chiều cao tối đa 600, tối thiểu 100
-            double desiredWidth = Math.Max(desiredHeight * 1.4, 5 * _message.Length / newLineCount);
-            while (desiredWidth > 1.6 * desiredHeight)
+            double desiredWidth = Math.Max(desiredHeight * 2, 5 * _message.Length / newLineCount);
+            while (desiredWidth > 2 * desiredHeight)
             {
                 desiredHeight *= 1.05;
                 desiredWidth *= 0.95;
@@ -123,6 +155,66 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             this.Width = Math.Max(300, desiredWidth);
             this.Height = Math.Max(100, desiredHeight);
             this.UpdateLayout(); // Áp dụng cuối, nếu desired height > max, scroll sẽ xuất hiện
+            EnsureProperCentering();
+        }
+
+        private void EnsureProperCentering()
+        {
+            try
+            {
+                // If we have an owner, manually center the window
+                if (this.Owner != null && this.Owner.IsLoaded)
+                {
+                    // Calculate center position relative to owner
+                    double centerX = this.Owner.Left + (this.Owner.Width - this.Width) / 2;
+                    double centerY = this.Owner.Top + (this.Owner.Height - this.Height) / 2;
+
+                    // Get the monitor where the owner is located
+                    System.Drawing.Point ownerCenter = new System.Drawing.Point(
+                        (int)(this.Owner.Left + this.Owner.Width / 2),
+                        (int)(this.Owner.Top + this.Owner.Height / 2)
+                    );
+                    IntPtr hMonitor = MonitorFromPoint(ownerCenter, MONITOR_DEFAULTTONEAREST);
+
+                    MONITORINFO mi = new MONITORINFO();
+                    mi.cbSize = Marshal.SizeOf(mi);
+                    if (GetMonitorInfo(hMonitor, ref mi))
+                    {
+                        RECT workArea = mi.rcWork;
+                        double monitorLeft = workArea.Left;
+                        double monitorTop = workArea.Top;
+                        double monitorWidth = workArea.Right - workArea.Left;
+                        double monitorHeight = workArea.Bottom - workArea.Top;
+
+                        // Clamp to the monitor's working area
+                        double minX = monitorLeft;
+                        double minY = monitorTop;
+                        double maxX = monitorLeft + monitorWidth - this.Width;
+                        double maxY = monitorTop + monitorHeight - this.Height;
+
+                        centerX = Math.Max(minX, Math.Min(maxX, centerX));
+                        centerY = Math.Max(minY, Math.Min(maxY, centerY));
+                    }
+                    // If GetMonitorInfo fails, fallback to primary screen (rare case)
+                    else
+                    {
+                        double maxX = SystemParameters.PrimaryScreenWidth - this.Width;
+                        double maxY = SystemParameters.PrimaryScreenHeight - this.Height;
+                        double minX = 0;
+                        double minY = 0;
+
+                        centerX = Math.Max(minX, Math.Min(maxX, centerX));
+                        centerY = Math.Max(minY, Math.Min(maxY, centerY));
+                    }
+
+                    this.Left = centerX;
+                    this.Top = centerY;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to manually center notification window: {ex.Message}");
+            }
         }
 
         private static ResourceDictionary DPUDict { get; } = new ResourceDictionary
@@ -297,6 +389,68 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                         else
                         {
                             OKButton_Click(OKButton, new RoutedEventArgs());
+                        }
+                        e.Handled = true;
+                        break;
+                    case Key.Tab:
+                        // Xử lý tab navigation với hiệu ứng visual
+                        if (Keyboard.Modifiers == ModifierKeys.Shift)
+                        {
+                            // Shift+Tab: di chuyển ngược lại
+                            if (OKButton.IsFocused)
+                            {
+                                CancelButton.Focus();
+                                e.Handled = true;
+                            }
+                            else if (CancelButton.IsFocused)
+                            {
+                                OKButton.Focus();
+                                e.Handled = true;
+                            }
+                        }
+                        else
+                        {
+                            // Tab: di chuyển tiến lên
+                            if (OKButton.IsFocused)
+                            {
+                                CancelButton.Focus();
+                                e.Handled = true;
+                            }
+                            else if (CancelButton.IsFocused)
+                            {
+                                OKButton.Focus();
+                                e.Handled = true;
+                            }
+                            else
+                            {
+                                OKButton.Focus();
+                                e.Handled = true;
+                            }
+                        }
+                        break;
+                    case Key.Left:
+                    case Key.Up:
+                        // Di chuyển focus sang button trước đó
+                        if (CancelButton.IsFocused)
+                        {
+                            OKButton.Focus();
+                        }
+                        else
+                        {
+                            CancelButton.Focus();
+                        }
+                        e.Handled = true;
+                        break;
+                    case Key.Right:
+                    case Key.Down:
+                        // Di chuyển focus sang button tiếp theo
+                        if (OKButton.IsFocused)
+                        {
+                            CancelButton.Focus();
+                        }
+                        else
+                        {
+                            OKButton.Focus();
                         }
                         e.Handled = true;
                         break;

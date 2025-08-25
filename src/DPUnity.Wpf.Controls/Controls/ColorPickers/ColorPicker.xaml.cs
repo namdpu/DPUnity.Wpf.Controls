@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -29,16 +30,10 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             get { return ACItoRGBLookup().Take(15).Select(t => t.Item2).ToList(); }
         }
 
-        // RecentColors are managed internally by the ColorPicker
-        private List<Color> _recentColors = new List<Color>();
-        public List<Color> RecentColors
+        // RecentColors are now managed by the static RecentColorsManager
+        public IReadOnlyList<Color> RecentColors
         {
-            get { return _recentColors; }
-            private set 
-            { 
-                _recentColors = value ?? new List<Color>();
-                UpdateRecentColorsPanel();
-            }
+            get { return RecentColorsManager.RecentColors; }
         }
 
         public static readonly DependencyProperty SelectedColorIndexProperty =
@@ -107,13 +102,33 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             toggleModeButton = FindName("ToggleModeButton") as Button;
             colorIndexUpDown = FindName("ColorIndexUpDown") as HandyControl.Controls.NumericUpDown;
 
+            // Đăng ký event handler cho RecentColorsManager
+            RecentColorsManager.RecentColorsChanged += OnRecentColorsChanged;
+
             Loaded += UserControl_Loaded;
+            Unloaded += UserControl_Unloaded;
         }
 
         private void InitializeDefaultColors()
         {
             // DefaultColors are now always from ACItoRGBLookup, no need to set
-            // RecentColors are managed internally
+            // RecentColors are managed by the static RecentColorsManager
+        }
+
+        /// <summary>
+        /// Event handler cho khi danh sách recent colors thay đổi
+        /// </summary>
+        private void OnRecentColorsChanged(object? sender, EventArgs e)
+        {
+            // Update UI trên UI thread
+            if (Dispatcher.CheckAccess())
+            {
+                UpdateRecentColorsPanel();
+            }
+            else
+            {
+                Dispatcher.BeginInvoke(new Action(() => UpdateRecentColorsPanel()));
+            }
         }
 
         private static void OnSelectedColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -321,6 +336,9 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
                     SelectedColor = color;
                     UpdateFromSelectedColor();
                 }
+                
+                // Thêm màu vào danh sách recent colors khi click
+                RecentColorsManager.AddRecentColor(color);
                 
                 ColorChanged?.Invoke(this, color);
             };
@@ -530,15 +548,9 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true; // Prevent DataGrid from handling this event
-            // Add to recent colors
-            if (!RecentColors.Contains(SelectedColor))
-            {
-                RecentColors.Insert(0, SelectedColor);
-                if (RecentColors.Count > 10) // Limit recent colors
-                    RecentColors.RemoveAt(RecentColors.Count - 1);
-
-                UpdateRecentColorsPanel();
-            }
+            
+            // Thêm màu hiện tại vào danh sách recent colors
+            RecentColorsManager.AddRecentColor(SelectedColor);
 
             Confirmed?.Invoke(this, EventArgs.Empty);
         }
@@ -795,6 +807,12 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
                     SelectedColorIndex = 0;
                 }
             }
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            // Cleanup: unsubscribe từ RecentColorsManager event
+            RecentColorsManager.RecentColorsChanged -= OnRecentColorsChanged;
         }
 
         private static List<Tuple<int, Color>> ACItoRGBLookup()

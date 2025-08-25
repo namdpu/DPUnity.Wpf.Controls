@@ -226,30 +226,51 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
 
                 // Hierarchy of owner windows:
                 // 1. If owner is provided, use it.
-                // 2. If no owner is provided, find the active window that is visible and not the current window.
-                // 3. If no active window is found, use the main application window's handle if available.
-                var wd = owner != window ? owner : Application.Current.Windows
-                    .OfType<System.Windows.Window>()
-                    .FirstOrDefault(w => w.IsActive && w.Visibility == Visibility.Visible && w != window)
-                    ?? null;
-
-                if (wd != null)
+                // 2. If no owner is provided, find the active window that is visible.
+                // 3. If no active window is found, use the main application window.
+                // 4. If no main window, use the application window handle if available.
+                if (owner is not null && owner.IsLoaded && owner.Visibility == Visibility.Visible && owner != window)
                 {
-                    window.Owner = wd;
+                    window.Owner = owner;
                 }
                 else
                 {
-                    var hwnd = AppHwnd.Instance.Hwnd;
-                    if (hwnd is not null)
+                    var wd = Application.Current.Windows
+                        .OfType<System.Windows.Window>()
+                        .FirstOrDefault(w => w.IsActive && w.Visibility == Visibility.Visible)
+                        ?? Application.Current.MainWindow;
+
+                    if (wd != null && wd.IsLoaded && wd.Visibility == Visibility.Visible)
                     {
-                        var helper = new WindowInteropHelper(window)
-                        {
-                            Owner = (IntPtr)hwnd
-                        };
+                        window.Owner = wd;
+                        // Ensure CenterOwner is used when owner is set
+                        window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     }
-                    else // If hwnd is not set, default to center screen
+                    else
                     {
-                        window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                        // Try to use the application window handle if available
+                        var hwnd = AppHwnd.Instance.Hwnd;
+                        if (hwnd is not null)
+                        {
+                            try
+                            {
+                                var helper = new WindowInteropHelper(window)
+                                {
+                                    Owner = (IntPtr)hwnd
+                                };
+                                // When using WindowInteropHelper, we need to set CenterOwner
+                                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                            }
+                            catch
+                            {
+                                // If setting owner via handle fails, fallback to center screen
+                                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                            }
+                        }
+                        else // If hwnd is not set, default to center screen
+                        {
+                            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                        }
                     }
                 }
                 window.ShowDialog();
@@ -265,21 +286,43 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
 
         private static bool? ShowCmdNotification(string message, NotificationType type, string? title = null)
         {
-            var window = new Views.NotificationWindow(message, type, title);
-            var hwnd = AppHwnd.Instance.Hwnd;
-            if (hwnd is not null)
+            Views.NotificationWindow? window = null;
+            try
             {
-                var helper = new WindowInteropHelper(window)
+                window = new(message, type, title);
+
+                // Try to use the application window handle if available
+                var hwnd = AppHwnd.Instance.Hwnd;
+                if (hwnd is not null)
                 {
-                    Owner = (IntPtr)hwnd
-                };
+                    try
+                    {
+                        var helper = new WindowInteropHelper(window)
+                        {
+                            Owner = (IntPtr)hwnd
+                        };
+                        // When using WindowInteropHelper, we need to set CenterOwner
+                        window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    }
+                    catch
+                    {
+                        // If setting owner via handle fails, fallback to center screen
+                        window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    }
+                }
+                else
+                {
+                    window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                }
+                window.ShowDialog();
+                return window.DialogResult;
             }
-            else
+            catch (Exception ex)
             {
-                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                MessageBox.Show($"Error showing notification: {ex.Message}");
+                window?.Close();
+                return null;
             }
-            window.ShowDialog();
-            return window.DialogResult;
         }
         #endregion
 

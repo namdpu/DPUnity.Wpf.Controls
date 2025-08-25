@@ -136,7 +136,7 @@ namespace DPUnity.Wpf.Controls.Controls.ProjectSettingsMenus
                 var name = nameProperty.GetValue(item)?.ToString();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    return name.IndexOf(SearchText, System.StringComparison.OrdinalIgnoreCase) >= 0;
+                    return name.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0;
                 }
             }
 

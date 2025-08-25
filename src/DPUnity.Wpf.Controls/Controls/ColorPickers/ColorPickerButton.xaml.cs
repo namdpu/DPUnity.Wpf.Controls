@@ -383,6 +383,9 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
                 SelectedColorIndex = colorPickerWindow.SelectedColorIndex;
                 _isInternalUpdate = false;
 
+                // Thêm màu vào danh sách recent colors
+                RecentColorsManager.AddRecentColor(color);
+
                 // Fire events
                 ColorChanged?.Invoke(this, color);
             };

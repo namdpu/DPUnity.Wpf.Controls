@@ -23,6 +23,120 @@
         <Color x:Key="AskColor">#d9a3d2</Color>
         <SolidColorBrush x:Key="AskBrush"
                          Color="{DynamicResource AskColor}" />
+        
+        <!-- Style cho OK Button với focus highlighting -->
+        <Style x:Key="NotificationOKButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="0" Opacity="0" Color="{DynamicResource PrimaryColor}"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0" BlurRadius="8" Color="{DynamicResource PrimaryColor}" Opacity="0.6"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                </Trigger>
+                <Trigger Property="IsFocused"
+                         Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="{DynamicResource PrimaryColor}" Opacity="0.8"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused"
+                         Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Style cho Cancel Button với focus highlighting -->
+        <Style x:Key="NotificationCancelButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonDanger}">
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="0" Opacity="0" Color="{DynamicResource DangerColor}"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0" BlurRadius="8" Color="{DynamicResource DangerColor}" Opacity="0.6"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsFocused"
+                         Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="{DynamicResource DangerColor}" Opacity="0.8"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused"
+                         Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Border x:Name="WindowBorder"
             CornerRadius="15"
@@ -127,14 +241,14 @@
                         Width="80"
                         Content="OK"
                         Visibility="Collapsed"
-                        Style="{DynamicResource ButtonPrimary}"
+                        Style="{StaticResource NotificationOKButtonStyle}"
                         Click="OKButton_Click"
                         IsDefault="True"
                         TabIndex="0" />
                 <Button x:Name="CancelButton"
                         Width="80"
                         Content="No"
-                        Style="{DynamicResource ButtonDanger}"
+                        Style="{StaticResource NotificationCancelButtonStyle}"
                         Visibility="Collapsed"
                         Click="CancelButton_Click"
                         IsCancel="True"

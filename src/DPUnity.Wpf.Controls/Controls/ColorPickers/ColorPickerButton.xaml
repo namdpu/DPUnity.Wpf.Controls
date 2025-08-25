@@ -13,7 +13,7 @@
             Click="MainButton_Click"
             BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="1"
-            Background="{DynamicResource RegionBrush}">
+            Background="Transparent">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="14" />
