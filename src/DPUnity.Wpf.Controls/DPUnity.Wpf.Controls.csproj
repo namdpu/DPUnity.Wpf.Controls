@@ -6,7 +6,7 @@
 		<UseWPF>true</UseWPF>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>1.0.13</Version>
+		<Version>1.0.14</Version>
 		<PackageId>DPUnity.Wpf.Controls</PackageId>
 		<Title>DPUnity WPF Controls</Title>
 		<Description>Custom WPF controls and components for enhanced user interface development</Description>
@@ -16,11 +16,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Behaviors\" />
+	  <Compile Remove="Behaviors\NewFolder\**" />
+	  <EmbeddedResource Remove="Behaviors\NewFolder\**" />
+	  <None Remove="Behaviors\NewFolder\**" />
+	  <Page Remove="Behaviors\NewFolder\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.11" />
+	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.12" />
 	</ItemGroup>
 
 

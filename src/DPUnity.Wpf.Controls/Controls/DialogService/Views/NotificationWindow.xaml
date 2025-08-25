@@ -7,21 +7,25 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:icons="https://dpunity.com/dev/wpf/ui/controls/packicon"
         mc:Ignorable="d"
-        Width="350"
+        Width="300"
+        Height="Auto"
         WindowStyle="None"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
         Background="Transparent"
-        SizeToContent="Height"
         Topmost="True"
-        MaxHeight="200"
-        MinHeight="200">
+        MinHeight="100"
+        MaxHeight="600"
+        MinWidth="300"
+        MaxWidth="1000"
+        ResizeMode="NoResize">
     <Window.Resources>
         <Color x:Key="AskColor">#d9a3d2</Color>
         <SolidColorBrush x:Key="AskBrush"
                          Color="{DynamicResource AskColor}" />
     </Window.Resources>
-    <Border x:Name="WindowBorder" CornerRadius="15"
+    <Border x:Name="WindowBorder"
+            CornerRadius="15"
             BorderThickness="1"
             Background="{DynamicResource SecondaryRegionBrush}"
             BorderBrush="{DynamicResource InfoBrush}"
@@ -105,17 +109,17 @@
                 <ScrollViewer Margin="30 0 10 0"
                               VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled">
-                    <TextBlock x:Name="Message"
-                               Margin="0 0 15 0"
-                               Text="This is a notification message."
-                               TextWrapping="Wrap"
-                               HorizontalAlignment="Left"
-                               FontSize="14"
-                               Foreground="{DynamicResource SecondaryTextBrush}" />
+                    <TextBox x:Name="Message"
+                             Margin="0 0 15 0"
+                             Text="This is a notification message."
+                             Style="{DynamicResource SimulateTextBlockForTextBoxStyle}"
+                             FontSize="14"
+                             Foreground="{DynamicResource SecondaryTextBrush}" />
                 </ScrollViewer>
             </Grid>
             <hc:UniformSpacingPanel Orientation="Horizontal"
                                     Grid.Row="2"
+                                    KeyboardNavigation.TabNavigation="Cycle"
                                     HorizontalAlignment="Right"
                                     Spacing="10"
                                     Margin="0 0 18 15">
@@ -124,14 +128,45 @@
                         Content="OK"
                         Visibility="Collapsed"
                         Style="{DynamicResource ButtonPrimary}"
-                        Click="OKButton_Click" />
+                        Click="OKButton_Click"
+                        IsDefault="True"
+                        TabIndex="0" />
                 <Button x:Name="CancelButton"
                         Width="80"
                         Content="No"
                         Style="{DynamicResource ButtonDanger}"
                         Visibility="Collapsed"
-                        Click="CancelButton_Click" />
+                        Click="CancelButton_Click"
+                        IsCancel="True"
+                        TabIndex="1" />
             </hc:UniformSpacingPanel>
+
+            <!-- Bottom edge -->
+            <Rectangle x:Name="BottomResize"
+                       Height="5"
+                       VerticalAlignment="Bottom"
+                       Fill="Transparent"
+                       Cursor="SizeNS"
+                       MouseLeftButtonDown="Resize_MouseLeftButtonDown"
+                       Grid.RowSpan="3" />
+            <Rectangle x:Name="RightResize"
+                       Width="5"
+                       HorizontalAlignment="Right"
+                       Fill="Transparent"
+                       Cursor="SizeWE"
+                       MouseLeftButtonDown="Resize_MouseLeftButtonDown"
+                       Grid.RowSpan="3" />
+            <!-- Bottom-Right corner -->
+            <Rectangle x:Name="BottomRightResize"
+                       Width="5"
+                       Height="5"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom"
+                       Fill="Transparent"
+                       Cursor="SizeNWSE"
+                       MouseLeftButtonDown="Resize_MouseLeftButtonDown"
+                       Grid.RowSpan="3" />
+
         </Grid>
     </Border>
 </Window>

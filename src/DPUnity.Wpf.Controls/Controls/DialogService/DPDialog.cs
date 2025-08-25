@@ -228,7 +228,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                 // 1. If owner is provided, use it.
                 // 2. If no owner is provided, find the active window that is visible and not the current window.
                 // 3. If no active window is found, use the main application window's handle if available.
-                var wd = owner ?? Application.Current.Windows
+                var wd = owner != window ? owner : Application.Current.Windows
                     .OfType<System.Windows.Window>()
                     .FirstOrDefault(w => w.IsActive && w.Visibility == Visibility.Visible && w != window)
                     ?? null;
