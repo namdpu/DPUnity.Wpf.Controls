@@ -67,8 +67,8 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
         {
             try
             {
-                InitializeComponent();
                 LoadResourceDictionaries();
+                InitializeComponent();
 
                 _type = type;
                 _message = message;
