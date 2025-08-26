@@ -22,7 +22,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
         private double startLeft;
         private double startTop;
         private ResizeDirection resizeDirection;
-
         [StructLayout(LayoutKind.Sequential)]
         private struct RECT
         {
@@ -31,7 +30,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             public int Right;
             public int Bottom;
         }
-
         [StructLayout(LayoutKind.Sequential)]
         private struct MONITORINFO
         {
@@ -40,15 +38,11 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             public RECT rcWork;
             public uint dwFlags;
         }
-
         [DllImport("user32.dll")]
         private static extern IntPtr MonitorFromPoint(System.Drawing.Point pt, uint dwFlags);
-
         [DllImport("user32.dll")]
         private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
-
         private const uint MONITOR_DEFAULTTONEAREST = 0x00000002;
-
         private enum ResizeDirection
         {
             None,
@@ -61,7 +55,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             BottomLeft,
             BottomRight
         }
-
         public NotificationWindow(string message, NotificationType type, string? title = null)
         {
             try
@@ -80,7 +73,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 MessageBox.Show($"Error initializing notification window: {ex.Message}");
             }
         }
-
         private void InitializeBasicUI()
         {
             Message.Text = _message;
@@ -102,11 +94,14 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 desiredHeight *= 1.05;
                 desiredWidth *= 0.95;
             }
+            if (_type == NotificationType.Ask)
+            {
+                desiredHeight += 100; // Tăng thêm chiều cao 100 nếu type là Ask do có nút Yes/No
+            }
             this.Width = Math.Max(300, desiredWidth);
             this.Height = Math.Max(100, desiredHeight);
             this.UpdateLayout(); // Áp dụng cuối, nếu desired height > max, scroll sẽ xuất hiện
         }
-
         private void ConfigureByType(string? title)
         {
             switch (_type)
@@ -158,10 +153,8 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                     break;
             }
         }
-
         [DllImport("user32.dll")]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
-
         private void EnsureWindowCenter()
         {
             var helper = new WindowInteropHelper(this);
@@ -194,7 +187,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 CenterToScreen();
             }
         }
-
         private void EnsureWindowInScreenBounds()
         {
             // Lấy monitor gần nhất
@@ -208,7 +200,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 this.Top = Math.Max(mi.rcWork.Top, Math.Min(this.Top, mi.rcWork.Bottom - this.Height));
             }
         }
-
         private void CenterToScreen()
         {
             var screenWidth = SystemParameters.PrimaryScreenWidth;
@@ -216,17 +207,14 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             this.Left = (screenWidth - this.Width) / 2;
             this.Top = (screenHeight - this.Height) / 2;
         }
-
         private static ResourceDictionary DPUDict { get; } = new ResourceDictionary
         {
             Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml")
         };
-
         private static ResourceDictionary HandyDict { get; } = new ResourceDictionary
         {
             Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/HandyResources.xaml")
         };
-
         private void LoadResourceDictionaries()
         {
             try
@@ -240,19 +228,16 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 MessageBox.Show($"Warning: Could not load resource dictionaries: {ex.Message}");
             }
         }
-
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
             this.Close();
         }
-
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
             this.Close();
         }
-
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             if (_type == NotificationType.Ask)
@@ -265,7 +250,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             }
             this.Close();
         }
-
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -273,7 +257,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 this.DragMove();
             }
         }
-
         private void Resize_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
@@ -304,7 +287,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 e.Handled = true;
             }
         }
-
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             if (isResizing)
@@ -351,7 +333,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 }
             }
         }
-
         private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (isResizing)
@@ -361,7 +342,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 resizeDirection = ResizeDirection.None;
             }
         }
-
         private void NotificationWindow_KeyDown(object sender, KeyEventArgs e)
         {
             if (_type == NotificationType.Ask)
@@ -466,7 +446,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 }
             }
         }
-
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             if (!this.DialogResult.HasValue)

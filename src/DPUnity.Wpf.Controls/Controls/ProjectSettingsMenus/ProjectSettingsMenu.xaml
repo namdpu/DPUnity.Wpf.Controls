@@ -17,112 +17,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <d:ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="ListViewWithoutBorder"
-                   TargetType="ListView">
-                <Setter Property="BorderThickness"
-                        Value="0" />
-                <Setter Property="BorderBrush"
-                        Value="{DynamicResource BorderBrush}" />
-                <Setter Property="Background"
-                        Value="{DynamicResource SecondaryRegionBrush}" />
-                <Setter Property="Margin"
-                        Value="0" />
-                <Setter Property="Padding"
-                        Value="0" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ListView">
-                            <Border x:Name="Bd"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    Padding="0"
-                                    SnapsToDevicePixels="true"
-                                    CornerRadius="3">
-                                <ScrollViewer Focusable="false"
-                                              Padding="0"
-                                              HorizontalScrollBarVisibility="Disabled">
-                                    <ItemsPresenter />
-                                </ScrollViewer>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Resources>
-                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                        <Setter Property="Visibility"
-                                Value="Collapsed" />
-                    </Style>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment"
-                                Value="Stretch" />
-                        <Setter Property="Height"
-                                Value="50" />
-                        <Setter Property="ToolTip">
-                            <Setter.Value>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding Name, StringFormat='Name: {0}'}"
-                                               FontWeight="Bold" />
-                                    <TextBlock Text="{Binding CreatedBy, StringFormat='Người tạo: {0}'}" />
-                                    <TextBlock Text="{Binding CreatedDate, StringFormat='Ngày tạo: {0:dd/MM/yyyy HH:mm:ss}', TargetNullValue='None'}" />
-                                    <TextBlock Text="{Binding UpdatedBy, StringFormat='Cập nhật: {0}'}" />
-                                    <TextBlock Text="{Binding UpdatedAt, StringFormat='Ngày cập nhật: {0:dd/MM/yyyy HH:mm:ss}', TargetNullValue='None'}" />
-                                </StackPanel>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                    <Border x:Name="Bd"
-                                            SnapsToDevicePixels="true"
-                                            BorderBrush="{DynamicResource BorderBrush}"
-                                            BorderThickness="0 0.5 0 0.5"
-                                            Background="{TemplateBinding Background}"
-                                            Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                          Content="{TemplateBinding Content}"
-                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver"
-                                                 Value="true">
-                                            <Setter Property="Background"
-                                                    TargetName="Bd"
-                                                    Value="{DynamicResource ThirdlyRegionBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsSelected"
-                                                 Value="true">
-                                            <Setter Property="Background"
-                                                    TargetName="Bd"
-                                                    Value="{DynamicResource RegionBrush}" />
-                                            <Setter Property="Foreground"
-                                                    Value="{DynamicResource PrimaryBrush}" />
-                                        </Trigger>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsSelected"
-                                                           Value="true" />
-                                                <Condition Property="Selector.IsSelectionActive"
-                                                           Value="false" />
-                                            </MultiTrigger.Conditions>
-                                            <Setter Property="Background"
-                                                    TargetName="Bd"
-                                                    Value="{DynamicResource RegionBrush}" />
-                                        </MultiTrigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsChecked}"
-                                         Value="True">
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Style.Resources>
-            </Style>
             <converters:BooleanToHiddenVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" />
             <local:StringToHasValueConverter x:Key="StringToHasValueConverter" />
             <SolidColorBrush x:Key="DarkPrimaryBrush"
@@ -151,7 +45,6 @@
                     <Button Style="{DynamicResource DP_IconButtonStyle}"
                             Content="Plus"
                             Tag="Plus"
-                            Padding="3 3 5 3"
                             Margin="3"
                             HorizontalAlignment="Left"
                             Command="{Binding AddNewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
