@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using static DPUnity.Wpf.Controls.Controls.DialogService.DPDialog;
-
 namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
 {
     /// <summary>
@@ -15,7 +15,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
         private NotificationType _type;
         private string _message = string.Empty;
         public new bool? DialogResult { get; set; } = null;
-
         private bool isResizing = false;
         private Point startPos;
         private double startWidth;
@@ -69,82 +68,33 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             {
                 LoadResourceDictionaries();
                 InitializeComponent();
-
                 _type = type;
                 _message = message;
-                Message.Text = message;
-                Message.TextWrapping = TextWrapping.Wrap; // Đảm bảo wrap để tính height linh hoạt
-
-                // Add keyboard event handler
-                this.KeyDown += NotificationWindow_KeyDown;
-
-                // Add resize event handlers
-                this.MouseLeftButtonUp += Window_MouseLeftButtonUp;
-                this.MouseMove += Window_MouseMove;
-
-                // Add loaded event for dynamic sizing
-                this.Loaded += NotificationWindow_Loaded;
-
-                switch (type)
-                {
-                    case NotificationType.Information:
-                        NotificationIcon.Kind = PackIconKind.Information;
-                        WindowBorder.BorderBrush = FindResource("InfoBrush") as Brush;
-                        NotificationIcon.Foreground = FindResource("InfoBrush") as Brush;
-                        TitleText.Text = title ?? "Thông tin";
-                        TitleText.Foreground = FindResource("InfoBrush") as Brush;
-                        break;
-                    case NotificationType.Success:
-                        NotificationIcon.Kind = PackIconKind.CheckCircle;
-                        WindowBorder.BorderBrush = FindResource("SuccessBrush") as Brush;
-                        NotificationIcon.Foreground = FindResource("PrimaryBrush") as Brush;
-                        TitleText.Text = title ?? "Thành công";
-                        TitleText.Foreground = FindResource("PrimaryBrush") as Brush;
-                        break;
-                    case NotificationType.Error:
-                        NotificationIcon.Kind = PackIconKind.CloseCircle;
-                        WindowBorder.BorderBrush = FindResource("DangerBrush") as Brush;
-                        NotificationIcon.Foreground = FindResource("DangerBrush") as Brush;
-                        TitleText.Text = title ?? "Lỗi";
-                        TitleText.Foreground = FindResource("DangerBrush") as Brush;
-                        break;
-                    case NotificationType.Warning:
-                        NotificationIcon.Kind = PackIconKind.AlertCircle;
-                        WindowBorder.BorderBrush = FindResource("WarningBrush") as Brush;
-                        NotificationIcon.Foreground = FindResource("WarningBrush") as Brush;
-                        TitleText.Text = title ?? "Cảnh báo";
-                        TitleText.Foreground = FindResource("WarningBrush") as Brush;
-                        break;
-                    case NotificationType.Ask:
-                        OKButton.Content = "Yes";
-                        NotificationIcon.Kind = PackIconKind.HelpCircle;
-                        WindowBorder.BorderBrush = FindResource("AskBrush") as Brush;
-                        NotificationIcon.Foreground = FindResource("AskBrush") as Brush;
-                        TitleText.Text = title ?? "Xác nhận";
-                        TitleText.Foreground = FindResource("AskBrush") as Brush;
-                        CancelButton.Visibility = Visibility.Visible;
-                        OKButton.Visibility = Visibility.Visible;
-
-                        // Focus vào button đầu tiên và thiết lập tab navigation
-                        this.Loaded += (s, e) =>
-                        {
-                            OKButton.Focus();
-                            // Đảm bảo keyboard navigation được kích hoạt
-                            KeyboardNavigation.SetTabNavigation(this, KeyboardNavigationMode.Cycle);
-                        };
-                        break;
-                }
+                InitializeBasicUI();
+                CalculateAndSetSize();
+                EnsureWindowCenter();
+                ConfigureByType(title);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error initializing notification window: {ex.Message}");
             }
         }
-        private void NotificationWindow_Loaded(object sender, RoutedEventArgs e)
+
+        private void InitializeBasicUI()
+        {
+            Message.Text = _message;
+            Message.TextWrapping = TextWrapping.Wrap; // Đảm bảo wrap để tính height linh hoạt
+                                                      // Add keyboard event handler
+            this.KeyDown += NotificationWindow_KeyDown;
+            // Add resize event handlers
+            this.MouseLeftButtonUp += Window_MouseLeftButtonUp;
+            this.MouseMove += Window_MouseMove;
+        }
+        private void CalculateAndSetSize()
         {
             int newLineCount = _message.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
             double lineHeight = Message.FontSize * 1.5; // Ước tính chiều cao mỗi dòng
-
             double desiredHeight = Math.Min(600, 20 + newLineCount * lineHeight); // Chiều cao tối đa 600, tối thiểu 100
             double desiredWidth = Math.Max(desiredHeight * 2, 5 * _message.Length / newLineCount);
             while (desiredWidth > 2 * desiredHeight)
@@ -155,72 +105,123 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             this.Width = Math.Max(300, desiredWidth);
             this.Height = Math.Max(100, desiredHeight);
             this.UpdateLayout(); // Áp dụng cuối, nếu desired height > max, scroll sẽ xuất hiện
-            EnsureProperCentering();
         }
 
-        private void EnsureProperCentering()
+        private void ConfigureByType(string? title)
         {
-            try
+            switch (_type)
             {
-                // If we have an owner, manually center the window
-                if (this.Owner != null && this.Owner.IsLoaded)
+                case NotificationType.Information:
+                    NotificationIcon.Kind = PackIconKind.Information;
+                    WindowBorder.BorderBrush = FindResource("InfoBrush") as Brush;
+                    NotificationIcon.Foreground = FindResource("InfoBrush") as Brush;
+                    TitleText.Text = title ?? "Thông tin";
+                    TitleText.Foreground = FindResource("InfoBrush") as Brush;
+                    break;
+                case NotificationType.Success:
+                    NotificationIcon.Kind = PackIconKind.CheckCircle;
+                    WindowBorder.BorderBrush = FindResource("SuccessBrush") as Brush;
+                    NotificationIcon.Foreground = FindResource("PrimaryBrush") as Brush;
+                    TitleText.Text = title ?? "Thành công";
+                    TitleText.Foreground = FindResource("PrimaryBrush") as Brush;
+                    break;
+                case NotificationType.Error:
+                    NotificationIcon.Kind = PackIconKind.CloseCircle;
+                    WindowBorder.BorderBrush = FindResource("DangerBrush") as Brush;
+                    NotificationIcon.Foreground = FindResource("DangerBrush") as Brush;
+                    TitleText.Text = title ?? "Lỗi";
+                    TitleText.Foreground = FindResource("DangerBrush") as Brush;
+                    break;
+                case NotificationType.Warning:
+                    NotificationIcon.Kind = PackIconKind.AlertCircle;
+                    WindowBorder.BorderBrush = FindResource("WarningBrush") as Brush;
+                    NotificationIcon.Foreground = FindResource("WarningBrush") as Brush;
+                    TitleText.Text = title ?? "Cảnh báo";
+                    TitleText.Foreground = FindResource("WarningBrush") as Brush;
+                    break;
+                case NotificationType.Ask:
+                    OKButton.Content = "Yes";
+                    NotificationIcon.Kind = PackIconKind.HelpCircle;
+                    WindowBorder.BorderBrush = FindResource("AskBrush") as Brush;
+                    NotificationIcon.Foreground = FindResource("AskBrush") as Brush;
+                    TitleText.Text = title ?? "Xác nhận";
+                    TitleText.Foreground = FindResource("AskBrush") as Brush;
+                    CancelButton.Visibility = Visibility.Visible;
+                    OKButton.Visibility = Visibility.Visible;
+                    // Focus vào button đầu tiên và thiết lập tab navigation (sử dụng Dispatcher để trì hoãn)
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        OKButton.Focus();
+                        // Đảm bảo keyboard navigation được kích hoạt
+                        KeyboardNavigation.SetTabNavigation(this, KeyboardNavigationMode.Cycle);
+                    }));
+                    break;
+            }
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        private void EnsureWindowCenter()
+        {
+            var helper = new WindowInteropHelper(this);
+            if (this.Owner != null)
+            {
+                this.Left = this.Owner.Left + (this.Owner.Width - this.Width) / 2;
+                this.Top = this.Owner.Top + (this.Owner.Height - this.Height) / 2;
+            }
+            else if (helper.Owner != IntPtr.Zero)
+            {
+                // Owner là native handle (Win32)
+                if (GetWindowRect(helper.Owner, out RECT ownerRect))
                 {
-                    // Calculate center position relative to owner
-                    double centerX = this.Owner.Left + (this.Owner.Width - this.Width) / 2;
-                    double centerY = this.Owner.Top + (this.Owner.Height - this.Height) / 2;
-
-                    // Get the monitor where the owner is located
-                    System.Drawing.Point ownerCenter = new System.Drawing.Point(
-                        (int)(this.Owner.Left + this.Owner.Width / 2),
-                        (int)(this.Owner.Top + this.Owner.Height / 2)
-                    );
-                    IntPtr hMonitor = MonitorFromPoint(ownerCenter, MONITOR_DEFAULTTONEAREST);
-
-                    MONITORINFO mi = new MONITORINFO();
-                    mi.cbSize = Marshal.SizeOf(mi);
-                    if (GetMonitorInfo(hMonitor, ref mi))
-                    {
-                        RECT workArea = mi.rcWork;
-                        double monitorLeft = workArea.Left;
-                        double monitorTop = workArea.Top;
-                        double monitorWidth = workArea.Right - workArea.Left;
-                        double monitorHeight = workArea.Bottom - workArea.Top;
-
-                        // Clamp to the monitor's working area
-                        double minX = monitorLeft;
-                        double minY = monitorTop;
-                        double maxX = monitorLeft + monitorWidth - this.Width;
-                        double maxY = monitorTop + monitorHeight - this.Height;
-
-                        centerX = Math.Max(minX, Math.Min(maxX, centerX));
-                        centerY = Math.Max(minY, Math.Min(maxY, centerY));
-                    }
-                    // If GetMonitorInfo fails, fallback to primary screen (rare case)
-                    else
-                    {
-                        double maxX = SystemParameters.PrimaryScreenWidth - this.Width;
-                        double maxY = SystemParameters.PrimaryScreenHeight - this.Height;
-                        double minX = 0;
-                        double minY = 0;
-
-                        centerX = Math.Max(minX, Math.Min(maxX, centerX));
-                        centerY = Math.Max(minY, Math.Min(maxY, centerY));
-                    }
-
-                    this.Left = centerX;
-                    this.Top = centerY;
+                    double ownerWidth = ownerRect.Right - ownerRect.Left;
+                    double ownerHeight = ownerRect.Bottom - ownerRect.Top;
+                    this.Left = ownerRect.Left + (ownerWidth - this.Width) / 2;
+                    this.Top = ownerRect.Top + (ownerHeight - this.Height) / 2;
+                    // Clamp vị trí vào màn hình để tránh lệch ra ngoài (tùy chọn)
+                    EnsureWindowInScreenBounds();
+                }
+                else
+                {
+                    // Fallback nếu không lấy được rect
+                    CenterToScreen();
                 }
             }
-            catch (Exception ex)
+            else
             {
-                System.Diagnostics.Debug.WriteLine($"Failed to manually center notification window: {ex.Message}");
+                // Không có owner, center to screen
+                CenterToScreen();
             }
+        }
+
+        private void EnsureWindowInScreenBounds()
+        {
+            // Lấy monitor gần nhất
+            System.Drawing.Point pt = new System.Drawing.Point((int)this.Left, (int)this.Top);
+            IntPtr hMonitor = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
+            MONITORINFO mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
+            if (GetMonitorInfo(hMonitor, ref mi))
+            {
+                // Clamp Left và Top vào work area
+                this.Left = Math.Max(mi.rcWork.Left, Math.Min(this.Left, mi.rcWork.Right - this.Width));
+                this.Top = Math.Max(mi.rcWork.Top, Math.Min(this.Top, mi.rcWork.Bottom - this.Height));
+            }
+        }
+
+        private void CenterToScreen()
+        {
+            var screenWidth = SystemParameters.PrimaryScreenWidth;
+            var screenHeight = SystemParameters.PrimaryScreenHeight;
+            this.Left = (screenWidth - this.Width) / 2;
+            this.Top = (screenHeight - this.Height) / 2;
         }
 
         private static ResourceDictionary DPUDict { get; } = new ResourceDictionary
         {
             Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml")
         };
+
         private static ResourceDictionary HandyDict { get; } = new ResourceDictionary
         {
             Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/HandyResources.xaml")
@@ -231,7 +232,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             try
             {
                 this.Resources.MergedDictionaries.Clear();
-
                 this.Resources.MergedDictionaries.Add(HandyDict);
                 this.Resources.MergedDictionaries.Add(DPUDict);
             }
@@ -284,7 +284,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 startHeight = this.Height;
                 startLeft = this.Left;
                 startTop = this.Top;
-
                 // Xác định hướng resize dựa trên tên control
                 if (sender is FrameworkElement element)
                 {
@@ -301,7 +300,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                         _ => ResizeDirection.None,
                     };
                 }
-
                 this.CaptureMouse();
                 e.Handled = true;
             }
@@ -314,7 +312,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                 Point currentPos = e.GetPosition(this);
                 double deltaX = currentPos.X - startPos.X;
                 double deltaY = currentPos.Y - startPos.Y;
-
                 switch (resizeDirection)
                 {
                     case ResizeDirection.Left:
