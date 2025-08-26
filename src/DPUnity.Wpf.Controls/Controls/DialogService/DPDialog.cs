@@ -229,7 +229,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                 // 2. If no owner is provided, find the active window that is visible.
                 // 3. If no active window is found, use the main application window.
                 // 4. If no main window, use the application window handle if available.
-                if (owner is not null && owner.IsLoaded && owner.Visibility == Visibility.Visible && owner != window)
+                if (owner is not null && owner.IsLoaded && owner != window)
                 {
                     window.Owner = owner;
                 }
@@ -240,7 +240,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                         .FirstOrDefault(w => w.IsActive && w.Visibility == Visibility.Visible)
                         ?? Application.Current.MainWindow;
 
-                    if (wd != null && wd.IsLoaded && wd.Visibility == Visibility.Visible)
+                    if (wd != null && wd.IsLoaded)
                     {
                         window.Owner = wd;
                         // Ensure CenterOwner is used when owner is set
