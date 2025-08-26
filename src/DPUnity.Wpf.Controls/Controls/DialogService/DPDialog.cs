@@ -237,8 +237,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                 {
                     var wd = Application.Current.Windows
                         .OfType<System.Windows.Window>()
-                        .FirstOrDefault(w => w.IsActive && w.Visibility == Visibility.Visible)
-                        ?? Application.Current.MainWindow;
+                        .FirstOrDefault(w => w.IsActive && w.Visibility == Visibility.Visible);
 
                     if (wd != null && wd.IsLoaded)
                     {
