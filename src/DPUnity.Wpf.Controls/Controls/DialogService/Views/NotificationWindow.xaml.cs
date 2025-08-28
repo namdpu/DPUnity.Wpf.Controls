@@ -207,6 +207,12 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             this.Left = (screenWidth - this.Width) / 2;
             this.Top = (screenHeight - this.Height) / 2;
         }
+
+        private static ResourceDictionary HandyDict { get; } = new ResourceDictionary
+        {
+            Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/HandyResources.xaml")
+        };
+
         private static ResourceDictionary DPUDict { get; } = new ResourceDictionary
         {
             Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml")
@@ -217,6 +223,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             try
             {
                 this.Resources.MergedDictionaries.Clear();
+                this.Resources.MergedDictionaries.Add(HandyDict);
                 this.Resources.MergedDictionaries.Add(DPUDict);
             }
             catch (Exception ex)
