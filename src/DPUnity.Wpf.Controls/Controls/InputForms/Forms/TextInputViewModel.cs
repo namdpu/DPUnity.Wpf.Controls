@@ -10,9 +10,13 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         [ObservableProperty]
         private string text = string.Empty;
 
+        [ObservableProperty]
+        private string inputTitle = string.Empty;
+
 
         public TextInputViewModel(IWindowService windowService, INavigationService navigationService) : base(windowService, navigationService)
         {
+
         }
 
         [RelayCommand]
@@ -22,10 +26,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         }
 
         [RelayCommand]
-        private void Cancel()
+        private new void Cancel()
         {
-            Cancel();
+            base.Cancel();
         }
-
     }
 }
