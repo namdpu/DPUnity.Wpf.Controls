@@ -24,7 +24,7 @@
 
 
 	<ItemGroup>
-	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.14-preview-5" />
+	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.15" />
 	</ItemGroup>
 
 </Project>
