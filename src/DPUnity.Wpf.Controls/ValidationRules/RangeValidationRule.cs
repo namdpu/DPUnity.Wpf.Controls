@@ -12,7 +12,7 @@ namespace DPUnity.Wpf.Controls.ValidationRules
         {
             if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
             {
-                return ValidationResult.ValidResult; // Để required xử lý riêng
+                return ValidationResult.ValidResult;
             }
 
             if (!double.TryParse(value.ToString(), out double number))

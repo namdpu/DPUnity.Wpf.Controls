@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace DPUnity.Wpf.Controls.ValidationRules
 {
-    public class PositiveOrZeroValidationRule : ValidationRule
+    public class NumericValidateRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -12,15 +12,11 @@ namespace DPUnity.Wpf.Controls.ValidationRules
                 return ValidationResult.ValidResult;
             }
 
-            if (!double.TryParse(value.ToString(), out double number))
+            if (!double.TryParse(value.ToString(), out _))
             {
                 return new ValidationResult(false, "Giá trị phải là số.");
             }
 
-            if (number < 0)
-            {
-                return new ValidationResult(false, "Giá trị phải lớn hơn hoặc bằng 0.");
-            }
             return ValidationResult.ValidResult;
         }
     }
