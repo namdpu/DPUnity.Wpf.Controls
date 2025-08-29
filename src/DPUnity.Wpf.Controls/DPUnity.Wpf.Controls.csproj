@@ -22,6 +22,11 @@
 	  <Page Remove="Behaviors\NewFolder\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Controls\InputForms\DPInputService.cs~RF4dab7ff6.TMP" />
+	  <None Remove="Controls\InputForms\InputResult.cs~RF4db05285.TMP" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.15" />

@@ -1,0 +1,31 @@
+﻿using DPUnity.Windows;
+using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
+
+namespace DPUnity.Wpf.Controls.Controls.InputForms
+{
+    public abstract class InputResultBase<T>(MessageResult isOK, T value)
+    {
+        public bool IsOk => isOK == MessageResult.OK;
+        public T Value => value;
+
+    }
+
+    public abstract class InputArrayResultBase<T>(MessageResult isOK, List<T> value)
+    {
+        public bool IsOk => isOK == MessageResult.OK;
+        public List<T> Value => value;
+    }
+
+    public class InputTextResult(MessageResult isOK, string text) : InputResultBase<string>(isOK, text)
+    {
+    }
+
+    public class InputComboBoxResult(MessageResult isOK, IInputObject? value) : InputResultBase<IInputObject?>(isOK, value)
+    {
+
+    }
+
+    public class InputMultiSelectResult(MessageResult isOK, List<IInputObject> values) : InputArrayResultBase<IInputObject>(isOK, values)
+    {
+    }
+}

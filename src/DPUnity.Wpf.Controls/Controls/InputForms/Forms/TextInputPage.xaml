@@ -12,16 +12,16 @@
 
     <Grid Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <hc:TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                    hc:TitleElement.Title="{Binding InputTitle}"
                     Style="{DynamicResource TextBoxExtend}"
-                    Height="50"/>
+                    Height="28"/>
         <hc:UniformSpacingPanel Spacing="10" Orientation="Horizontal"
                                 Grid.Row="1"
-                                HorizontalAlignment="Right">
+                                HorizontalAlignment="Right"
+                                Margin=" 0 0 0 10">
             <Button Content="OK"
                     Width="75"
                     IsDefault="True"
