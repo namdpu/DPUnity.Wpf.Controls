@@ -1,0 +1,153 @@
+﻿<wd:DPage x:Class="DPUnity.Wpf.Controls.Controls.InputForms.Forms.MultiSelectInputPage"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.InputForms.Forms"
+          xmlns:hc="https://handyorg.github.io/handycontrol"
+          xmlns:wd="https://dpunity.com/dev/wpf/windows"
+          mc:Ignorable="d"
+          d:DesignHeight="450"
+          d:DesignWidth="800"
+          Title="MultiSelectInputPage">
+    <Page.Resources>
+
+        <SolidColorBrush x:Key="PrimaryBrush60"
+                         Opacity="0.6"
+                         Color="#03AB54" />
+
+        <Style x:Key="DP_ListViewStyle.Small"
+               TargetType="{x:Type ListView}"
+               BasedOn="{StaticResource ListView.Small}">
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type ListViewItem}"
+                           BasedOn="{StaticResource ListViewItemBaseStyle.Small}">
+                        <Setter Property="Padding"
+                                Value="0" />
+                        <Setter Property="Background"
+                                Value="{DynamicResource SecondaryRegionBrush}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        Value="{DynamicResource PrimaryBrush60}" />
+                                <Setter Property="BorderBrush"
+                                        Value="{DynamicResource PrimaryBrush60}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        Value="{DynamicResource ThirdlyRegionBrush}" />
+                                <Setter Property="BorderBrush"
+                                        Value="{DynamicResource ThirdlyRegionBrush}" />
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected"
+                                               Value="True" />
+                                    <Condition Property="IsMouseOver"
+                                               Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background"
+                                        Value="{StaticResource PrimaryBrush60}" />
+                                <Setter Property="BorderBrush"
+                                        Value="{StaticResource PrimaryBrush60}" />
+                            </MultiTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <hc:SearchBar Grid.Row="1"
+                      Margin="0 10 0 10"
+                      hc:InfoElement.Placeholder="Tìm kiếm"
+                      hc:InfoElement.ShowClearButton="True"
+                      Style="{DynamicResource SearchBarExtendBaseStyle}"
+                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+
+        <ListView Grid.Row="2"
+                  x:Name="LeftListView"
+                  ItemsSource="{Binding ItemsSource}"
+                  SelectionChanged="LeftListView_SelectionChanged"
+                  Style="{DynamicResource DP_ListViewStyle.Small}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"
+                               Padding="5" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <hc:UniformSpacingPanel Grid.Row="2"
+                                Spacing="3"
+                                Orientation="Vertical"
+                                Grid.Column="1"
+                                Margin="5 0"
+                                VerticalAlignment="Center">
+            <Button Style="{DynamicResource DP_IconButtonHighLightStyle}"
+                    Content="ArrowRightThin"
+                    Command="{Binding MoveRightCommand}" />
+            <Button Style="{DynamicResource DP_IconButtonHighLightStyle}"
+                    Content="ArrowExpandRight"
+                    Margin="0 0 0 7"
+                    Command="{Binding MoveRightAllCommand}" />
+            <Button Style="{DynamicResource DP_IconButtonHighLightStyle}"
+                    Content="ArrowLeftThin"
+                    Margin="0 7 0 0"
+                    Command="{Binding MoveLeftCommand}" />
+            <Button Style="{DynamicResource DP_IconButtonHighLightStyle}"
+                    Content="ArrowExpandLeft"
+                    Command="{Binding MoveLeftAllCommand}" />
+        </hc:UniformSpacingPanel>
+
+        <ListView Grid.Row="2"
+                  Grid.Column="2"
+                  x:Name="RightListView"
+                  ItemsSource="{Binding SelectedItems}"
+                  SelectionChanged="RightListView_SelectionChanged"
+                  Style="{DynamicResource DP_ListViewStyle.Small}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"
+                               Padding="5" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <hc:UniformSpacingPanel Spacing="5"
+                                Grid.Row="3"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Right"
+                                Margin="0 10 0 0">
+            <Button Content="OK"
+                    Width="75"
+                    IsDefault="True"
+                    Command="{Binding SubmitCommand}" />
+            <Button Content="Cancel"
+                    Width="75"
+                    Style="{DynamicResource ButtonDanger}"
+                    Command="{Binding CancelCommand}"
+                    HorizontalAlignment="Left" />
+        </hc:UniformSpacingPanel>
+    </Grid>
+</wd:DPage>

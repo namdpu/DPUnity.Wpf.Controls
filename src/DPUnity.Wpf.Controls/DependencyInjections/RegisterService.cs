@@ -8,11 +8,24 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
     {
         public static IServiceCollection AddDPUControls(this IServiceCollection services)
         {
-            services.AddScoped<DPInputService>();
+            services.AddScoped<IDPInputService, DPInputService>();
 
+            #region Input forms
             services.AddScoped<TextInputPage>();
             services.AddScoped<TextInputViewModel>();
 
+            services.AddScoped<NumericInputPage>();
+            services.AddScoped<NumericInputViewModel>();
+
+            services.AddScoped<SelectInputPage>();
+            services.AddScoped<SelectInputViewModel>();
+
+            services.AddScoped<MultiSelectInputPage>();
+            services.AddScoped<MultiSelectInputViewModel>();
+
+            services.AddScoped<BooleanInputPage>();
+            services.AddScoped<BooleanInputViewModel>();
+            #endregion
 
             return services;
         }

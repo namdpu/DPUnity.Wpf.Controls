@@ -14,6 +14,7 @@ namespace DPUnity.Wpf.Controls.Helpers
         /// <returns></returns>
         public static bool HasValidationFail(IWindowService windowService)
         {
+            bool result = false;
             var window = windowService.CurrentWindow.Window;
             if (window.FindName("MainFrame") is Frame frame && frame.Content is Page page)
             {
@@ -24,18 +25,19 @@ namespace DPUnity.Wpf.Controls.Helpers
                         var binding = BindingOperations.GetBindingExpression(textBox, TextBox.TextProperty);
                         binding?.UpdateSource();
                         if (Validation.GetHasError(textBox))
-                            return true;
+                            result = true;
                     }
                     else if (element is ComboBox comboBox)
                     {
                         var binding = BindingOperations.GetBindingExpression(comboBox, ComboBox.SelectedItemProperty);
                         binding?.UpdateSource();
                         if (Validation.GetHasError(comboBox))
-                            return true;
+                            result = true;
+
                     }
                 }
             }
-            return false;
+            return result;
         }
     }
 }
