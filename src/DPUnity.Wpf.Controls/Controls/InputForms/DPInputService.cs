@@ -9,8 +9,11 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
     public interface IDPInputService
     {
         Task<InputTextResult> ShowTextInput(string title, string defaultText);
+        Task<InputNumericResult> ShowNumericInput(string title, double? defaultValue = null, bool allowDecimal = true, double? minValue = null, double? maxValue = null, bool allowEmpty = false);
         Task<InputComboBoxResult> ShowSelectInput(string title, List<IInputObject> itemSource, IInputObject? defaultSelection = null);
         Task<InputMultiSelectResult> ShowMultiSelect(string title, List<IInputObject> itemSource);
+        Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false);
+
     }
 
     public class DPInputService : IDPInputService
@@ -44,6 +47,44 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 return new InputTextResult(Result, ViewModel.Text);
             }
             return new InputTextResult(Result, string.Empty);
+        }
+
+        public async Task<InputNumericResult> ShowNumericInput(string title, double? defaultValue = null, bool allowDecimal = true, double? minValue = null, double? maxValue = null, bool allowEmpty = false)
+        {
+            var options = new WindowOptions()
+            {
+                Title = title,
+                Width = 400,
+                Height = 160,
+                MinHeight = 160,
+                ResizeMode = System.Windows.ResizeMode.NoResize,
+            };
+            var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<NumericInputPage, NumericInputViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is NumericInputViewModel viewModel)
+                   {
+                       viewModel.AllowDecimal = allowDecimal;
+                       viewModel.MinValue = minValue;
+                       viewModel.MaxValue = maxValue;
+                       if (defaultValue.HasValue)
+                       {
+                           if (!allowDecimal && defaultValue.Value != Math.Truncate(defaultValue.Value))
+                           {
+                               defaultValue = Math.Truncate(defaultValue.Value);
+                           }
+                           viewModel.Text = defaultValue.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                           viewModel.NumericValue = defaultValue.Value;
+                           viewModel.AllowEmpty = allowEmpty;
+                       }
+                   }
+               });
+
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new InputNumericResult(Result, ViewModel.NumericValue);
+            }
+            return new InputNumericResult(Result, null);
         }
 
         public async Task<InputComboBoxResult> ShowSelectInput(string title, List<IInputObject> itemSource, IInputObject? defaultSelection = null)
@@ -95,6 +136,33 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 return new InputMultiSelectResult(Result, [.. ViewModel.SelectedItems]);
             }
             return new InputMultiSelectResult(Result, []);
+        }
+
+        public async Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false)
+        {
+            var options = new WindowOptions()
+            {
+                Title = title,
+                Width = 400,
+                Height = 160,
+                MinHeight = 160,
+                ResizeMode = System.Windows.ResizeMode.NoResize,
+            };
+            var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<BooleanInputPage, BooleanInputViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is BooleanInputViewModel viewModel)
+                   {
+                       viewModel.TrueContent = trueContent;
+                       viewModel.FalseContent = falseContent;
+                       viewModel.Value = defaultValue;
+                   }
+               });
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new InputBooleanResult(Result, ViewModel.Value);
+            }
+            return new InputBooleanResult(Result, false);
         }
     }
 }

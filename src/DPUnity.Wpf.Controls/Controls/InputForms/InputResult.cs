@@ -20,12 +20,20 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
     {
     }
 
+    public class InputNumericResult(MessageResult isOK, double? value) : InputResultBase<double?>(isOK, value)
+    {
+    }
+
     public class InputComboBoxResult(MessageResult isOK, IInputObject? value) : InputResultBase<IInputObject?>(isOK, value)
     {
 
     }
 
     public class InputMultiSelectResult(MessageResult isOK, List<IInputObject> values) : InputArrayResultBase<IInputObject>(isOK, values)
+    {
+    }
+
+    public class InputBooleanResult(MessageResult isOK, bool value) : InputResultBase<bool>(isOK, value)
     {
     }
 }

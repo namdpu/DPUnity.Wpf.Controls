@@ -86,6 +86,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
         private void CalculateAndSetSize()
         {
             int newLineCount = _message.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
+            if (newLineCount == 0) newLineCount = 1; // Đảm bảo ít nhất 1 dòng
             double lineHeight = Message.FontSize * 1.5; // Ước tính chiều cao mỗi dòng
             double desiredHeight = Math.Min(600, 20 + newLineCount * lineHeight); // Chiều cao tối đa 600, tối thiểu 100
             double desiredWidth = Math.Max(desiredHeight * 2, 5 * _message.Length / newLineCount);
