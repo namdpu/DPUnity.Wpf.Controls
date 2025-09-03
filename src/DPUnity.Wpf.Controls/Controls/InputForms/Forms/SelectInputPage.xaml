@@ -17,6 +17,7 @@
                   DisplayMemberPath="Name"
                   VerticalAlignment="Center"
                   Height="28"
-                     Margin="10 0 10 10"/>
+                     Margin="10 0 10 10"
+                     />
     </Grid>
 </wd:DPage>

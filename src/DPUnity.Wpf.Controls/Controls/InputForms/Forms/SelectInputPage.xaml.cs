@@ -1,4 +1,5 @@
 ﻿using DPUnity.Windows;
+using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 {

@@ -13,13 +13,20 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         [ObservableProperty]
         private IInputObject? selectedItem;
 
+        private bool isFirstLoad = true;
+
         public SelectInputViewModel(IWindowService windowService, INavigationService navigationService) : base(windowService, navigationService)
         {
         }
 
-        partial void OnSelectedItemChanged(IInputObject? value)
+
+        partial void OnSelectedItemChanged(IInputObject? oldValue, IInputObject? newValue)
         {
-            base.OK();
+            if (!isFirstLoad)
+            {
+                OK();
+            }
+            isFirstLoad = false;
         }
     }
 }
