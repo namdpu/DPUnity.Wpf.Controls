@@ -13,6 +13,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         [ObservableProperty]
         private string inputTitle = string.Empty;
 
+
         public TextInputViewModel(IWindowService windowService, INavigationService navigationService) : base(windowService, navigationService)
         {
 

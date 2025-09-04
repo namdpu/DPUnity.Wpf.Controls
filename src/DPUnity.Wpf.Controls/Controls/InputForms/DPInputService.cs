@@ -1,8 +1,10 @@
 ﻿using DPUnity.Windows;
 using DPUnity.Windows.Services;
+using DPUnity.Wpf.Controls.Controls.DialogService;
 using DPUnity.Wpf.Controls.Controls.InputForms.Forms;
 using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms
 {
@@ -13,7 +15,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         Task<InputComboBoxResult> ShowSelectInput(string title, List<IInputObject> itemSource, IInputObject? defaultSelection = null);
         Task<InputMultiSelectResult> ShowMultiSelect(string title, List<IInputObject> itemSource);
         Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false);
-
+        Task<InputReplaceResult> ShowReplaceInput(string title, string findText = "", string replaceText = "");
+        ProcessViewModel ShowProcess(string title, bool hideParent);
     }
 
     public class DPInputService : IDPInputService
@@ -163,6 +166,50 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 return new InputBooleanResult(Result, ViewModel.Value);
             }
             return new InputBooleanResult(Result, false);
+        }
+
+        public async Task<InputReplaceResult> ShowReplaceInput(string title, string findText = "", string replaceText = "")
+        {
+            var options = new WindowOptions()
+            {
+                Title = title,
+                Width = 400,
+                Height = 200,
+                MinHeight = 200,
+                ResizeMode = System.Windows.ResizeMode.NoResize,
+            };
+            var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<ReplaceInputPage, ReplaceInputViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is ReplaceInputViewModel viewModel)
+                   {
+                       viewModel.Replace = findText;
+                       viewModel.ReplaceWith = replaceText;
+                   }
+               });
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new InputReplaceResult(Result, ViewModel.Replace, ViewModel.ReplaceWith);
+            }
+            return new InputReplaceResult(Result, string.Empty, string.Empty);
+        }
+
+        public ProcessViewModel ShowProcess(string title, bool hideParent)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 125,
+                Width = 450,
+                Height = 125,
+                Title = title,
+            };
+            var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions, hideParent);
+            return viewModel;
         }
     }
 }

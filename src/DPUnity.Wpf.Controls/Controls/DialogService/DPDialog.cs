@@ -1,7 +1,5 @@
-using DPUnity.Wpf.Controls.Interfaces;
+using DPUnity.Wpf.Controls.Helpers;
 using HandyControl.Controls;
-using System.Windows;
-using System.Windows.Interop;
 using MessageBox = System.Windows.MessageBox;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService
@@ -123,69 +121,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
         }
         #endregion
 
-        #region Show Notification in CMD
-        /// <summary>
-        /// Shows a notification with a infomation message.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="intPtr">The pointer to the owner window.</param>
-        /// <param name="title">The title of the notification window.</param>
-        /// <returns>True</returns>
-        public static bool? CmdInfo(string message, string? title = null)
-        {
-            return ShowCmdNotification(message, NotificationType.Information, title);
-        }
-
-        /// <summary>
-        /// Shows a notification with a success message.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="intPtr">The pointer to the owner window.</param>
-        /// <param name="title">The title of the notification window.</param>
-        /// <returns>True</returns>
-        public static bool? CmdSuccess(string message, string? title = null)
-        {
-            return ShowCmdNotification(message, NotificationType.Success, title);
-        }
-
-        /// <summary>
-        /// Shows a notification with a error message.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="intPtr">The pointer to the owner window.</param>
-        /// <param name="title">The title of the notification window.</param>
-        /// <returns>True</returns>
-        public static bool? CmdError(string message, string? title = null)
-        {
-            return ShowCmdNotification(message, NotificationType.Error, title);
-        }
-
-        /// <summary>
-        /// Shows a notification with a warning message.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="intPtr">The pointer to the owner window.</param>
-        /// <param name="title">The title of the notification window.</param>
-        /// <returns>True</returns>
-        public static bool? CmdWarning(string message, string? title = null)
-        {
-            return ShowCmdNotification(message, NotificationType.Warning, title);
-        }
-
-        /// <summary>
-        /// Shows a notification asking the user to confirm an action.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="intPtr"> The pointer to the owner window.</param>
-        /// <param name="title">The title of the notification window.</param>
-        /// <returns> True if the user confirmed the action; null if the action was canceled, otherwise, false.</returns>
-        public static bool? CmdAsk(string message, string? title = null)
-        {
-            return ShowCmdNotification(message, NotificationType.Ask, title);
-        }
-        #endregion
-
-
         #region Private Methods
         private static async Task<bool?> ShowWeakNotification(string message, NotificationType type = NotificationType.Information)
         {
@@ -235,83 +170,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                 }
                 else
                 {
-                    var wd = Application.Current.Windows
-                        .OfType<System.Windows.Window>()
-                        .FirstOrDefault(w => w.IsActive && w.Visibility == Visibility.Visible);
-
-                    if (wd != null && wd.IsLoaded)
-                    {
-                        window.Owner = wd;
-                        // Ensure CenterOwner is used when owner is set
-                        window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                    }
-                    else
-                    {
-                        // Try to use the application window handle if available
-                        var hwnd = AppHwnd.Instance.Hwnd;
-                        if (hwnd is not null)
-                        {
-                            try
-                            {
-                                var helper = new WindowInteropHelper(window)
-                                {
-                                    Owner = (IntPtr)hwnd
-                                };
-                                // When using WindowInteropHelper, we need to set CenterOwner
-                                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                            }
-                            catch
-                            {
-                                // If setting owner via handle fails, fallback to center screen
-                                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                            }
-                        }
-                        else // If hwnd is not set, default to center screen
-                        {
-                            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                        }
-                    }
-                }
-                window.ShowDialog();
-                return window.DialogResult;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error showing notification: {ex.Message}");
-                window?.Close();
-                return null;
-            }
-        }
-
-        private static bool? ShowCmdNotification(string message, NotificationType type, string? title = null)
-        {
-            Views.NotificationWindow? window = null;
-            try
-            {
-                window = new(message, type, title);
-
-                // Try to use the application window handle if available
-                var hwnd = AppHwnd.Instance.Hwnd;
-                if (hwnd is not null)
-                {
-                    try
-                    {
-                        var helper = new WindowInteropHelper(window)
-                        {
-                            Owner = (IntPtr)hwnd
-                        };
-                        // When using WindowInteropHelper, we need to set CenterOwner
-                        window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                    }
-                    catch
-                    {
-                        // If setting owner via handle fails, fallback to center screen
-                        window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                    }
-                }
-                else
-                {
-                    window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    WindowHelper.SetWindowOwner(window);
                 }
                 window.ShowDialog();
                 return window.DialogResult;

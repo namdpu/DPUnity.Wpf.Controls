@@ -33,16 +33,16 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         private bool hasValidationRange = false;
 
         [ObservableProperty]
-        private bool allowEmpty = false;
+        private bool allowEmpty = true;
 
         public NumericInputViewModel(IWindowService windowService, INavigationService navigationService) : base(windowService, navigationService)
         {
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanSubmit))]
         private void Submit()
         {
-            if (AllowEmpty && string.IsNullOrWhiteSpace(Text))
+            if (string.IsNullOrWhiteSpace(Text))
             {
                 NumericValue = null;
                 OK();
@@ -50,6 +50,18 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             else if (ValidateInput())
             {
                 OK();
+            }
+        }
+
+        private bool CanSubmit()
+        {
+            if (string.IsNullOrWhiteSpace(Text))
+            {
+                return AllowEmpty;
+            }
+            else
+            {
+                return ValidateInput();
             }
         }
 
@@ -91,6 +103,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             {
                 NumericValue = null;
             }
+
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnAllowDecimalChanged(bool value)
@@ -103,16 +117,20 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
                     Text = Math.Truncate(decimalValue).ToString(CultureInfo.InvariantCulture);
                 }
             }
+
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnMinValueChanged(double? value)
         {
             UpdateRangeDisplay();
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnMaxValueChanged(double? value)
         {
             UpdateRangeDisplay();
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         private void UpdateRangeDisplay()

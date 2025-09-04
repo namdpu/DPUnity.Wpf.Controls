@@ -36,4 +36,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
     public class InputBooleanResult(MessageResult isOK, bool value) : InputResultBase<bool>(isOK, value)
     {
     }
+
+    public class InputReplaceResult(MessageResult isOK, string find, string replaceWith) : InputResultBase<(string Find, string ReplaceWith)>(isOK, (find, replaceWith))
+    {
+    }
 }

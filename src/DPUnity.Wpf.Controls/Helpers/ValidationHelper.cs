@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace DPUnity.Wpf.Controls.Helpers
 {
-    public class ValidationHelper
+    public static class ValidationHelper
     {
         /// <summary>
         /// Checks if there are any validation errors in the visual tree of the main window in the given window service.
@@ -20,20 +20,22 @@ namespace DPUnity.Wpf.Controls.Helpers
             {
                 foreach (var element in page.FindVisualChildren<FrameworkElement>())
                 {
-                    if (element is TextBox textBox)
+                    // Duyệt qua tất cả local values để tìm và cập nhật binding expressions
+                    var enumerator = element.GetLocalValueEnumerator();
+                    while (enumerator.MoveNext())
                     {
-                        var binding = BindingOperations.GetBindingExpression(textBox, TextBox.TextProperty);
-                        binding?.UpdateSource();
-                        if (Validation.GetHasError(textBox))
-                            result = true;
+                        var entry = enumerator.Current;
+                        if (BindingOperations.IsDataBound(element, entry.Property))
+                        {
+                            var bindingExpr = BindingOperations.GetBindingExpression(element, entry.Property);
+                            bindingExpr?.UpdateSource();
+                        }
                     }
-                    else if (element is ComboBox comboBox)
-                    {
-                        var binding = BindingOperations.GetBindingExpression(comboBox, ComboBox.SelectedItemProperty);
-                        binding?.UpdateSource();
-                        if (Validation.GetHasError(comboBox))
-                            result = true;
 
+                    // Kiểm tra nếu element có lỗi validation
+                    if (Validation.GetHasError(element))
+                    {
+                        result = true;
                     }
                 }
             }
