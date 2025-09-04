@@ -25,6 +25,11 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
 
             services.AddScoped<BooleanInputPage>();
             services.AddScoped<BooleanInputViewModel>();
+
+            services.AddScoped<ReplaceInputPage>();
+            services.AddScoped<ReplaceInputViewModel>();
+
+            services.AddScoped<ProcessPage>();
             #endregion
 
             return services;

@@ -10,8 +10,8 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
-
+             d:DesignWidth="800"
+             x:Name="Root">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,7 +23,6 @@
                              Color="#03AB54" />
         </ResourceDictionary>
     </UserControl.Resources>
-
     <DockPanel LastChildFill="True">
         <GroupBox Header="Dự án hiện tại"
                   DockPanel.Dock="Top">
@@ -33,16 +32,14 @@
                        FontWeight="Bold"
                        FontSize="18" />
         </GroupBox>
-
-        <GroupBox Header="Danh sách thiết lập"
-                  >
+        <GroupBox Header="Danh sách thiết lập">
             <DockPanel LastChildFill="True">
                 <Grid DockPanel.Dock="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button Style="{DynamicResource DP_IconButtonStyle}"
+                    <Button Style="{DynamicResource DP_IconButtonHighLightStyle}"
                             Content="Plus"
                             Tag="Plus"
                             Margin="3"
@@ -55,12 +52,14 @@
                                 hc:InfoElement.Placeholder="Tìm kiếm"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
+                                Style="{DynamicResource TextBoxExtend}"
+                                Height="28"
                                 Text="{Binding SearchText, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="Search_TextChanged" />
                 </Grid>
-
                 <Grid Margin="0">
-                    <ListView Style="{DynamicResource ListViewWithoutBorder}"
+                    <ListView x:Name="ProjectSettingList"
+                              Style="{DynamicResource ListViewWithoutBorder}"
                               ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                               SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                               Visibility="{Binding HasItems, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
@@ -73,7 +72,8 @@
                                         <ColumnDefinition Width="30" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Orientation="Vertical">
-                                        <icons:PackIcon x:Name="activeIcon" Kind="Ticket"
+                                        <icons:PackIcon x:Name="activeIcon"
+                                                        Kind="Ticket"
                                                         Height="24"
                                                         Width="14"
                                                         Foreground="{DynamicResource PrimaryBrush}"
@@ -118,9 +118,8 @@
                                                                                 Property="Kind"
                                                                                 Value="ContentSave" />
                                                                     </Trigger>
-                                                                    <Trigger   Property="Visibility"
+                                                                    <Trigger Property="Visibility"
                                                                              Value="Hidden">
-                                                                        
                                                                     </Trigger>
                                                                 </ControlTemplate.Triggers>
                                                             </ControlTemplate>
@@ -186,11 +185,21 @@
                                         <Button.ContextMenu>
                                             <ContextMenu Style="{DynamicResource DP_ContextMenuStyle}">
                                                 <MenuItem Header="Kích hoạt"
-                                                          itemIcon:MenuItemIconBehavior.IconKind="Ticket" />
+                                                          itemIcon:MenuItemIconBehavior.IconKind="Ticket"
+                                                          Command="{Binding ElementName=Root, Path=ActivateCommand}"
+                                                          CommandParameter="{Binding}" />
                                                 <MenuItem Header="Sửa"
-                                                          itemIcon:MenuItemIconBehavior.IconKind="Edit" />
+                                                          itemIcon:MenuItemIconBehavior.IconKind="Edit"
+                                                          Command="{Binding ElementName=Root, Path=EditCommand}"
+                                                          CommandParameter="{Binding}" />
+                                                <MenuItem Header="Copy"
+                                                          itemIcon:MenuItemIconBehavior.IconKind="ContentCopy"
+                                                          Command="{Binding ElementName=Root, Path=CopyCommand}"
+                                                          CommandParameter="{Binding}" />
                                                 <MenuItem Header="Xóa"
-                                                          itemIcon:MenuItemIconBehavior.IconKind="Delete" />
+                                                          itemIcon:MenuItemIconBehavior.IconKind="Delete"
+                                                          Command="{Binding ElementName=Root, Path=DeleteCommand}"
+                                                          CommandParameter="{Binding}" />
                                             </ContextMenu>
                                         </Button.ContextMenu>
                                         <Button.Style>
@@ -216,7 +225,6 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-
                     <!-- Thông báo khi không tìm thấy kết quả -->
                     <StackPanel Orientation="Vertical"
                                 HorizontalAlignment="Center"
@@ -235,7 +243,6 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-
                         <icons:PackIcon Kind="DatabaseSearchOutline"
                                         Height="48"
                                         Width="48"

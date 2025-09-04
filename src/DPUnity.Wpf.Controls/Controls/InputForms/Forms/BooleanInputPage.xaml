@@ -20,12 +20,14 @@
         <RadioButton IsChecked="{Binding Value}"
                      Content="{Binding TrueContent}"
                      GroupName="BooleanInput"
-                     HorizontalAlignment="Left" />
+                     HorizontalAlignment="Left"
+                     Padding="5 3" />
 
         <RadioButton Content="{Binding FalseContent}"
                      GroupName="BooleanInput"
                      HorizontalAlignment="Left"
-                     Grid.Row="1" />
+                     Grid.Row="1"
+                     Padding="5 3" />
         <hc:UniformSpacingPanel Spacing="10"
                                 Orientation="Horizontal"
                                 Grid.Row="2"

@@ -136,7 +136,7 @@ namespace DPUnity.Wpf.Controls.Controls.ProjectSettingsMenus
                 var name = nameProperty.GetValue(item)?.ToString();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    return name.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0;
+                    return name!.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0;
                 }
             }
 
@@ -146,13 +146,13 @@ namespace DPUnity.Wpf.Controls.Controls.ProjectSettingsMenus
                 var description = descriptionProperty.GetValue(item)?.ToString();
                 if (!string.IsNullOrWhiteSpace(description))
                 {
-                    return description.IndexOf(SearchText, System.StringComparison.OrdinalIgnoreCase) >= 0;
+                    return description!.IndexOf(SearchText, System.StringComparison.OrdinalIgnoreCase) >= 0;
                 }
             }
 
             var itemString = item?.ToString();
             return !string.IsNullOrWhiteSpace(itemString) &&
-                   itemString.IndexOf(SearchText, System.StringComparison.OrdinalIgnoreCase) >= 0;
+                   itemString!.IndexOf(SearchText, System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public void ClearSearch()
@@ -192,6 +192,42 @@ namespace DPUnity.Wpf.Controls.Controls.ProjectSettingsMenus
         {
             get { return (ICommand)GetValue(SaveCommandProperty); }
             set { SetValue(SaveCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty ActivateCommandProperty =
+            DependencyProperty.Register("ActivateCommand", typeof(ICommand), typeof(ProjectSettingsMenu));
+
+        public ICommand ActivateCommand
+        {
+            get { return (ICommand)GetValue(ActivateCommandProperty); }
+            set { SetValue(ActivateCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty EditCommandProperty =
+            DependencyProperty.Register("EditCommand", typeof(ICommand), typeof(ProjectSettingsMenu));
+
+        public ICommand EditCommand
+        {
+            get { return (ICommand)GetValue(EditCommandProperty); }
+            set { SetValue(EditCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty DeleteCommandProperty =
+            DependencyProperty.Register("DeleteCommand", typeof(ICommand), typeof(ProjectSettingsMenu));
+
+        public ICommand DeleteCommand
+        {
+            get { return (ICommand)GetValue(DeleteCommandProperty); }
+            set { SetValue(DeleteCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty CopyCommandProperty =
+            DependencyProperty.Register("CopyCommand", typeof(ICommand), typeof(ProjectSettingsMenu));
+
+        public ICommand CopyCommand
+        {
+            get { return (ICommand)GetValue(CopyCommandProperty); }
+            set { SetValue(CopyCommandProperty, value); }
         }
 
         public static readonly DependencyProperty CurrentProjectNameProperty =
