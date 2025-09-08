@@ -1,5 +1,8 @@
-using DPUnity.Wpf.Controls.Helpers;
+﻿using DPUnity.Windows;
+using DPUnity.Wpf.Controls.Controls.DialogService.Views;
+using DPUnity.Wpf.Controls.Interfaces;
 using HandyControl.Controls;
+using System.Windows;
 using MessageBox = System.Windows.MessageBox;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService
@@ -152,38 +155,114 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             }
         }
 
+        //private static bool? ShowNotification(string message, NotificationType type, System.Windows.Window? owner = null, string? title = null)
+        //{
+        //    Views.NotificationWindow? window = null;
+        //    try
+        //    {
+        //        window = new(message, type, title);
+
+        //        // Hierarchy of owner windows:
+        //        // 1. If owner is provided, use it.
+        //        // 2. If no owner is provided, find the active window that is visible.
+        //        // 3. If no active window is found, use the main application window.
+        //        // 4. If no main window, use the application window handle if available.
+        //        if (owner is not null && owner.IsLoaded && owner != window)
+        //        {
+        //            window.Owner = owner;
+        //        }
+        //        else
+        //        {
+        //            WindowHelper.SetWindowOwner(window);
+        //        }
+        //        window.ShowDialog();
+        //        return window.DialogResult;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error showing notification: {ex.Message}");
+        //        window?.Close();
+        //        return null;
+        //    }
+        //}
+
         private static bool? ShowNotification(string message, NotificationType type, System.Windows.Window? owner = null, string? title = null)
         {
-            Views.NotificationWindow? window = null;
             try
             {
-                window = new(message, type, title);
+                var (width, height) = CalculateWindowSize(message, type);
+                var windowOptions = new WindowOptions
+                {
+                    Width = width,
+                    Height = height,
+                    MinWidth = width,
+                    MinHeight = height,
+                    Title = title ?? GetDefaultTitle(type),
+                    ResizeMode = ResizeMode.NoResize
+                };
+                NotificationViewModel? viewModel = null;
+                WindowManager.ShowDialog<IDPDialogWindow, NotificationPage>(windowOptions, (vm) =>
+                {
+                    if (vm is NotificationViewModel nvm)
+                    {
+                        nvm.Initialize(message, type, title);
+                        viewModel = nvm;
+                    }
+                });
 
-                // Hierarchy of owner windows:
-                // 1. If owner is provided, use it.
-                // 2. If no owner is provided, find the active window that is visible.
-                // 3. If no active window is found, use the main application window.
-                // 4. If no main window, use the application window handle if available.
-                if (owner is not null && owner.IsLoaded && owner != window)
+                if (viewModel != null)
                 {
-                    window.Owner = owner;
+                    return viewModel.DialogResult;
                 }
-                else
-                {
-                    WindowHelper.SetWindowOwner(window);
-                }
-                window.ShowDialog();
-                return window.DialogResult;
+                return false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error showing notification: {ex.Message}");
-                window?.Close();
+                // Fallback về MessageBox nếu có lỗi
+                MessageBox.Show($"Lỗi hiển thị notification: {ex.Message}\n\nMessage: {message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
         }
-        #endregion
 
+        private static (double width, double height) CalculateWindowSize(string message, NotificationType type)
+        {
+            double width;
+            double height;
+            int newLineCount = message.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
+            if (newLineCount == 0) newLineCount = 1; // Đảm bảo ít nhất 1 dòng
+            double lineHeight = 14 * 1.5;
+            double desiredHeight = Math.Min(600, 20 + newLineCount * lineHeight); // Chiều cao tối đa 600, tối thiểu 100
+            double desiredWidth = Math.Max(desiredHeight * 2, 5 * message.Length / newLineCount);
+            while (desiredWidth > 2 * desiredHeight)
+            {
+                desiredHeight *= 1.05;
+                desiredWidth *= 0.95;
+            }
+            if (type == NotificationType.Ask)
+            {
+                desiredHeight += 100; // Tăng thêm chiều cao 100 nếu type là Ask do có nút Yes/No
+            }
+            width = Math.Max(300, desiredWidth);
+            height = Math.Max(100, desiredHeight);
+            return (width, height);
+        }
+
+        /// <summary>
+        /// Lấy title mặc định theo type
+        /// </summary>
+        private static string GetDefaultTitle(NotificationType type)
+        {
+            return type switch
+            {
+                NotificationType.Information => "Thông tin",
+                NotificationType.Success => "Thành công",
+                NotificationType.Error => "Lỗi",
+                NotificationType.Warning => "Cảnh báo",
+                NotificationType.Ask => "Xác nhận",
+                _ => "Thông báo"
+            };
+        }
+        #endregion
 
         public enum NotificationType
         {

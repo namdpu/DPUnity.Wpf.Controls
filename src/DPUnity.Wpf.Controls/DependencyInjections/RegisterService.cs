@@ -1,5 +1,9 @@
-﻿using DPUnity.Wpf.Controls.Controls.InputForms;
+﻿using DPUnity.Windows;
+using DPUnity.Wpf.Controls.Controls.DialogService;
+using DPUnity.Wpf.Controls.Controls.DialogService.Views;
+using DPUnity.Wpf.Controls.Controls.InputForms;
 using DPUnity.Wpf.Controls.Controls.InputForms.Forms;
+using DPUnity.Wpf.Controls.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DPUnity.Wpf.Controls.DependencyInjections
@@ -9,6 +13,8 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
         public static IServiceCollection AddDPUControls(this IServiceCollection services)
         {
             services.AddScoped<IDPInputService, DPInputService>();
+            services.AddWindowWpf<IDPDialogWindow, DPDialogWindowUI>();
+            services.AddScoped<IDPDialogService, DPDialogService>();
 
             #region Input forms
             services.AddScoped<TextInputPage>();
@@ -28,9 +34,12 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
 
             services.AddScoped<ReplaceInputPage>();
             services.AddScoped<ReplaceInputViewModel>();
-
-            services.AddScoped<ProcessPage>();
             #endregion
+
+            services.AddScoped<Controls.InputForms.Forms.ProcessPage>();
+
+            services.AddScoped<NotificationPage>();
+            services.AddScoped<NotificationViewModel>();
 
             return services;
         }
