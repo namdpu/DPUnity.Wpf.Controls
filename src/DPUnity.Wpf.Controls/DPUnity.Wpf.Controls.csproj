@@ -6,7 +6,7 @@
 		<UseWPF>true</UseWPF>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>1.0.18</Version>
+		<Version>1.0.19</Version>
 		<PackageId>DPUnity.Wpf.Controls</PackageId>
 		<Title>DPUnity WPF Controls</Title>
 		<Description>Custom WPF controls and components for enhanced user interface development</Description>
@@ -27,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Controls\DialogService\Views\DPDialogWindowUI.xaml.cs~RF71402820.TMP" />
 	  <None Remove="Controls\InputForms\DPInput.cs~RF6c8df966.TMP" />
 	  <None Remove="Controls\InputForms\DPInputService.cs~RF4dab7ff6.TMP" />
 	  <None Remove="Controls\InputForms\InputResult.cs~RF4db05285.TMP" />
@@ -34,7 +35,7 @@
 
 
 	<ItemGroup>
-	  <PackageReference Include="DPUnity.Windows" Version="1.2.7" />
+	  <PackageReference Include="DPUnity.Windows" Version="1.2.8" />
 	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.17" />
 	</ItemGroup>
 

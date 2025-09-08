@@ -174,12 +174,6 @@ namespace DPUnity.Wpf.Controls.ValidationRules
                 return new ValidationResult(false, CustomErrorMessage ?? "Giá trị phải là số hợp lệ.");
             }
 
-            // Check if integer only is required
-            if (numericValue != Math.Floor(numericValue))
-            {
-                return new ValidationResult(false, CustomErrorMessage ?? "Chỉ được nhập số nguyên.");
-            }
-
             // Check decimal places limit (only if decimals are allowed)
             if (MaxDecimalPlaces.HasValue && AllowDecimal && input.Contains(decimalSeparator))
             {
