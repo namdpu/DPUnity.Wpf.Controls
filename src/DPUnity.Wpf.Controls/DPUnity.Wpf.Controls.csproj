@@ -6,7 +6,7 @@
 		<UseWPF>true</UseWPF>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>1.0.19</Version>
+		<Version>1.0.20</Version>
 		<PackageId>DPUnity.Wpf.Controls</PackageId>
 		<Title>DPUnity WPF Controls</Title>
 		<Description>Custom WPF controls and components for enhanced user interface development</Description>
@@ -36,7 +36,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="DPUnity.Windows" Version="1.2.8" />
-	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.17" />
+	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.20" />
 	</ItemGroup>
 
 </Project>

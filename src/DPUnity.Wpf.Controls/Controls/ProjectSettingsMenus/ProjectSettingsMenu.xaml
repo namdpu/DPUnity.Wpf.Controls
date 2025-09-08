@@ -52,7 +52,7 @@
                                 hc:InfoElement.Placeholder="Tìm kiếm"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
-                                Style="{DynamicResource TextBoxExtend}"
+                                Style="{DynamicResource TextBoxPlusBaseStyle}"
                                 Height="28"
                                 Text="{Binding SearchText, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
                                 TextChanged="Search_TextChanged" />

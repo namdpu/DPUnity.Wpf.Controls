@@ -12,22 +12,12 @@
         Topmost="True"
         MinHeight="100"
         MaxHeight="600"
-        ResizeMode="CanResize"
         MinWidth="300"
-        MaxWidth="1000"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown">
-    <Border x:Name="MainBorder"  
-            Background="Transparent"
-            CornerRadius="15"
-            ClipToBounds="True">
+        MaxWidth="1000">
+    <Border x:Name="MainBorder"
+            CornerRadius="5"
+            MouseLeftButtonDown="Window_MouseLeftButtonDown">
         <Frame x:Name="MainFrame"
-               Margin="1"
-               Background="Transparent"
-               Style="{DynamicResource DP_ContentFrame}">
-            <!--<Frame.Background>
-                <SolidColorBrush Color="{DynamicResource SecondaryRegionColor}"
-                                 Opacity="0.7" />
-            </Frame.Background>-->
-        </Frame>
+               Style="{DynamicResource DP_ContentFrameStyle}" />
     </Border>
 </Window>

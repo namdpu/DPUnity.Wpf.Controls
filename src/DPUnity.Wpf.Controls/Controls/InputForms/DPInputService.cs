@@ -141,7 +141,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             return new InputMultiSelectResult(Result, []);
         }
 
-        public async Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false)
+        public async Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "Đúng", string falseContent = "Sai", bool defaultValue = false)
         {
             var options = new WindowOptions()
             {

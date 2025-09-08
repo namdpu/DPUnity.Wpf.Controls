@@ -3,10 +3,8 @@ using DPUnity.Windows.Services;
 using DPUnity.Wpf.Controls.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
 {
@@ -15,8 +13,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
     /// </summary>
     public partial class DPDialogWindowUI : Window, IDPDialogWindow
     {
-        private Border? _mainBorder;
-
         public DPDialogWindowUI(IServiceProvider serviceProvider)
         {
             LoadResourceDictionaries();
@@ -25,40 +21,8 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             WindowService.Init(serviceProvider, this, true);
             NavigationService = serviceProvider.GetRequiredService<INavigationService>();
             NavigationService.Initialize("MainFrame", this);
-            Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _mainBorder = this.Template.FindName("PART_Border", this) as Border;
-
-            _mainBorder ??= this.Content as Border;
-            if (_mainBorder != null)
-            {
-                _mainBorder.SizeChanged += OnBorderSizeChanged;
-                UpdateClip();
-            }
-
-        }
-
-        private void OnBorderSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            UpdateClip();
-        }
-
-        private void UpdateClip()
-        {
-            if (_mainBorder?.ActualWidth > 0 && _mainBorder.ActualHeight > 0)
-            {
-                var rect = new RectangleGeometry
-                {
-                    Rect = new Rect(0, 0, _mainBorder.ActualWidth, _mainBorder.ActualHeight),
-                    RadiusX = 16,
-                    RadiusY = 16
-                };
-                _mainBorder.Clip = rect;
-            }
-        }
 
 
         #region Implementation of IDPWindow

@@ -1,16 +1,17 @@
 ﻿<wd:DPage x:Class="DPUnity.Wpf.Controls.Controls.DialogService.Views.NotificationPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.DialogService.Views"
-      xmlns:icons="https://dpunity.com/dev/wpf/ui/controls/packicon"
-      xmlns:hc="https://handyorg.github.io/handycontrol"
-      xmlns:wd="https://dpunity.com/dev/wpf/windows"
-      mc:Ignorable="d"
-      d:DesignHeight="450"
-      d:DesignWidth="800"
-      Title="NotificationPage">
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.DialogService.Views"
+          xmlns:icons="https://dpunity.com/dev/wpf/ui/controls/packicon"
+          xmlns:hc="https://handyorg.github.io/handycontrol"
+          xmlns:wd="https://dpunity.com/dev/wpf/windows"
+          mc:Ignorable="d"
+          d:DesignHeight="450"
+          d:DesignWidth="800"
+          Title="NotificationPage"
+          Focusable="True">
 
     <wd:DPage.Resources>
         <Color x:Key="AskColor">#d9a3d2</Color>
@@ -177,7 +178,7 @@
     <Border x:Name="WindowBorder"
             CornerRadius="15"
             BorderThickness="1"
-            Background="Transparent"
+            Background="{DynamicResource SecondaryRegionBrush}"
             BorderBrush="{Binding BorderBrush}"
             Opacity="0.95">
         <Grid>
@@ -277,17 +278,14 @@
                         Content="{Binding OkButtonContent}"
                         Visibility="{Binding OkButtonVisibility}"
                         Style="{StaticResource NotificationOKButtonStyle}"
-                        Command="{Binding OkActionCommand}"
-                        IsDefault="True"
-                        TabIndex="0" />
+                        Command="{Binding OkActionCommand}" />
                 <Button x:Name="CancelButton"
                         Width="80"
                         Content="{Binding CancelButtonContent}"
                         Style="{StaticResource NotificationCancelButtonStyle}"
                         Visibility="{Binding CancelButtonVisibility}"
                         Command="{Binding CancelCommand}"
-                        IsCancel="True"
-                        TabIndex="1" />
+                        IsCancel="True" />
             </hc:UniformSpacingPanel>
         </Grid>
     </Border>

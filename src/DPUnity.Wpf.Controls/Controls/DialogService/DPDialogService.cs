@@ -84,7 +84,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                     Title = title ?? GetDefaultTitle(type),
                     ResizeMode = ResizeMode.NoResize
                 };
-                var (result, viewModel) = await _windowService.OpenWindowDialogByLoadingAsync<IDPDialogWindow, NotificationPage, NotificationViewModel>(
+                var (result, viewModel) = await _windowService.OpenWindowDialogAsync<IDPDialogWindow, NotificationPage, NotificationViewModel>(
                     windowOptions,
                     false,
                     (vm) =>
