@@ -15,52 +15,6 @@
         <SolidColorBrush x:Key="PrimaryBrush60"
                          Opacity="0.6"
                          Color="#03AB54" />
-
-        <Style x:Key="DP_ListViewStyle.Small"
-               TargetType="{x:Type ListView}"
-               BasedOn="{StaticResource ListView.Small}">
-            <Setter Property="Padding"
-                    Value="0" />
-            <Setter Property="ItemContainerStyle">
-                <Setter.Value>
-                    <Style TargetType="{x:Type ListViewItem}"
-                           BasedOn="{StaticResource ListViewItemBaseStyle.Small}">
-                        <Setter Property="Padding"
-                                Value="0" />
-                        <Setter Property="Background"
-                                Value="{DynamicResource SecondaryRegionBrush}" />
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        Value="{DynamicResource PrimaryBrush60}" />
-                                <Setter Property="BorderBrush"
-                                        Value="{DynamicResource PrimaryBrush60}" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        Value="{DynamicResource ThirdlyRegionBrush}" />
-                                <Setter Property="BorderBrush"
-                                        Value="{DynamicResource ThirdlyRegionBrush}" />
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected"
-                                               Value="True" />
-                                    <Condition Property="IsMouseOver"
-                                               Value="True" />
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background"
-                                        Value="{StaticResource PrimaryBrush60}" />
-                                <Setter Property="BorderBrush"
-                                        Value="{StaticResource PrimaryBrush60}" />
-                            </MultiTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Page.Resources>
 
 

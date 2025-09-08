@@ -9,6 +9,18 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
 {
     public static class DPDialog
     {
+        private const double ASK_HEIGHT_INCREASE = 100;
+        private const double MIN_WIDTH = 300;
+        private const double MIN_HEIGHT = 100;
+        private const double MAX_HEIGHT = 600;
+        private const double LINE_HEIGHT = 14 * 1.5;
+        private const double WIDTH_HEIGHT_RATIO_LIMIT = 2.0;
+        private const double WIDTH_DECREASE_FACTOR = 0.95;
+        private const double HEIGHT_INCREASE_FACTOR = 1.05;
+        private const double BASE_HEIGHT_PADDING = 20;
+        private const double MESSAGE_LENGTH_FACTOR = 5;
+
+
         #region Weak Notification
         /// <summary>
         /// Shows a weak notification with the specified message and type.
@@ -155,37 +167,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             }
         }
 
-        //private static bool? ShowNotification(string message, NotificationType type, System.Windows.Window? owner = null, string? title = null)
-        //{
-        //    Views.NotificationWindow? window = null;
-        //    try
-        //    {
-        //        window = new(message, type, title);
-
-        //        // Hierarchy of owner windows:
-        //        // 1. If owner is provided, use it.
-        //        // 2. If no owner is provided, find the active window that is visible.
-        //        // 3. If no active window is found, use the main application window.
-        //        // 4. If no main window, use the application window handle if available.
-        //        if (owner is not null && owner.IsLoaded && owner != window)
-        //        {
-        //            window.Owner = owner;
-        //        }
-        //        else
-        //        {
-        //            WindowHelper.SetWindowOwner(window);
-        //        }
-        //        window.ShowDialog();
-        //        return window.DialogResult;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error showing notification: {ex.Message}");
-        //        window?.Close();
-        //        return null;
-        //    }
-        //}
-
         private static bool? ShowNotification(string message, NotificationType type, System.Windows.Window? owner = null, string? title = null)
         {
             try
@@ -230,20 +211,19 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             double height;
             int newLineCount = message.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
             if (newLineCount == 0) newLineCount = 1; // Đảm bảo ít nhất 1 dòng
-            double lineHeight = 14 * 1.5;
-            double desiredHeight = Math.Min(600, 20 + newLineCount * lineHeight); // Chiều cao tối đa 600, tối thiểu 100
-            double desiredWidth = Math.Max(desiredHeight * 2, 5 * message.Length / newLineCount);
-            while (desiredWidth > 2 * desiredHeight)
+            double desiredHeight = Math.Min(MAX_HEIGHT, BASE_HEIGHT_PADDING + newLineCount * LINE_HEIGHT);
+            double desiredWidth = Math.Max(desiredHeight * WIDTH_HEIGHT_RATIO_LIMIT, MESSAGE_LENGTH_FACTOR * message.Length / newLineCount);
+            while (desiredWidth > WIDTH_HEIGHT_RATIO_LIMIT * desiredHeight)
             {
-                desiredHeight *= 1.05;
-                desiredWidth *= 0.95;
+                desiredHeight *= HEIGHT_INCREASE_FACTOR;
+                desiredWidth *= WIDTH_DECREASE_FACTOR;
             }
             if (type == NotificationType.Ask)
             {
-                desiredHeight += 100; // Tăng thêm chiều cao 100 nếu type là Ask do có nút Yes/No
+                desiredHeight += ASK_HEIGHT_INCREASE; // Tăng thêm chiều cao ASK_HEIGHT_INCREASE nếu type là Ask do có nút Yes/No
             }
-            width = Math.Max(300, desiredWidth);
-            height = Math.Max(100, desiredHeight);
+            width = Math.Max(MIN_WIDTH, desiredWidth);
+            height = Math.Max(MIN_HEIGHT, desiredHeight);
             return (width, height);
         }
 
