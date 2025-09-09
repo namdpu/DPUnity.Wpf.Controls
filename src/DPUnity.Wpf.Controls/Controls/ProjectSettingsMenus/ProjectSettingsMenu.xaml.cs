@@ -261,6 +261,38 @@ namespace DPUnity.Wpf.Controls.Controls.ProjectSettingsMenus
                 SearchText = textBox.Text;
             }
         }
+
+        private void ActivateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is object item)
+            {
+                ActivateCommand?.Execute(item);
+            }
+        }
+
+        private void EditMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is object item)
+            {
+                EditCommand?.Execute(item);
+            }
+        }
+
+        private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is object item)
+            {
+                CopyCommand?.Execute(item);
+            }
+        }
+
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is object item)
+            {
+                DeleteCommand?.Execute(item);
+            }
+        }
     }
 
     public class StringToHasValueConverter : IValueConverter

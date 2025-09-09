@@ -20,6 +20,10 @@ namespace DPUnity.Wpf.Controls.Helpers
             {
                 foreach (var element in page.FindVisualChildren<FrameworkElement>())
                 {
+                    if (element.IsEnabled == false)
+                    {
+                        continue;
+                    }
                     // Duyệt qua tất cả local values để tìm và cập nhật binding expressions
                     var enumerator = element.GetLocalValueEnumerator();
                     while (enumerator.MoveNext())
