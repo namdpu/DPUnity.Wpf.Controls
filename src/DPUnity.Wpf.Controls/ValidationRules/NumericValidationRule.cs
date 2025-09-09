@@ -10,14 +10,27 @@ namespace DPUnity.Wpf.Controls.ValidationRules
     public class NumericValidationRule : ValidationRule
     {
         /// <summary>
+        /// Enum defining the allowed sign and zero restrictions for numeric values.
+        /// </summary>
+        public enum NumberSignMode
+        {
+            PositiveOnly,      // > 0
+            PositiveOrZero,    // >= 0
+            NegativeOnly,      // < 0
+            NegativeOrZero,    // <= 0
+            PositiveOrNegative,// > 0 or < 0, no zero
+            AllValues          // All, including zero
+        }
+
+        /// <summary>
+        /// Gets or sets the sign mode for allowed numeric values. Default is AllValues.
+        /// </summary>
+        public NumberSignMode SignMode { get; set; } = NumberSignMode.AllValues;
+
+        /// <summary>
         /// Gets or sets whether decimal numbers are allowed. Default is true.
         /// </summary>
         public bool AllowDecimal { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets whether negative numbers are allowed. Default is true.
-        /// </summary>
-        public bool AllowNegative { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the minimum value allowed. If null, no minimum limit is applied.
@@ -104,8 +117,23 @@ namespace DPUnity.Wpf.Controls.ValidationRules
             // Special handling for partial input cases during typing
             string decimalSeparator = cultureInfo?.NumberFormat.NumberDecimalSeparator ?? ".";
 
+            // Determine allowances based on SignMode
+            bool allowsNegative = SignMode is NumberSignMode.NegativeOnly or
+                                  NumberSignMode.NegativeOrZero or
+                                  NumberSignMode.PositiveOrNegative or
+                                  NumberSignMode.AllValues;
+
+            bool allowsPositive = SignMode is NumberSignMode.PositiveOnly or
+                                  NumberSignMode.PositiveOrZero or
+                                  NumberSignMode.PositiveOrNegative or
+                                  NumberSignMode.AllValues;
+
+            bool allowsZero = SignMode is NumberSignMode.PositiveOrZero or
+                              NumberSignMode.NegativeOrZero or
+                              NumberSignMode.AllValues;
+
             // Allow single minus sign if negative numbers are allowed (user is typing)
-            if (input == "-" && AllowNegative)
+            if (input == "-" && allowsNegative)
             {
                 return ValidationResult.ValidResult; // Allow partial negative input
             }
@@ -117,7 +145,7 @@ namespace DPUnity.Wpf.Controls.ValidationRules
             }
 
             // Allow minus followed by decimal separator
-            if (input == "-" + decimalSeparator && AllowNegative && AllowDecimal)
+            if (input == "-" + decimalSeparator && allowsNegative && AllowDecimal)
             {
                 return ValidationResult.ValidResult; // Allow partial negative decimal input
             }
@@ -126,14 +154,19 @@ namespace DPUnity.Wpf.Controls.ValidationRules
             if (AllowDecimal && input.EndsWith(decimalSeparator) && input.Length > 1)
             {
                 string withoutTrailingDecimal = input.Substring(0, input.Length - decimalSeparator.Length);
-                if (double.TryParse(withoutTrailingDecimal, NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite, cultureInfo ?? CultureInfo.CurrentCulture, out _))
+                NumberStyles partialStyles = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
+                if (allowsNegative)
+                {
+                    partialStyles |= NumberStyles.AllowLeadingSign;
+                }
+                if (double.TryParse(withoutTrailingDecimal, partialStyles, cultureInfo ?? CultureInfo.CurrentCulture, out _))
                 {
                     return ValidationResult.ValidResult; // Allow partial decimal like "123."
                 }
             }
 
             // Allow negative partial decimal numbers ending with decimal separator (e.g., "-123.")
-            if (AllowNegative && AllowDecimal && input.StartsWith("-") && input.EndsWith(decimalSeparator) && input.Length > 2)
+            if (allowsNegative && AllowDecimal && input.StartsWith("-") && input.EndsWith(decimalSeparator) && input.Length > 2)
             {
                 string withoutTrailingDecimal = input.Substring(0, input.Length - decimalSeparator.Length);
                 if (double.TryParse(withoutTrailingDecimal, NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite, cultureInfo ?? CultureInfo.CurrentCulture, out _))
@@ -143,24 +176,22 @@ namespace DPUnity.Wpf.Controls.ValidationRules
             }
 
             // Try to parse as double for most comprehensive numeric validation
-            NumberStyles numberStyles = NumberStyles.None;
+            NumberStyles numberStyles = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
 
             if (AllowDecimal)
             {
                 numberStyles |= NumberStyles.AllowDecimalPoint;
             }
 
-            if (AllowNegative)
+            if (allowsNegative)
             {
                 numberStyles |= NumberStyles.AllowLeadingSign;
             }
 
-            numberStyles |= NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
-
             if (!double.TryParse(input, numberStyles, cultureInfo ?? CultureInfo.CurrentCulture, out double numericValue))
             {
                 // Check if it's a negative sign issue
-                if (!AllowNegative && input.StartsWith("-"))
+                if (!allowsNegative && input.StartsWith("-"))
                 {
                     return new ValidationResult(false, CustomErrorMessage ?? "Không được nhập số âm.");
                 }
@@ -184,10 +215,54 @@ namespace DPUnity.Wpf.Controls.ValidationRules
                 }
             }
 
-            // Check if negative is allowed
-            if (!AllowNegative && numericValue < 0)
+            // Check sign and zero restrictions based on SignMode
+            string? signErrorMessage = CustomErrorMessage;
+            bool isValidSign = true;
+
+            switch (SignMode)
             {
-                return new ValidationResult(false, CustomErrorMessage ?? "Không được nhập số âm.");
+                case NumberSignMode.AllValues:
+                    break;
+                case NumberSignMode.PositiveOnly:
+                    if (numericValue <= 0)
+                    {
+                        isValidSign = false;
+                        signErrorMessage ??= "Giá trị phải là số dương.";
+                    }
+                    break;
+                case NumberSignMode.PositiveOrZero:
+                    if (numericValue < 0)
+                    {
+                        isValidSign = false;
+                        signErrorMessage ??= "Giá trị phải lớn hơn hoặc bằng 0.";
+                    }
+                    break;
+                case NumberSignMode.NegativeOnly:
+                    if (numericValue >= 0)
+                    {
+                        isValidSign = false;
+                        signErrorMessage ??= "Giá trị phải là số âm.";
+                    }
+                    break;
+                case NumberSignMode.NegativeOrZero:
+                    if (numericValue > 0)
+                    {
+                        isValidSign = false;
+                        signErrorMessage ??= "Giá trị phải nhỏ hơn hoặc bằng 0.";
+                    }
+                    break;
+                case NumberSignMode.PositiveOrNegative:
+                    if (numericValue == 0)
+                    {
+                        isValidSign = false;
+                        signErrorMessage ??= "Giá trị phải là số dương hoặc âm, không được bằng 0.";
+                    }
+                    break;
+            }
+
+            if (!isValidSign)
+            {
+                return new ValidationResult(false, signErrorMessage);
             }
 
             // Check minimum value

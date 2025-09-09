@@ -175,52 +175,49 @@
                                                  BaselineAlignment="Center" />
                                         </TextBlock>
                                     </StackPanel>
-                                    <Button x:Name="MenuButton"
-                                            Background="Transparent"
-                                            Click="MenuButton_Click"
-                                            Grid.Column="2"
-                                            VerticalAlignment="Top"
-                                            Margin="0 5 10 0"
-                                            Cursor="Hand">
-                                        <Button.ContextMenu>
-                                            <ContextMenu Style="{DynamicResource DP_ContextMenuStyle}">
-                                                <MenuItem Header="Kích hoạt"
-                                                          itemIcon:MenuItemIconBehavior.IconKind="Ticket"
-                                                          Command="{Binding ElementName=Root, Path=ActivateCommand}"
-                                                          CommandParameter="{Binding}" />
-                                                <MenuItem Header="Sửa"
-                                                          itemIcon:MenuItemIconBehavior.IconKind="Edit"
-                                                          Command="{Binding ElementName=Root, Path=EditCommand}"
-                                                          CommandParameter="{Binding}" />
-                                                <MenuItem Header="Copy"
-                                                          itemIcon:MenuItemIconBehavior.IconKind="ContentCopy"
-                                                          Command="{Binding ElementName=Root, Path=CopyCommand}"
-                                                          CommandParameter="{Binding}" />
-                                                <MenuItem Header="Xóa"
-                                                          itemIcon:MenuItemIconBehavior.IconKind="Delete"
-                                                          Command="{Binding ElementName=Root, Path=DeleteCommand}"
-                                                          CommandParameter="{Binding}" />
-                                            </ContextMenu>
-                                        </Button.ContextMenu>
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Grid Background="Transparent"
-                                                                  Height="20">
-                                                                <icons:PackIcon Kind="DotsVertical"
-                                                                                Height="14"
-                                                                                Width="14" />
-                                                            </Grid>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                                <Setter Property="Foreground"
-                                                        Value="{DynamicResource PrimaryTextBrush}" />
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                    <StackPanel Grid.Column="2">
+                                        <Button x:Name="MenuButton"
+                                                Background="Transparent"
+                                                Click="MenuButton_Click"
+                                                Grid.Column="2"
+                                                Margin="0 2 10 0"
+                                                Cursor="Hand">
+                                            <Button.ContextMenu>
+                                                <ContextMenu Style="{DynamicResource DP_ContextMenuStyle}">
+                                                    <MenuItem Header="Kích hoạt"
+                                                              itemIcon:MenuItemIconBehavior.IconKind="Ticket"
+                                                              Click="ActivateMenuItem_Click" />
+                                                    <MenuItem Header="Sửa"
+                                                              itemIcon:MenuItemIconBehavior.IconKind="Edit"
+                                                              Click="EditMenuItem_Click" />
+                                                    <MenuItem Header="Copy"
+                                                              itemIcon:MenuItemIconBehavior.IconKind="ContentCopy"
+                                                              Click="CopyMenuItem_Click" />
+                                                    <MenuItem Header="Xóa"
+                                                              itemIcon:MenuItemIconBehavior.IconKind="Delete"
+                                                              Click="DeleteMenuItem_Click" />
+                                                </ContextMenu>
+                                            </Button.ContextMenu>
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Grid Background="Transparent"
+                                                                      Height="20">
+                                                                    <icons:PackIcon Kind="DotsVertical"
+                                                                                    Height="14"
+                                                                                    Width="14" />
+                                                                </Grid>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="Foreground"
+                                                            Value="{DynamicResource PrimaryTextBrush}" />
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </StackPanel>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
