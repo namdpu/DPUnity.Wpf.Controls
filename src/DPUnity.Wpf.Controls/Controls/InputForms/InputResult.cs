@@ -40,4 +40,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
     public class InputReplaceResult(MessageResult isOK, string find, string replaceWith) : InputResultBase<(string Find, string ReplaceWith)>(isOK, (find, replaceWith))
     {
     }
+
+    public class InputDataGridReplaceResult(MessageResult isOK, List<string> selectedColumns, string find, string replaceWith) 
+        : InputResultBase<(List<string> SelectedColumns, string Find, string ReplaceWith)>(isOK, (selectedColumns, find, replaceWith))
+    {
+    }
 }

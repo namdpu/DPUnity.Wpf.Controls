@@ -209,5 +209,35 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             }
             return new InputReplaceResult(Result, string.Empty, string.Empty);
         }
+
+        public static async Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<string> columnNames, string findText = "", string replaceText = "", nint owner = 0)
+        {
+            var options = new WindowOptions()
+            {
+                Title = title,
+                Width = 800,
+                Height = 500,
+                MinHeight = 500,
+                MinWidth = 600,
+                ResizeMode = ResizeMode.CanResize,
+                WindowOwner = owner,
+                windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
+            };
+            var (Result, ViewModel) = await WindowManager.ShowDialogAsync<DataGridReplaceInputPage, DataGridReplaceInputViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is DataGridReplaceInputViewModel viewModel)
+                   {
+                       viewModel.InitializeColumns(columnNames);
+                       viewModel.Replace = findText;
+                       viewModel.ReplaceWith = replaceText;
+                   }
+               });
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new InputDataGridReplaceResult(Result, [.. ViewModel.SelectedColumns], ViewModel.Replace, ViewModel.ReplaceWith);
+            }
+            return new InputDataGridReplaceResult(Result, [], string.Empty, string.Empty);
+        }
     }
 }
