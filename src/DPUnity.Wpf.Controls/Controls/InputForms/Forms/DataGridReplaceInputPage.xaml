@@ -127,7 +127,7 @@
                 </i:Interaction.Triggers>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" Padding="5" />
+                        <TextBlock Text="{Binding Header}" Padding="5" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -229,7 +229,7 @@
                 </i:Interaction.Triggers>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" />
+                        <TextBlock Text="{Binding Header}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

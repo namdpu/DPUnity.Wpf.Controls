@@ -1,5 +1,6 @@
 ﻿using DPUnity.Windows;
 using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
+using System.Windows.Controls;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms
 {
@@ -41,8 +42,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
     {
     }
 
-    public class InputDataGridReplaceResult(MessageResult isOK, List<string> selectedColumns, string find, string replaceWith) 
-        : InputResultBase<(List<string> SelectedColumns, string Find, string ReplaceWith)>(isOK, (selectedColumns, find, replaceWith))
+    public class InputDataGridReplaceResult(MessageResult isOK, List<DataGridColumn> selectedColumns, string find, string replaceWith) 
+        : InputResultBase<(List<DataGridColumn> SelectedColumns, string Find, string ReplaceWith)>(isOK, (selectedColumns, find, replaceWith))
     {
     }
 }

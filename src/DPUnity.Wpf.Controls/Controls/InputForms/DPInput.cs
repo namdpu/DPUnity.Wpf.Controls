@@ -5,6 +5,7 @@ using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
 using DPUnity.Wpf.Controls.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms
 {
@@ -210,7 +211,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             return new InputReplaceResult(Result, string.Empty, string.Empty);
         }
 
-        public static async Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<string> columnNames, string findText = "", string replaceText = "", nint owner = 0)
+        public static async Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<DataGridColumn> columns, string findText = "", string replaceText = "", nint owner = 0)
         {
             var options = new WindowOptions()
             {
@@ -228,7 +229,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                {
                    if (vm is DataGridReplaceInputViewModel viewModel)
                    {
-                       viewModel.InitializeColumns(columnNames);
+                       viewModel.InitializeColumns(columns);
                        viewModel.Replace = findText;
                        viewModel.ReplaceWith = replaceText;
                    }
