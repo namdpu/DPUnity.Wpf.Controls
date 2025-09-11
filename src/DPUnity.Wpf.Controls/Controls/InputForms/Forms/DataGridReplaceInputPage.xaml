@@ -42,10 +42,10 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <hc:SearchBar Margin="0 10 5 10"
-                          hc:InfoElement.Placeholder="Search available columns"
+            <hc:TextBox Margin="0 10 5 10"
+                          hc:InfoElement.Placeholder="Tìm kiếm"
                           hc:InfoElement.ShowClearButton="True"
-                          Style="{DynamicResource SearchBarExtendBaseStyle}"
+                        Style="{DynamicResource TextBoxPlusBaseStyle}"
                           Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
             <Button Content="Sort"
                     Grid.Column="1"
@@ -58,10 +58,10 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <hc:SearchBar Margin="0 10 5 10"
-                          hc:InfoElement.Placeholder="Search selected columns"
+            <hc:TextBox Margin="0 10 5 10"
+                          hc:InfoElement.Placeholder="Tìm kiếm"
                           hc:InfoElement.ShowClearButton="True"
-                          Style="{DynamicResource SearchBarExtendBaseStyle}"
+                          Style="{DynamicResource TextBoxPlusBaseStyle}"
                           Text="{Binding SelectedSearchText, UpdateSourceTrigger=PropertyChanged}" />
             <Button Content="Sort"
                     Grid.Column="1"
