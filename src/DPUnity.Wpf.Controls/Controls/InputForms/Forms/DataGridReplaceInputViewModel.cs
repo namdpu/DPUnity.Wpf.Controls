@@ -146,6 +146,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
                 _selectedColumnsInLeft.Remove(item);
             }
             FilterSelectedColumns();
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         [RelayCommand]
@@ -160,6 +161,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             }
             _selectedColumnsInLeft.Clear();
             FilterSelectedColumns();
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         [RelayCommand]
@@ -174,6 +176,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             }
             FilterColumns(); // Re-apply filter to show moved items
             FilterSelectedColumns();
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         [RelayCommand]
@@ -188,6 +191,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             _selectedColumnsInRight.Clear();
             FilterColumns(); // Re-apply filter to show moved items
             FilterSelectedColumns();
+            SubmitCommand.NotifyCanExecuteChanged();
+
         }
 
         [RelayCommand]
@@ -198,6 +203,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             _allColumns.Remove(column);
             SelectedColumns.Add(column);
             FilterSelectedColumns();
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         [RelayCommand]
@@ -208,6 +214,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             _allColumns.Add(column);
             FilterColumns(); // Re-apply filter to show moved item
             FilterSelectedColumns();
+            SubmitCommand.NotifyCanExecuteChanged();
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
