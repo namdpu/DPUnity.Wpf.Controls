@@ -5,6 +5,7 @@ using DPUnity.Wpf.Controls.Controls.InputForms.Forms;
 using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms
 {
@@ -16,7 +17,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         Task<InputMultiSelectResult> ShowMultiSelect(string title, List<IInputObject> itemSource);
         Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false);
         Task<InputReplaceResult> ShowReplaceInput(string title, string findText = "", string replaceText = "");
-        Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<string> columnNames, string findText = "", string replaceText = "");
+        Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<DataGridColumn> columns, string findText = "", string replaceText = "");
         ProcessViewModel ShowProcess(string title, bool hideParent);
     }
 
@@ -195,7 +196,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             return new InputReplaceResult(Result, string.Empty, string.Empty);
         }
 
-        public async Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<string> columnNames, string findText = "", string replaceText = "")
+        public async Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<DataGridColumn> columns, string findText = "", string replaceText = "")
         {
             var options = new WindowOptions()
             {
@@ -211,7 +212,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                {
                    if (vm is DataGridReplaceInputViewModel viewModel)
                    {
-                       viewModel.InitializeColumns(columnNames);
+                       viewModel.InitializeColumns(columns);
                        viewModel.Replace = findText;
                        viewModel.ReplaceWith = replaceText;
                    }

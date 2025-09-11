@@ -20,7 +20,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         {
             if (sender is ListView listView)
             {
-                var selectedItems = listView.SelectedItems.Cast<string>();
+                var selectedItems = listView.SelectedItems.Cast<DataGridColumn>();
                 ViewModel.OnLeftSelectionChanged(selectedItems);
             }
         }
@@ -29,7 +29,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         {
             if (sender is ListView listView)
             {
-                var selectedItems = listView.SelectedItems.Cast<string>();
+                var selectedItems = listView.SelectedItems.Cast<DataGridColumn>();
                 ViewModel.OnRightSelectionChanged(selectedItems);
             } 
         }

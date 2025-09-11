@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using DPUnity.Windows;
 using DPUnity.Windows.Services;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 {
@@ -12,13 +13,13 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         private string inputTitle = string.Empty;
 
         [ObservableProperty]
-        private ObservableCollection<string> columnsSource = [];
+        private ObservableCollection<DataGridColumn> columnsSource = [];
 
         [ObservableProperty]
-        private ObservableCollection<string> selectedColumns = [];
+        private ObservableCollection<DataGridColumn> selectedColumns = [];
 
         [ObservableProperty]
-        private ObservableCollection<string> filteredSelectedColumns = [];
+        private ObservableCollection<DataGridColumn> filteredSelectedColumns = [];
 
         [ObservableProperty]
         private string searchText = string.Empty;
@@ -33,9 +34,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         private string replaceWith = string.Empty;
 
         // Collections to hold all items and filtered items
-        private ObservableCollection<string> _allColumns = [];
-        private ObservableCollection<string> _selectedColumnsInLeft = [];
-        private ObservableCollection<string> _selectedColumnsInRight = [];
+        private ObservableCollection<DataGridColumn> _allColumns = [];
+        private ObservableCollection<DataGridColumn> _selectedColumnsInLeft = [];
+        private ObservableCollection<DataGridColumn> _selectedColumnsInRight = [];
 
         // Variables for sort direction tracking
         private bool _leftIsAscending = true;
@@ -45,7 +46,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         {
         }
 
-        partial void OnColumnsSourceChanged(ObservableCollection<string> value)
+        partial void OnColumnsSourceChanged(ObservableCollection<DataGridColumn> value)
         {
             _allColumns.Clear();
             if (value != null)
@@ -58,7 +59,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             FilterColumns();
         }
 
-        partial void OnSelectedColumnsChanged(ObservableCollection<string> value)
+        partial void OnSelectedColumnsChanged(ObservableCollection<DataGridColumn> value)
         {
             FilteredSelectedColumns.Clear();
             if (value != null)
@@ -98,7 +99,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             }
             else
             {
-                var filteredItems = _allColumns.Where(x => x.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                var filteredItems = _allColumns.Where(x => GetColumnHeader(x).IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                 ColumnsSource.Clear();
                 foreach (var item in filteredItems)
                 {
@@ -119,13 +120,18 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             }
             else
             {
-                var filteredItems = SelectedColumns.Where(x => x.IndexOf(SelectedSearchText, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                var filteredItems = SelectedColumns.Where(x => GetColumnHeader(x).IndexOf(SelectedSearchText, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                 FilteredSelectedColumns.Clear();
                 foreach (var item in filteredItems)
                 {
                     FilteredSelectedColumns.Add(item);
                 }
             }
+        }
+
+        private string GetColumnHeader(DataGridColumn column)
+        {
+            return column.Header?.ToString() ?? string.Empty;
         }
 
         [RelayCommand]
@@ -185,9 +191,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         }
 
         [RelayCommand]
-        private void MoveSingleRight(string column)
+        private void MoveSingleRight(DataGridColumn column)
         {
-            if (string.IsNullOrEmpty(column)) return;
+            if (column == null) return;
             ColumnsSource.Remove(column);
             _allColumns.Remove(column);
             SelectedColumns.Add(column);
@@ -195,9 +201,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         }
 
         [RelayCommand]
-        private void MoveSingleLeft(string column)
+        private void MoveSingleLeft(DataGridColumn column)
         {
-            if (string.IsNullOrEmpty(column)) return;
+            if (column == null) return;
             SelectedColumns.Remove(column);
             _allColumns.Add(column);
             FilterColumns(); // Re-apply filter to show moved item
@@ -225,8 +231,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         private void LeftSort()
         {
             var sorted = _leftIsAscending
-                ? _allColumns.OrderBy(x => x).ToList()
-                : _allColumns.OrderByDescending(x => x).ToList();
+                ? _allColumns.OrderBy(x => GetColumnHeader(x)).ToList()
+                : _allColumns.OrderByDescending(x => GetColumnHeader(x)).ToList();
             _allColumns.Clear();
             foreach (var item in sorted)
             {
@@ -240,8 +246,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         private void RightSort()
         {
             var sorted = _rightIsAscending
-                ? SelectedColumns.OrderBy(x => x).ToList()
-                : SelectedColumns.OrderByDescending(x => x).ToList();
+                ? SelectedColumns.OrderBy(x => GetColumnHeader(x)).ToList()
+                : SelectedColumns.OrderByDescending(x => GetColumnHeader(x)).ToList();
             SelectedColumns.Clear();
             foreach (var item in sorted)
             {
@@ -255,7 +261,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         /// Handles selection change in the left ListView
         /// </summary>
         /// <param name="selectedColumns">Currently selected columns in left ListView</param>
-        public void OnLeftSelectionChanged(IEnumerable<string> selectedColumns)
+        public void OnLeftSelectionChanged(IEnumerable<DataGridColumn> selectedColumns)
         {
             _selectedColumnsInLeft.Clear();
             foreach (var column in selectedColumns)
@@ -268,7 +274,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         /// Handles selection change in the right ListView
         /// </summary>
         /// <param name="selectedColumns">Currently selected columns in right ListView</param>
-        public void OnRightSelectionChanged(IEnumerable<string> selectedColumns)
+        public void OnRightSelectionChanged(IEnumerable<DataGridColumn> selectedColumns)
         {
             _selectedColumnsInRight.Clear();
             foreach (var column in selectedColumns)
@@ -278,20 +284,20 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         }
 
         /// <summary>
-        /// Initialize the control with list of column names
+        /// Initialize the control with list of DataGrid columns
         /// </summary>
-        /// <param name="columnNames">List of column names</param>
-        public void InitializeColumns(List<string> columnNames)
+        /// <param name="columns">List of DataGridColumn</param>
+        public void InitializeColumns(List<DataGridColumn> columns)
         {
             _allColumns.Clear();
             ColumnsSource.Clear();
 
-            if (columnNames != null)
+            if (columns != null)
             {
-                foreach (var columnName in columnNames)
+                foreach (var column in columns)
                 {
-                    _allColumns.Add(columnName);
-                    ColumnsSource.Add(columnName);
+                    _allColumns.Add(column);
+                    ColumnsSource.Add(column);
                 }
             }
         }
