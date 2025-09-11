@@ -13,6 +13,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 
         public DataGridReplaceInputPage(DataGridReplaceInputViewModel vm) : base(vm)
         {
+            InitializeComponent();
         }
 
         private void LeftListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

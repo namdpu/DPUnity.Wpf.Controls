@@ -200,10 +200,10 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             var options = new WindowOptions()
             {
                 Title = title,
-                Width = 800,
+                Width = 400,
                 Height = 500,
+                MinWidth = 400,
                 MinHeight = 500,
-                MinWidth = 600,
                 ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<DataGridReplaceInputPage, DataGridReplaceInputViewModel>

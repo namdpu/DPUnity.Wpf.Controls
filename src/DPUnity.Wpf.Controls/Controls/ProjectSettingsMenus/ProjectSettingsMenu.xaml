@@ -39,7 +39,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button Style="{DynamicResource DP_IconButtonHighLightStyle}"
+                    <Button Style="{DynamicResource DP_IconButtonStyle}"
                             Content="Plus"
                             Tag="Plus"
                             Margin="3"

@@ -215,10 +215,10 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             var options = new WindowOptions()
             {
                 Title = title,
-                Width = 800,
+                Width = 400,
                 Height = 500,
+                MinWidth = 400,
                 MinHeight = 500,
-                MinWidth = 600,
                 ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
