@@ -34,6 +34,9 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
 
             services.AddScoped<ReplaceInputPage>();
             services.AddScoped<ReplaceInputViewModel>();
+
+            services.AddScoped<DataGridReplaceInputPage>();
+            services.AddScoped<DataGridReplaceInputViewModel>();
             #endregion
 
             services.AddScoped<Controls.InputForms.Forms.ProcessPage>();

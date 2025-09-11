@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using DPUnity.Windows;
 using DPUnity.Windows.Services;
 using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
@@ -9,24 +10,32 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
     {
         [ObservableProperty]
         private List<IInputObject> itemsSource = [];
-
+        [ObservableProperty]
+        private int selectedIndex;
         [ObservableProperty]
         private IInputObject? selectedItem;
-
-        private bool isFirstLoad = true;
 
         public SelectInputViewModel(IWindowService windowService, INavigationService navigationService) : base(windowService, navigationService)
         {
         }
 
-
-        partial void OnSelectedItemChanged(IInputObject? oldValue, IInputObject? newValue)
+        [RelayCommand(CanExecute = nameof(CanSubmit))]
+        private void Submit()
         {
-            if (!isFirstLoad)
+            if (SelectedIndex >= 0)
             {
                 OK();
             }
-            isFirstLoad = false;
+        }
+
+        private bool CanSubmit()
+        {
+            return SelectedIndex >= 0;
+        }
+
+        partial void OnSelectedIndexChanged(int value)
+        {
+            SubmitCommand.NotifyCanExecuteChanged();
         }
     }
 }

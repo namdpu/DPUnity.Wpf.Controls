@@ -16,6 +16,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         Task<InputMultiSelectResult> ShowMultiSelect(string title, List<IInputObject> itemSource);
         Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false);
         Task<InputReplaceResult> ShowReplaceInput(string title, string findText = "", string replaceText = "");
+        Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<string> columnNames, string findText = "", string replaceText = "");
         ProcessViewModel ShowProcess(string title, bool hideParent);
     }
 
@@ -96,8 +97,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             {
                 Title = title,
                 Width = 400,
-                Height = 120,
-                MinHeight = 120,
+                Height = 130,
+                MinHeight = 130,
                 ResizeMode = System.Windows.ResizeMode.NoResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<SelectInputPage, SelectInputViewModel>
@@ -192,6 +193,34 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 return new InputReplaceResult(Result, ViewModel.Replace, ViewModel.ReplaceWith);
             }
             return new InputReplaceResult(Result, string.Empty, string.Empty);
+        }
+
+        public async Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<string> columnNames, string findText = "", string replaceText = "")
+        {
+            var options = new WindowOptions()
+            {
+                Title = title,
+                Width = 400,
+                Height = 500,
+                MinWidth = 400,
+                MinHeight = 500,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
+            };
+            var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<DataGridReplaceInputPage, DataGridReplaceInputViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is DataGridReplaceInputViewModel viewModel)
+                   {
+                       viewModel.InitializeColumns(columnNames);
+                       viewModel.Replace = findText;
+                       viewModel.ReplaceWith = replaceText;
+                   }
+               });
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new InputDataGridReplaceResult(Result, [.. ViewModel.SelectedColumns], ViewModel.Replace, ViewModel.ReplaceWith);
+            }
+            return new InputDataGridReplaceResult(Result, [], string.Empty, string.Empty);
         }
 
         public ProcessViewModel ShowProcess(string title, bool hideParent)
