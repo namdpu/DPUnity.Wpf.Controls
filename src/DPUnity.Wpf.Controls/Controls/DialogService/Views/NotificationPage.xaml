@@ -1,0 +1,292 @@
+﻿<wd:DPage x:Class="DPUnity.Wpf.Controls.Controls.DialogService.Views.NotificationPage"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.DialogService.Views"
+          xmlns:icons="https://dpunity.com/dev/wpf/ui/controls/packicon"
+          xmlns:hc="https://handyorg.github.io/handycontrol"
+          xmlns:wd="https://dpunity.com/dev/wpf/windows"
+          mc:Ignorable="d"
+          d:DesignHeight="450"
+          d:DesignWidth="800"
+          Title="NotificationPage"
+          Focusable="True">
+
+    <wd:DPage.Resources>
+        <Color x:Key="AskColor">#d9a3d2</Color>
+        <SolidColorBrush x:Key="AskBrush"
+                         Color="{DynamicResource AskColor}" />
+
+        <!-- Style cho OK Button với focus highlighting -->
+        <Style x:Key="NotificationOKButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource ButtonPrimary}">
+            <Setter Property="BorderThickness"
+                    Value="2" />
+            <Setter Property="BorderBrush"
+                    Value="Transparent" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1"
+                                    ScaleY="1" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin"
+                    Value="0.5,0.5" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="0"
+                                      BlurRadius="0"
+                                      Opacity="0"
+                                      Color="{DynamicResource PrimaryColor}" />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsFocused"
+                         Value="True">
+                    <Setter Property="BorderBrush"
+                            Value="{DynamicResource PrimaryBrush}" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0"
+                                              BlurRadius="8"
+                                              Color="{DynamicResource PrimaryColor}"
+                                              Opacity="0.6" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05"
+                                            ScaleY="1.05" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                </Trigger>
+                <Trigger Property="IsFocused"
+                         Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused"
+                         Value="True">
+                    <Setter Property="BorderBrush"
+                            Value="{DynamicResource PrimaryBrush}" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0"
+                                              BlurRadius="10"
+                                              Color="{DynamicResource PrimaryColor}"
+                                              Opacity="0.8" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05"
+                                            ScaleY="1.05" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused"
+                         Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style cho Cancel Button với focus highlighting -->
+        <Style x:Key="NotificationCancelButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource ButtonDanger}">
+            <Setter Property="BorderThickness"
+                    Value="2" />
+            <Setter Property="BorderBrush"
+                    Value="Transparent" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1"
+                                    ScaleY="1" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin"
+                    Value="0.5,0.5" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="0"
+                                      BlurRadius="0"
+                                      Opacity="0"
+                                      Color="{DynamicResource DangerColor}" />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsFocused"
+                         Value="True">
+                    <Setter Property="BorderBrush"
+                            Value="{DynamicResource DangerBrush}" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0"
+                                              BlurRadius="8"
+                                              Color="{DynamicResource DangerColor}"
+                                              Opacity="0.6" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05"
+                                            ScaleY="1.05" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsFocused"
+                         Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused"
+                         Value="True">
+                    <Setter Property="BorderBrush"
+                            Value="{DynamicResource DangerBrush}" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0"
+                                              BlurRadius="10"
+                                              Color="{DynamicResource DangerColor}"
+                                              Opacity="0.8" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05"
+                                            ScaleY="1.05" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused"
+                         Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </wd:DPage.Resources>
+
+    <Border x:Name="WindowBorder"
+            CornerRadius="15"
+            BorderThickness="1"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            BorderBrush="{Binding BorderBrush}"
+            Opacity="0.95">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Rectangle x:Name="BackgroundOverlay"
+                       Grid.RowSpan="3"
+                       Opacity="0.2"
+                       RadiusX="15"
+                       RadiusY="15" />
+            <Grid Grid.Row="0"
+                  Margin="10 10 10 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <icons:PackIcon x:Name="NotificationIcon"
+                                Grid.Column="0"
+                                Kind="{Binding IconKind}"
+                                Width="18"
+                                Height="18"
+                                Margin="5 0 0 0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Foreground="{Binding IconForeground}" />
+                <TextBlock x:Name="TitleText"
+                           Grid.Column="1"
+                           Text="{Binding Title}"
+                           HorizontalAlignment="Left"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           TextTrimming="CharacterEllipsis"
+                           MaxWidth="280"
+                           Foreground="{Binding TitleForeground}" />
+                <Button x:Name="CloseButton"
+                        Grid.Column="2"
+                        Width="30"
+                        Height="30"
+                        Margin="0 -5 0 0"
+                        HorizontalAlignment="Right"
+                        Command="{Binding CloseCommand}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="2">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="Transparent">
+                                <icons:PackIcon x:Name="Cross"
+                                                Kind="Close"
+                                                Foreground="{DynamicResource DangerBrush}"
+                                                Height="16"
+                                                Width="16" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="Cross"
+                                            Property="Opacity"
+                                            Value="0.8" />
+                                </Trigger>
+                                <Trigger Property="IsPressed"
+                                         Value="True">
+                                    <Setter TargetName="Cross"
+                                            Property="Opacity"
+                                            Value="0.6" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1"
+                  Margin="10 0 0 10">
+                <ScrollViewer Margin="30 0 10 0"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <TextBox x:Name="Message"
+                             Margin="0 0 15 0"
+                             Text="{Binding Message}"
+                             Style="{DynamicResource SimulateTextBlockForTextBoxStyle}"
+                             FontSize="14"
+                             Foreground="{DynamicResource SecondaryTextBrush}" />
+                </ScrollViewer>
+            </Grid>
+            <hc:UniformSpacingPanel Orientation="Horizontal"
+                                    Grid.Row="2"
+                                    KeyboardNavigation.TabNavigation="Cycle"
+                                    HorizontalAlignment="Right"
+                                    Spacing="10"
+                                    Margin="0 0 18 15">
+                <Button x:Name="OKButton"
+                        Width="80"
+                        Content="{Binding OkButtonContent}"
+                        Visibility="{Binding OkButtonVisibility}"
+                        Style="{StaticResource NotificationOKButtonStyle}"
+                        Command="{Binding OkActionCommand}" />
+                <Button x:Name="CancelButton"
+                        Width="80"
+                        Content="{Binding CancelButtonContent}"
+                        Style="{StaticResource NotificationCancelButtonStyle}"
+                        Visibility="{Binding CancelButtonVisibility}"
+                        Command="{Binding CancelCommand}"
+                        IsCancel="True" />
+            </hc:UniformSpacingPanel>
+        </Grid>
+    </Border>
+</wd:DPage>
