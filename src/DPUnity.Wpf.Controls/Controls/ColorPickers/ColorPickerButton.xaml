@@ -9,6 +9,7 @@
              d:DesignWidth="150">
     <Button x:Name="MainButton"
             Height="20"
+            Width="20"
             HorizontalAlignment="Stretch"
             Click="MainButton_Click"
             BorderBrush="{DynamicResource BorderBrush}"
