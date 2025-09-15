@@ -1,5 +1,4 @@
 ﻿using DPUnity.Windows;
-using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 {
@@ -11,6 +10,11 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         public SelectInputPage(SelectInputViewModel vm) : base(vm)
         {
             InitializeComponent();
+        }
+
+        private void DPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SelectCombobox.Focus();
         }
     }
 }

@@ -1,6 +1,5 @@
 using DPUnity.Windows;
 using System.Windows.Controls;
-using System.Linq;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 {
@@ -31,7 +30,12 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             {
                 var selectedItems = listView.SelectedItems.Cast<DataGridColumn>();
                 ViewModel.OnRightSelectionChanged(selectedItems);
-            } 
+            }
+        }
+
+        private void DPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Search.Focus();
         }
     }
 }

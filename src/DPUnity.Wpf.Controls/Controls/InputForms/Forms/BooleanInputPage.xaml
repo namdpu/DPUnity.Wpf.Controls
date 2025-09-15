@@ -6,28 +6,39 @@
           xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.InputForms.Forms"
           xmlns:wd="https://dpunity.com/dev/wpf/windows"
           xmlns:hc="https://handyorg.github.io/handycontrol"
+          xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
           mc:Ignorable="d"
           d:DesignHeight="450"
           d:DesignWidth="800"
-          Title="BooleanInputPage">
+          Title="BooleanInputPage"
+          Loaded="DPage_Loaded">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding KeyDownCommand}"
+                                   PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid Margin="10 5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <RadioButton IsChecked="{Binding Value}"
-                     Content="{Binding TrueContent}"
-                     GroupName="BooleanInput"
-                     HorizontalAlignment="Left"
-                     Padding="5 3" />
-
-        <RadioButton Content="{Binding FalseContent}"
-                     GroupName="BooleanInput"
-                     HorizontalAlignment="Left"
-                     Grid.Row="1"
-                     Padding="5 3" />
+        <hc:UniformSpacingPanel Spacing="10"
+                                Orientation="Vertical"
+                                KeyboardNavigation.TabNavigation="Cycle">
+            <RadioButton x:Name="TrueRadio"
+                         IsChecked="{Binding Value}"
+                         Content="{Binding TrueContent}"
+                         GroupName="BooleanInput"
+                         HorizontalAlignment="Left"
+                         Padding="5 3" />
+            <RadioButton x:Name="FalseRadio"
+                         Content="{Binding FalseContent}"
+                         GroupName="BooleanInput"
+                         HorizontalAlignment="Left"
+                         Padding="5 3" />
+        </hc:UniformSpacingPanel>
         <hc:UniformSpacingPanel Spacing="10"
                                 Orientation="Horizontal"
                                 Grid.Row="2"
@@ -35,7 +46,6 @@
                                 Margin=" 0 0 0 10">
             <Button Content="OK"
                     Width="75"
-                    IsDefault="True"
                     Command="{Binding SubmitCommand}" />
             <Button Content="Cancel"
                     Width="75"

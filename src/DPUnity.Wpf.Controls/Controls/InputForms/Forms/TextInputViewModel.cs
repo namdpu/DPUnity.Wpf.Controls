@@ -30,5 +30,20 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         {
             base.Cancel();
         }
+
+        [RelayCommand]
+        private void KeyDown(System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                Submit();
+                e.Handled = true;
+            }
+            else if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                Cancel();
+                e.Handled = true;
+            }
+        }
     }
 }
