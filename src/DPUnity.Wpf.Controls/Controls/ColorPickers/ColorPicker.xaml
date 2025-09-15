@@ -41,30 +41,23 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="SliderStyle"
-               TargetType="Slider">
-            <Setter Property="Height"
-                    Value="20" />
-            <Setter Property="Margin"
-                    Value="5,2" />
-        </Style>
     </UserControl.Resources>
     <Border CornerRadius="15"
+            Width="385"
             BorderThickness="1"
             BorderBrush="{DynamicResource BorderBrush}"
             Background="{DynamicResource SecondaryRegionBrush}">
-        <Grid Margin="5">
+        <Grid Margin="5" Width="380">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!-- Color Canvas Area -->
-            <Grid Grid.Row="0"
-                  Margin="10">
+            <Grid Grid.Row="0" Width="365"
+                  Margin="-14 10 0 5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="20" />
@@ -211,7 +204,7 @@
             </Grid>
             <!-- Current Color Display -->
             <Grid Grid.Row="1"
-                  Margin="10,5">
+                  Margin="0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60" />
                     <ColumnDefinition Width="*" />
@@ -345,40 +338,37 @@
             </Grid>
             <!-- Default Colors -->
             <StackPanel Grid.Row="2"
-                        Margin="10,5">
-                <TextBlock Text="Default Colors"
-                           Margin="0,0,0,5" />
+                        Margin="0,5">
+                <TextBlock Text="Default Colors"/>
                 <WrapPanel x:Name="DefaultColorsPanel"
                            Orientation="Horizontal" />
             </StackPanel>
             <!-- Recent Colors -->
             <StackPanel Grid.Row="3"
-                        Margin="10,5">
-                <TextBlock Text="Recent Colors"
-                           Margin="0,0,0,5" />
+                        Margin="0,5">
+                <TextBlock Text="Recent Colors"/>
                 <WrapPanel x:Name="RecentColorsPanel"
                            Orientation="Horizontal"
                            Height="30" />
             </StackPanel>
             <!-- Buttons -->
-            <StackPanel Grid.Row="5"
+            <hc:UniformSpacingPanel Grid.Row="4"
+                                    Spacing="10"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right"
-                        Margin="10">
+                        Margin="10 5">
                 <Button x:Name="ConfirmButton"
                         Content="Confirm"
                         Width="80"
                         Height="30"
-                        Margin="5,0"
                         Click="ConfirmButton_Click" />
                 <Button x:Name="CancelButton"
                         Content="Cancel"
                         Width="80"
                         Height="30"
-                        Margin="5,0"
                         Style="{DynamicResource ButtonDanger}"
                         Click="CancelButton_Click" />
-            </StackPanel>
+            </hc:UniformSpacingPanel>
         </Grid>
     </Border>
 </UserControl>

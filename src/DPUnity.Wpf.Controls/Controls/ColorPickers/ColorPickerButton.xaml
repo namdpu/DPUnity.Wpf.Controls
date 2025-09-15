@@ -7,55 +7,97 @@
              mc:Ignorable="d"
              d:DesignHeight="32"
              d:DesignWidth="150">
+    
     <Button x:Name="MainButton"
-            Height="20"
-            Width="20"
+            Height="28"
             HorizontalAlignment="Stretch"
             Click="MainButton_Click"
-            BorderBrush="{DynamicResource BorderBrush}"
-            BorderThickness="1"
-            Background="Transparent">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="14" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            
-            <!-- Color Rectangle -->
-            <Border Grid.Column="0"
-                    Width="14"
-                    Height="14"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1"
-                    VerticalAlignment="Center">
-                <!-- Checkerboard background for transparency -->
-                <Border.Background>
-                    <DrawingBrush Viewport="0,0,4,4"
-                                  ViewportUnits="Absolute"
-                                  TileMode="Tile">
-                        <DrawingBrush.Drawing>
-                            <DrawingGroup>
-                                <GeometryDrawing Brush="White">
-                                    <GeometryDrawing.Geometry>
-                                        <RectangleGeometry Rect="0,0,4,4" />
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                                <GeometryDrawing Brush="{DynamicResource BorderBrush}">
-                                    <GeometryDrawing.Geometry>
-                                        <GeometryGroup>
-                                            <RectangleGeometry Rect="0,0,2,2" />
-                                            <RectangleGeometry Rect="2,2,2,2" />
-                                        </GeometryGroup>
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                            </DrawingGroup>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Border.Background>
-                <Rectangle x:Name="ColorRectangle"
-                           Fill="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}, Converter={x:Static local:ColorToBrushConverter.Instance}}" />
-            </Border>
-        </Grid>
+            Cursor="Hand"
+            VerticalAlignment="Center"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Foreground="{DynamicResource SecondaryTextBrush}">
+        
+        <Button.Style>
+            <Style TargetType="Button">
+                <Setter Property="Width" Value="50" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ShowRgbText, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="True">
+                        <Setter Property="Width" Value="90" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Button.Style>
+        
+        <Button.Template>
+            <ControlTemplate TargetType="Button">
+                <Border x:Name="border"
+                        CornerRadius="3"
+                        BorderThickness="1"
+                        Background="Transparent"
+                        Padding="4">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource BorderBrush}" />
+                        </Style>
+                    </Border.Style>
+                    
+                    <!-- Content Panel -->
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        
+                        <!-- Color Rectangle -->
+                        <Border Width="14"
+                                Height="14"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1"
+                                VerticalAlignment="Center"
+                                Margin="0,0,4,0">
+                            
+                            <Rectangle x:Name="ColorRectangle"
+                                       Fill="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}, Converter={x:Static local:ColorToBrushConverter.Instance}}" />
+                        </Border>
+                        
+                        <!-- RGB Text -->
+                        <TextBlock x:Name="rgbText"
+                                   Text="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}, Converter={x:Static local:ColorToRgbStringConverter.Instance}}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ShowRgbText, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        
+                    </StackPanel>
+                </Border>
+                
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver"
+                             Value="True">
+                        <Setter TargetName="border"
+                                Property="BorderBrush"
+                                Value="{DynamicResource PrimaryBrush}" />
+                        <Setter TargetName="rgbText"
+                                Property="Foreground"
+                                Value="{DynamicResource PrimaryBrush}" />
+                    </Trigger>
+                    <Trigger Property="IsEnabled"
+                             Value="False">
+                        <Setter Property="Opacity"
+                                Value="0.6" />
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Button.Template>
         
     </Button>
 </UserControl>
