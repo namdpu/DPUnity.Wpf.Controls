@@ -6,17 +6,24 @@
           xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.InputForms.Forms"
           xmlns:wd="https://dpunity.com/dev/wpf/windows"
           xmlns:hc="https://handyorg.github.io/handycontrol"
+          xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
           mc:Ignorable="d"
           d:DesignHeight="450"
           d:DesignWidth="800"
-          Title="SelectInputPage">
-
+          Title="SelectInputPage"
+          Loaded="DPage_Loaded">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding KeyDownCommand}"
+                                   PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <hc:ComboBox ItemsSource="{Binding ItemsSource}"
+        <hc:ComboBox x:Name="SelectCombobox" ItemsSource="{Binding ItemsSource}"
                      IsTextSearchEnabled="True"
                      SelectedItem="{Binding SelectedItem}"
                      SelectedIndex="{Binding SelectedIndex, Mode=OneWayToSource}"

@@ -10,6 +10,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         public ProcessPage(ProcessViewModel processViewModel) : base(processViewModel)
         {
             InitializeComponent();
+            CancelButton.Focus();
         }
     }
 }

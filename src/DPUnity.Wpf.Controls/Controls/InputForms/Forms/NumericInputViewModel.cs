@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using DPUnity.Windows;
 using DPUnity.Windows.Services;
 using System.Globalization;
+using System.Windows.Input;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 {
@@ -185,6 +186,24 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
                 return false;
 
             return true;
+        }
+
+        [RelayCommand]
+        private void KeyDown(EventArgs e)
+        {
+            if (e is KeyEventArgs keyEvent)
+            {
+                if (keyEvent.Key == Key.Enter && CanSubmit())
+                {
+                    Submit();
+                    keyEvent.Handled = true;
+                }
+                else if (keyEvent.Key == Key.Escape)
+                {
+                    Cancel();
+                    keyEvent.Handled = true;
+                }
+            }
         }
     }
 }

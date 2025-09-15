@@ -15,7 +15,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         {
             var windowOptions = new WindowOptions()
             {
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 MinWidth = 125,
                 MinHeight = 125,
                 Width = 450,
@@ -40,7 +40,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 300,
                 Height = 160,
                 MinHeight = 160,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -69,7 +69,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 140,
                 MinHeight = 140,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -96,7 +96,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 160,
                 MinHeight = 160,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -136,7 +136,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 120,
                 MinHeight = 120,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -191,7 +191,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 200,
                 MinHeight = 200,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };

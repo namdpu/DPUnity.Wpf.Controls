@@ -7,9 +7,17 @@
           xmlns:wd="https://dpunity.com/dev/wpf/windows"
           xmlns:hc="https://handyorg.github.io/handycontrol"
           xmlns:cvt="clr-namespace:DPUnity.Wpf.Controls.Converters"
+          xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
           mc:Ignorable="d"
           d:DesignHeight="200"
-          d:DesignWidth="400">
+          d:DesignWidth="400"
+          Loaded="DPage_Loaded">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding KeyDownCommand}"
+                                   PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Page.Resources>
         <cvt:BooleanToHiddenVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" />
     </Page.Resources>

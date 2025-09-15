@@ -6,10 +6,17 @@
           xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.InputForms.Forms"
           xmlns:wd="https://dpunity.com/dev/wpf/windows"
           xmlns:hc="https://handyorg.github.io/handycontrol"
+          xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
           mc:Ignorable="d"
           d:DesignHeight="200"
-          d:DesignWidth="400">
-
+          d:DesignWidth="400"
+          Loaded="DPage_Loaded">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding KeyDownCommand}"
+                                   PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -17,6 +24,7 @@
         </Grid.RowDefinitions>
         <hc:TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                     Style="{DynamicResource TextBoxExtend}"
+                    Name="InputTextBox"
                     Height="28"/>
         <hc:UniformSpacingPanel Spacing="10" Orientation="Horizontal"
                                 Grid.Row="1"

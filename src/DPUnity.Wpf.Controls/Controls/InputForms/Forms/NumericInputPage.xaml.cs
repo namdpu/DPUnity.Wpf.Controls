@@ -51,5 +51,10 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             // Kiểm tra range validation
             return viewModel.IsValidInputForRange(currentText, input, caretIndex);
         }
+
+        private void DPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            NumericTextBox.Focus();
+        }
     }
 }

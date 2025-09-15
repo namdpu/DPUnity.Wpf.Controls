@@ -11,5 +11,10 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
         {
             InitializeComponent();
         }
+
+        private void DPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            InputTextBox.Focus();
+        }
     }
 }

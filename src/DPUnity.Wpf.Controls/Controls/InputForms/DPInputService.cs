@@ -37,7 +37,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 140,
                 MinHeight = 140,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<TextInputPage, TextInputViewModel>
                (options, false, (vm) =>
@@ -62,7 +62,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 160,
                 MinHeight = 160,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<NumericInputPage, NumericInputViewModel>
                (options, false, (vm) =>
@@ -100,7 +100,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 130,
                 MinHeight = 130,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<SelectInputPage, SelectInputViewModel>
                (options, false, (vm) =>
@@ -151,7 +151,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 160,
                 MinHeight = 160,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<BooleanInputPage, BooleanInputViewModel>
                (options, false, (vm) =>
@@ -178,7 +178,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 200,
                 MinHeight = 200,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<ReplaceInputPage, ReplaceInputViewModel>
                (options, false, (vm) =>
@@ -228,7 +228,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         {
             var windowOptions = new WindowOptions()
             {
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 MinWidth = 125,
                 MinHeight = 125,
                 Width = 450,
