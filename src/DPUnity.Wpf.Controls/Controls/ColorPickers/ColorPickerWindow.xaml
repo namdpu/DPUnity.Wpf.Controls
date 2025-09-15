@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.ColorPickers"
         Title="Color Picker"
-        Width="400"
-        Height="500"
+        Width="440"
+        Height="445"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
@@ -12,14 +12,9 @@
         Topmost="True"
         Background="Transparent"
         AllowsTransparency="True">
-    <Border BorderBrush="{DynamicResource BorderBrush}"
-            BorderThickness="1"
-            CornerRadius="14">
-        <local:ColorPicker x:Name="ColorPickerControl"
-                           Width="400"
-                           Height="500"
-                           Confirmed="ColorPicker_Confirmed"
-                           Cancelled="ColorPicker_Cancelled"
-                           ColorChanged="ColorPicker_ColorChanged" />
-    </Border>
+
+    <local:ColorPicker x:Name="ColorPickerControl"
+                       Confirmed="ColorPicker_Confirmed"
+                       Cancelled="ColorPicker_Cancelled"
+                       ColorChanged="ColorPicker_ColorChanged" />
 </Window>
