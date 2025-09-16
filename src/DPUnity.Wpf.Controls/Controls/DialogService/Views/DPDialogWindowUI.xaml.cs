@@ -1,6 +1,7 @@
 ﻿using DPUnity.Windows;
 using DPUnity.Windows.Services;
 using DPUnity.Wpf.Controls.Interfaces;
+using DPUnity.Wpf.UI.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Input;
@@ -15,6 +16,8 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
     {
         public DPDialogWindowUI(IServiceProvider serviceProvider)
         {
+            _ = DPThemeManager.GetCurrentThemeName();
+
             LoadResourceDictionaries();
             InitializeComponent();
             WindowService = serviceProvider.GetRequiredService<IWindowService>();
