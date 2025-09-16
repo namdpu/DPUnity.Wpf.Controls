@@ -15,11 +15,7 @@
 
     <wd:DPage.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-                <Color x:Key="AskColor">#d9a3d2</Color>
+            <Color x:Key="AskColor">#d9a3d2</Color>
             <SolidColorBrush x:Key="AskBrush"
                              Color="{DynamicResource AskColor}" />
 
