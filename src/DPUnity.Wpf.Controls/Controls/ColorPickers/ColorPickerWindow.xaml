@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DPUnity.Wpf.Controls.Controls.ColorPickers"
+        xmlns:rs="clr-namespace:DPUnity.Wpf.UI.Styles;assembly=DPUnity.Wpf.UI"
         Title="Color Picker"
         Width="440"
         Height="445"
@@ -12,7 +13,14 @@
         Topmost="True"
         Background="Transparent"
         AllowsTransparency="True">
-
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <rs:DpuResources />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     <local:ColorPicker x:Name="ColorPickerControl"
                        Confirmed="ColorPicker_Confirmed"
                        Cancelled="ColorPicker_Cancelled"

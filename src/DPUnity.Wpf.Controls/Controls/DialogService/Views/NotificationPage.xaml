@@ -7,6 +7,7 @@
           xmlns:icons="https://dpunity.com/dev/wpf/ui/controls/packicon"
           xmlns:hc="https://handyorg.github.io/handycontrol"
           xmlns:wd="https://dpunity.com/dev/wpf/windows"
+          xmlns:rs="clr-namespace:DPUnity.Wpf.UI.Styles;assembly=DPUnity.Wpf.UI"
           mc:Ignorable="d"
           d:DesignHeight="450"
           d:DesignWidth="800"
@@ -15,6 +16,9 @@
 
     <wd:DPage.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <rs:DpuResources />
+            </ResourceDictionary.MergedDictionaries>
             <Color x:Key="AskColor">#d9a3d2</Color>
             <SolidColorBrush x:Key="AskBrush"
                              Color="{DynamicResource AskColor}" />

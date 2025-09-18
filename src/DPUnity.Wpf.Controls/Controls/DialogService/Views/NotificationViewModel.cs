@@ -111,7 +111,6 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
                     TitleForeground = GetBrushResource("WarningBrush", application);
                     SetupInformationButtons();
                     break;
-
                 case NotificationType.Ask:
                     IconKind = PackIconKind.HelpCircle;
                     BorderBrush = GetBrushResource("AskBrush", application);
