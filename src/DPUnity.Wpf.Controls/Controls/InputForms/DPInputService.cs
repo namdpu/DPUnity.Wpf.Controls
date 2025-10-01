@@ -18,7 +18,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false);
         Task<InputReplaceResult> ShowReplaceInput(string title, string findText = "", string replaceText = "");
         Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<DataGridColumn> columns, string findText = "", string replaceText = "");
-        ProcessViewModel ShowProcess(string title, bool hideParent);
+        ProcessViewModel ShowProcess(string title, bool hideParent = true);
+        ProcessViewModel ShowProcess2(string title, bool hideParent = true);
+        ProcessViewModel ShowProcess3(string title, bool hideParent = true);
     }
 
     public class DPInputService : IDPInputService
@@ -224,21 +226,66 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             return new InputDataGridReplaceResult(Result, [], string.Empty, string.Empty);
         }
 
-        public ProcessViewModel ShowProcess(string title, bool hideParent)
+        public ProcessViewModel ShowProcess(string title, bool hideParent = true)
         {
             var windowOptions = new WindowOptions()
             {
-                ResizeMode = ResizeMode.CanResize,
+                ResizeMode = ResizeMode.NoResize,
                 MinWidth = 125,
-                MinHeight = 125,
+                MinHeight = 145,
                 Width = 450,
-                Height = 125,
+                Height = 145,
                 Title = title,
             };
             var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
             {
                 return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
             }, windowOptions, hideParent);
+            return viewModel;
+        }
+        public ProcessViewModel ShowProcess2(string title, bool hideParent = true)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 175,
+                Width = 450,
+                Height = 175,
+                Title = title,
+            };
+            var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions, hideParent);
+            if (viewModel is ProcessViewModel vm)
+            {
+                vm.Progress2Visibility = Visibility.Visible;
+            }
+            return viewModel;
+        }
+
+        public ProcessViewModel ShowProcess3(string title, bool hideParent = true)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 175,
+                Width = 450,
+                Height = 170,
+                Title = title,
+            };
+            var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions, hideParent);
+            if (viewModel is ProcessViewModel vm)
+            {
+                vm.WindowService.CurrentWindow.Window.Height = 175;
+                vm.Progress2Visibility = Visibility.Visible;
+                vm.Progress3Visibility = Visibility.Visible;
+            }
             return viewModel;
         }
     }

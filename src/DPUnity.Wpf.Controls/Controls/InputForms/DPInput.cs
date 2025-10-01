@@ -15,11 +15,11 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         {
             var windowOptions = new WindowOptions()
             {
-                ResizeMode = ResizeMode.CanResize,
+                ResizeMode = ResizeMode.NoResize,
                 MinWidth = 125,
-                MinHeight = 125,
+                MinHeight = 145,
                 Width = 450,
-                Height = 125,
+                Height = 145,
                 Title = title,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
@@ -29,6 +29,56 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             {
                 return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
             }, windowOptions);
+
+            return viewModel;
+        }
+
+        public static ProcessViewModel ShowProcess2(string title, nint owner = 0)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 175,
+                Width = 450,
+                Height = 175,
+                Title = title,
+                WindowOwner = owner,
+                windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
+            };
+            var viewModel = WindowManager.OpenWindowProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions);
+            if (viewModel is ProcessViewModel vm)
+            {
+                vm.Progress2Visibility = Visibility.Visible;
+            }
+            return viewModel;
+        }
+
+        public static ProcessViewModel ShowProcess3(string title, nint owner = 0)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 175,
+                Width = 450,
+                Height = 170,
+                Title = title,
+                WindowOwner = owner,
+                windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
+            };
+            var viewModel = WindowManager.OpenWindowProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions);
+            if (viewModel is ProcessViewModel vm)
+            {
+                vm.Progress2Visibility = Visibility.Visible;
+                vm.Progress3Visibility = Visibility.Visible;
+            }
             return viewModel;
         }
 
