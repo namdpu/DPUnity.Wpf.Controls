@@ -2,6 +2,7 @@
 using DPUnity.Windows.Services;
 using DPUnity.Wpf.Controls.Interfaces;
 using DPUnity.Wpf.UI.Helpers;
+using DPUnity.Wpf.UI.Styles;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Input;
@@ -77,17 +78,12 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
             }
         }
 
-        private static ResourceDictionary DPUDict { get; } = new ResourceDictionary
-        {
-            Source = new Uri("pack://application:,,,/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml")
-        };
-
         private void LoadResourceDictionaries()
         {
             try
             {
                 this.Resources.MergedDictionaries.Clear();
-                this.Resources.MergedDictionaries.Add(DPUDict);
+                this.Resources.MergedDictionaries.Add(new DpuResources());
             }
             catch (Exception ex)
             {

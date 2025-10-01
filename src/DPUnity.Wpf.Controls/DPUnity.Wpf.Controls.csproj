@@ -6,7 +6,7 @@
 		<UseWPF>true</UseWPF>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>1.0.27-preview-1</Version>
+		<Version>1.0.28</Version>
 		<PackageId>DPUnity.Wpf.Controls</PackageId>
 		<Title>DPUnity WPF Controls</Title>
 		<Description>Custom WPF controls and components for enhanced user interface development</Description>
@@ -16,28 +16,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Behaviors\NewFolder\**" />
-	  <Compile Remove="Controls\InputForms\Forms\NewFolder\**" />
-	  <EmbeddedResource Remove="Behaviors\NewFolder\**" />
-	  <EmbeddedResource Remove="Controls\InputForms\Forms\NewFolder\**" />
-	  <None Remove="Behaviors\NewFolder\**" />
-	  <None Remove="Controls\InputForms\Forms\NewFolder\**" />
-	  <Page Remove="Behaviors\NewFolder\**" />
-	  <Page Remove="Controls\InputForms\Forms\NewFolder\**" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="Controls\DialogService\Views\DPDialogWindowUI.xaml.cs~RF71402820.TMP" />
-	  <None Remove="Controls\InputForms\DPInput.cs~RF6c8df966.TMP" />
-	  <None Remove="Controls\InputForms\DPInputService.cs~RF4dab7ff6.TMP" />
-	  <None Remove="Controls\InputForms\InputResult.cs~RF4db05285.TMP" />
+	<ItemGroup Condition="'$(Configuration)' != 'Debug'">
+		<PackageReference Include="DPUnity.Wpf.UI" Version="1.0.29" />
 	</ItemGroup>
 
-
-	<ItemGroup>
-	  <PackageReference Include="DPUnity.Windows" Version="1.2.8" />
-	  <PackageReference Include="DPUnity.Wpf.UI" Version="1.0.27" />
-	  <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<ProjectReference Include="..\..\..\DPUnity.Wpf.UI\DPUnity.Wpf.UI.csproj" />
 	</ItemGroup>
-
 </Project>
