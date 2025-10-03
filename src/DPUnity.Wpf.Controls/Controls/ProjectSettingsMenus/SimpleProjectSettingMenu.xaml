@@ -14,9 +14,6 @@
              x:Name="Root">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <d:ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <converters:BooleanToHiddenVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" />
             <local:StringToHasValueConverter x:Key="StringToHasValueConverter" />
             <SolidColorBrush x:Key="DarkPrimaryBrush"

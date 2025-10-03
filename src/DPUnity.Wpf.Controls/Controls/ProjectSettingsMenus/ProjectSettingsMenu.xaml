@@ -11,12 +11,10 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
+             Width="210"
              x:Name="Root">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <d:ResourceDictionary Source="/DPUnity.WPF.UI;component/Styles/DPUnityResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <converters:BooleanToHiddenVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" />
             <local:StringToHasValueConverter x:Key="StringToHasValueConverter" />
             <SolidColorBrush x:Key="DarkPrimaryBrush"
@@ -37,17 +35,27 @@
                 <Grid DockPanel.Dock="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Button Style="{DynamicResource DP_IconButtonStyle}"
                             Content="Plus"
+                            ToolTip="Tạo mới"
+                            Tag="Plus"
+                            Margin="3"
+                            HorizontalAlignment="Left"
+                            Command="{Binding AddNewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                    <Button Style="{DynamicResource DP_IconButtonStyle}"
+                            ToolTip="Khôi phục"
+                            Grid.Column="1"
+                            Content="DatabaseCheckOutline"
                             Tag="Plus"
                             Margin="3"
                             HorizontalAlignment="Left"
                             Command="{Binding AddNewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
                     <hc:TextBox Margin="3"
-                                Grid.Column="1"
-                                MinWidth="160"
+                                Grid.Column="2"
+                                MinWidth="127"
                                 hc:InfoElement.ShowClearButton="True"
                                 hc:InfoElement.Placeholder="Tìm kiếm"
                                 HorizontalAlignment="Left"
@@ -195,6 +203,9 @@
                                                               Click="CopyMenuItem_Click" />
                                                     <MenuItem Header="Xóa"
                                                               itemIcon:MenuItemIconBehavior.IconKind="Delete"
+                                                              Click="DeleteMenuItem_Click" />
+                                                    <MenuItem Header="Chọn phiên bản"
+                                                              itemIcon:MenuItemIconBehavior.IconKind="Artstation"
                                                               Click="DeleteMenuItem_Click" />
                                                 </ContextMenu>
                                             </Button.ContextMenu>

@@ -9,6 +9,11 @@ using System.Windows.Threading;
 
 namespace DPUnity.Wpf.Controls.Controls.ProjectSettingsMenus
 {
+    public interface IDP_ProjectSetting : IDP_SimpleProjectSetting
+    {
+        public bool IsActivated { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for ProjectSettingsMenu.xaml
     /// </summary>

@@ -16,6 +16,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="DependencyInjections\RegisterService.cs~RF358dd3d.TMP" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
 	</ItemGroup>
 
