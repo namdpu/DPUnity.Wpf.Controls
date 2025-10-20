@@ -21,6 +21,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         ProcessViewModel ShowProcess(string title, bool hideParent = true);
         ProcessViewModel ShowProcess2(string title, bool hideParent = true);
         ProcessViewModel ShowProcess3(string title, bool hideParent = true);
+
+        Task<InputConfirmDeleteResult> ShowInputConfirmDelete(string title, string message = "Are you sure you want to delete this item?", string confirmString = "DELETE");
     }
 
     public class DPInputService : IDPInputService
@@ -287,6 +289,57 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 vm.Progress3Visibility = Visibility.Visible;
             }
             return viewModel;
+        }
+
+        public async Task<InputConfirmDeleteResult> ShowInputConfirmDelete(string title, string message = "Are you sure you want to delete this item?", string confirmString = "DELETE")
+        {
+            double width = 400;
+            double height = CalculateStringHeight(message, width);
+
+            var options = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 450,
+                MinHeight = 180,
+                Width = 450,
+                Height = 180,
+                Title = title,
+            };
+            var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<BooleanInputPage, BooleanInputViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is ConfirmDeleteViewModel viewModel)
+                   {
+                       viewModel.Message = message;
+                       viewModel.ConfirmString = confirmString;
+                   }
+               });
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new(Result, ViewModel.Value);
+            }
+            return new(Result, false);
+        }
+
+        private const double LINE_HEIGHT = 14 * 1.7;
+        private const int CHARACTER_PER_LINE = 65;
+        private static double CalculateStringHeight(string message, double width)
+        {
+            string[] stringLine = message.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            int newLineCount = stringLine.Length;
+            if (newLineCount == 0) newLineCount = 1;
+            int newLinesFromWrap = 0;
+            foreach (var line in stringLine)
+            {
+                if (line.Length > CHARACTER_PER_LINE)
+                {
+                    newLinesFromWrap += 1;
+                }
+            }
+            newLineCount += newLinesFromWrap;
+
+            double desiredHeight = newLineCount * LINE_HEIGHT;
+            return desiredHeight + 110;
         }
     }
 }

@@ -39,6 +39,9 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
             services.AddScoped<DataGridReplaceInputViewModel>();
 
             services.AddScoped<Controls.InputForms.Forms.ProcessPage>();
+
+            services.AddScoped<ConfirmDeletePage>();
+            services.AddScoped<ConfirmDeleteViewModel>();
             #endregion
 
             #region DialogServices

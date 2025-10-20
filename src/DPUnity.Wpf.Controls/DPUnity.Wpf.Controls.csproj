@@ -6,7 +6,7 @@
 		<UseWPF>true</UseWPF>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>1.0.28</Version>
+		<Version>1.0.29</Version>
 		<PackageId>DPUnity.Wpf.Controls</PackageId>
 		<Title>DPUnity WPF Controls</Title>
 		<Description>Custom WPF controls and components for enhanced user interface development</Description>
@@ -24,10 +24,10 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' != 'Debug'">
-		<PackageReference Include="DPUnity.Wpf.UI" Version="1.0.29" />
+		<PackageReference Include="DPUnity.Wpf.UI" Version="1.0.30" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<ProjectReference Include="..\..\..\DPUnity.Wpf.UI\DPUnity.Wpf.UI.csproj" />
+	  <ProjectReference Include="..\..\..\DPUnity.Wpf.UI\DPUnity.Wpf.UI.csproj" />
 	</ItemGroup>
 </Project>
