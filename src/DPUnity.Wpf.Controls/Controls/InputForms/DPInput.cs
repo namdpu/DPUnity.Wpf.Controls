@@ -290,5 +290,58 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             }
             return new InputDataGridReplaceResult(Result, [], string.Empty, string.Empty);
         }
+
+        public static async Task<InputConfirmDeleteResult> ShowConfirmDelete(string title, string confirmString = "DELETE", string message = "Are you sure you want to delete this item?", nint owner = 0)
+        {
+            double width = 400;
+            double height = CalculateStringHeight(message, width);
+
+            var options = new WindowOptions()
+            {
+                Title = title,
+                Width = width,
+                Height = height,
+                MinHeight = height,
+                ResizeMode = ResizeMode.NoResize,
+                WindowOwner = owner,
+                windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
+            };
+            var (Result, ViewModel) = await WindowManager.ShowDialogAsync<ConfirmDeletePage, ConfirmDeleteViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is ConfirmDeleteViewModel viewModel)
+                   {
+                       viewModel.ConfirmString = confirmString;
+                       viewModel.Message = message;
+                   }
+               });
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new InputConfirmDeleteResult(Result, ViewModel.ConfirmString == ViewModel.InputString);
+            }
+            return new InputConfirmDeleteResult(Result, false);
+        }
+
+        private const double LINE_HEIGHT = 14 * 1.7;
+        private const int CHARACTER_PER_LINE = 65;
+
+        private static double CalculateStringHeight(string message, double width)
+        {
+            string[] stringLine = message.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            int newLineCount = stringLine.Length;
+            if (newLineCount == 0) newLineCount = 1;
+            int newLinesFromWrap = 0;
+            foreach (var line in stringLine)
+            {
+                if (line.Length > CHARACTER_PER_LINE)
+                {
+                    newLinesFromWrap += 1;
+                }
+            }
+            newLineCount += newLinesFromWrap;
+
+            double desiredHeight = newLineCount * LINE_HEIGHT;
+            return desiredHeight + 110;
+        }
     }
 }
