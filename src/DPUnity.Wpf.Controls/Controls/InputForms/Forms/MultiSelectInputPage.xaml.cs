@@ -31,7 +31,12 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             {
                 var selectedItems = listView.SelectedItems.Cast<IInputObject>();
                 ViewModel.OnRightSelectionChanged(selectedItems);
-            } 
+            }
+        }
+
+        private void DPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Search.Focus();
         }
     }
 }

@@ -17,9 +17,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             {
                 ResizeMode = ResizeMode.NoResize,
                 MinWidth = 125,
-                MinHeight = 125,
+                MinHeight = 145,
                 Width = 450,
-                Height = 125,
+                Height = 145,
                 Title = title,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
@@ -29,6 +29,56 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             {
                 return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
             }, windowOptions);
+
+            return viewModel;
+        }
+
+        public static ProcessViewModel ShowProcess2(string title, nint owner = 0)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 175,
+                Width = 450,
+                Height = 175,
+                Title = title,
+                WindowOwner = owner,
+                windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
+            };
+            var viewModel = WindowManager.OpenWindowProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions);
+            if (viewModel is ProcessViewModel vm)
+            {
+                vm.Progress2Visibility = Visibility.Visible;
+            }
+            return viewModel;
+        }
+
+        public static ProcessViewModel ShowProcess3(string title, nint owner = 0)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 175,
+                Width = 450,
+                Height = 170,
+                Title = title,
+                WindowOwner = owner,
+                windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
+            };
+            var viewModel = WindowManager.OpenWindowProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions);
+            if (viewModel is ProcessViewModel vm)
+            {
+                vm.Progress2Visibility = Visibility.Visible;
+                vm.Progress3Visibility = Visibility.Visible;
+            }
             return viewModel;
         }
 
@@ -40,7 +90,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 300,
                 Height = 160,
                 MinHeight = 160,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -69,7 +119,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 140,
                 MinHeight = 140,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -96,7 +146,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 160,
                 MinHeight = 160,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -136,7 +186,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 120,
                 MinHeight = 120,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -191,7 +241,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 200,
                 MinHeight = 200,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 WindowOwner = owner,
                 windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
             };
@@ -239,6 +289,59 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 return new InputDataGridReplaceResult(Result, [.. ViewModel.SelectedColumns], ViewModel.Replace, ViewModel.ReplaceWith);
             }
             return new InputDataGridReplaceResult(Result, [], string.Empty, string.Empty);
+        }
+
+        public static async Task<InputConfirmDeleteResult> ShowConfirmDelete(string title, string confirmString = "DELETE", string message = "Are you sure you want to delete this item?", nint owner = 0)
+        {
+            double width = 400;
+            double height = CalculateStringHeight(message, width);
+
+            var options = new WindowOptions()
+            {
+                Title = title,
+                Width = width,
+                Height = height,
+                MinHeight = height,
+                ResizeMode = ResizeMode.NoResize,
+                WindowOwner = owner,
+                windowAction = (wd) => { if (owner == 0) { WindowHelper.SetWindowOwner(wd.Window); } }
+            };
+            var (Result, ViewModel) = await WindowManager.ShowDialogAsync<ConfirmDeletePage, ConfirmDeleteViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is ConfirmDeleteViewModel viewModel)
+                   {
+                       viewModel.ConfirmString = confirmString;
+                       viewModel.Message = message;
+                   }
+               });
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new InputConfirmDeleteResult(Result, ViewModel.ConfirmString == ViewModel.InputString);
+            }
+            return new InputConfirmDeleteResult(Result, false);
+        }
+
+        private const double LINE_HEIGHT = 14 * 1.7;
+        private const int CHARACTER_PER_LINE = 65;
+
+        private static double CalculateStringHeight(string message, double width)
+        {
+            string[] stringLine = message.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            int newLineCount = stringLine.Length;
+            if (newLineCount == 0) newLineCount = 1;
+            int newLinesFromWrap = 0;
+            foreach (var line in stringLine)
+            {
+                if (line.Length > CHARACTER_PER_LINE)
+                {
+                    newLinesFromWrap += 1;
+                }
+            }
+            newLineCount += newLinesFromWrap;
+
+            double desiredHeight = newLineCount * LINE_HEIGHT;
+            return desiredHeight + 110;
         }
     }
 }

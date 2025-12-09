@@ -18,7 +18,11 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
         Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false);
         Task<InputReplaceResult> ShowReplaceInput(string title, string findText = "", string replaceText = "");
         Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<DataGridColumn> columns, string findText = "", string replaceText = "");
-        ProcessViewModel ShowProcess(string title, bool hideParent);
+        ProcessViewModel ShowProcess(string title, bool hideParent = true);
+        ProcessViewModel ShowProcess2(string title, bool hideParent = true);
+        ProcessViewModel ShowProcess3(string title, bool hideParent = true);
+
+        Task<InputConfirmDeleteResult> ShowInputConfirmDelete(string title, string message = "Are you sure you want to delete this item?", string confirmString = "DELETE");
     }
 
     public class DPInputService : IDPInputService
@@ -37,7 +41,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 140,
                 MinHeight = 140,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<TextInputPage, TextInputViewModel>
                (options, false, (vm) =>
@@ -62,7 +66,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 160,
                 MinHeight = 160,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<NumericInputPage, NumericInputViewModel>
                (options, false, (vm) =>
@@ -100,7 +104,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 130,
                 MinHeight = 130,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<SelectInputPage, SelectInputViewModel>
                (options, false, (vm) =>
@@ -151,7 +155,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 160,
                 MinHeight = 160,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<BooleanInputPage, BooleanInputViewModel>
                (options, false, (vm) =>
@@ -178,7 +182,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Width = 400,
                 Height = 200,
                 MinHeight = 200,
-                ResizeMode = System.Windows.ResizeMode.NoResize,
+                ResizeMode = System.Windows.ResizeMode.CanResize,
             };
             var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<ReplaceInputPage, ReplaceInputViewModel>
                (options, false, (vm) =>
@@ -224,15 +228,15 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             return new InputDataGridReplaceResult(Result, [], string.Empty, string.Empty);
         }
 
-        public ProcessViewModel ShowProcess(string title, bool hideParent)
+        public ProcessViewModel ShowProcess(string title, bool hideParent = true)
         {
             var windowOptions = new WindowOptions()
             {
                 ResizeMode = ResizeMode.NoResize,
                 MinWidth = 125,
-                MinHeight = 125,
+                MinHeight = 145,
                 Width = 450,
-                Height = 125,
+                Height = 145,
                 Title = title,
             };
             var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
@@ -240,6 +244,102 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
             }, windowOptions, hideParent);
             return viewModel;
+        }
+        public ProcessViewModel ShowProcess2(string title, bool hideParent = true)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 175,
+                Width = 450,
+                Height = 175,
+                Title = title,
+            };
+            var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions, hideParent);
+            if (viewModel is ProcessViewModel vm)
+            {
+                vm.Progress2Visibility = Visibility.Visible;
+            }
+            return viewModel;
+        }
+
+        public ProcessViewModel ShowProcess3(string title, bool hideParent = true)
+        {
+            var windowOptions = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 125,
+                MinHeight = 175,
+                Width = 450,
+                Height = 170,
+                Title = title,
+            };
+            var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
+            {
+                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+            }, windowOptions, hideParent);
+            if (viewModel is ProcessViewModel vm)
+            {
+                vm.WindowService.CurrentWindow.Window.Height = 175;
+                vm.Progress2Visibility = Visibility.Visible;
+                vm.Progress3Visibility = Visibility.Visible;
+            }
+            return viewModel;
+        }
+
+        public async Task<InputConfirmDeleteResult> ShowInputConfirmDelete(string title, string message = "Are you sure you want to delete this item?", string confirmString = "DELETE")
+        {
+            double width = 400;
+            double height = CalculateStringHeight(message, width);
+
+            var options = new WindowOptions()
+            {
+                ResizeMode = ResizeMode.NoResize,
+                MinWidth = 450,
+                MinHeight = 180,
+                Width = 450,
+                Height = 180,
+                Title = title,
+            };
+            var (Result, ViewModel) = await _windowService.OpenWindowDialogByLoadingAsync<BooleanInputPage, BooleanInputViewModel>
+               (options, false, (vm) =>
+               {
+                   if (vm is ConfirmDeleteViewModel viewModel)
+                   {
+                       viewModel.Message = message;
+                       viewModel.ConfirmString = confirmString;
+                   }
+               });
+            if (Result == MessageResult.OK && ViewModel is not null)
+            {
+                return new(Result, ViewModel.Value);
+            }
+            return new(Result, false);
+        }
+
+        private const double LINE_HEIGHT = 14 * 1.7;
+        private const int CHARACTER_PER_LINE = 65;
+        private static double CalculateStringHeight(string message, double width)
+        {
+            string[] stringLine = message.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            int newLineCount = stringLine.Length;
+            if (newLineCount == 0) newLineCount = 1;
+            int newLinesFromWrap = 0;
+            foreach (var line in stringLine)
+            {
+                if (line.Length > CHARACTER_PER_LINE)
+                {
+                    newLinesFromWrap += 1;
+                }
+            }
+            newLineCount += newLinesFromWrap;
+
+            double desiredHeight = newLineCount * LINE_HEIGHT;
+            return desiredHeight + 110;
         }
     }
 }

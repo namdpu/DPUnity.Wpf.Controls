@@ -4,6 +4,7 @@ using DPUnity.Windows;
 using DPUnity.Windows.Services;
 using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 {
@@ -236,6 +237,23 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
             {
                 _selectedItemsInRight.Add(item);
             }
+        }
+
+        [RelayCommand]
+        private void KeyDown(EventArgs e)
+        {
+            if (e is KeyEventArgs keyEvent)
+            {
+                if (keyEvent.Key == Key.Enter)
+                {
+                    Submit();
+                }
+                else if (keyEvent.Key == Key.Escape)
+                {
+                    Cancel();
+                }
+            }
+
         }
     }
 }

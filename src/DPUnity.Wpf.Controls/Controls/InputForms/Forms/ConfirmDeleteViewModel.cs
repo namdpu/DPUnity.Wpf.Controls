@@ -6,22 +6,21 @@ using System.Windows.Input;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 {
-    public partial class BooleanInputViewModel : ViewModelPage
+    public partial class ConfirmDeleteViewModel : ViewModelPage
     {
         [ObservableProperty]
-        private bool value = true;
+        private string message = "Are you sure you want to delete this item?";
 
         [ObservableProperty]
-        private string trueContent = "True";
+        private string inputString = string.Empty;
 
-        [ObservableProperty]
-        private string falseContent = "False";
+        public string ConfirmString { get; set; } = "DELETE";
 
-        public BooleanInputViewModel(IWindowService windowService, INavigationService navigationService) : base(windowService, navigationService)
+        public ConfirmDeleteViewModel(IWindowService windowService, INavigationService navigationService) : base(windowService, navigationService)
         {
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanSubmit))]
         private void Submit()
         {
             OK();
@@ -36,6 +35,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
                 case Key.Space:
                 case Key.Enter:
                     // Enter key submits the form
+                    if (!CanSubmit) break;
                     OK();
                     keyEventArgs.Handled = true;
                     break;
@@ -45,6 +45,13 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
                     keyEventArgs.Handled = true;
                     break;
             }
+        }
+
+        public bool CanSubmit => InputString == ConfirmString;
+
+        partial void OnInputStringChanged(string? oldValue, string newValue)
+        {
+            SubmitCommand.NotifyCanExecuteChanged();
         }
     }
 }

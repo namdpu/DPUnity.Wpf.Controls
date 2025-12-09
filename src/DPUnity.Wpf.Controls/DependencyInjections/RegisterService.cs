@@ -37,12 +37,17 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
 
             services.AddScoped<DataGridReplaceInputPage>();
             services.AddScoped<DataGridReplaceInputViewModel>();
-            #endregion
 
             services.AddScoped<Controls.InputForms.Forms.ProcessPage>();
 
+            services.AddScoped<ConfirmDeletePage>();
+            services.AddScoped<ConfirmDeleteViewModel>();
+            #endregion
+
+            #region DialogServices
             services.AddScoped<NotificationPage>();
             services.AddScoped<NotificationViewModel>();
+            #endregion
 
             return services;
         }

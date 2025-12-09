@@ -4,6 +4,7 @@ using DPUnity.Windows;
 using DPUnity.Windows.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 {
@@ -306,6 +307,26 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
                     _allColumns.Add(column);
                     ColumnsSource.Add(column);
                 }
+            }
+        }
+
+        [RelayCommand]
+        private void KeyDown(EventArgs e)
+        {
+            if (e is not KeyEventArgs keyEventArgs) return;
+            switch (keyEventArgs.Key)
+            {
+                case Key.Enter:
+                    if (CanSubmit())
+                    {
+                        OK();
+                        keyEventArgs.Handled = true;
+                    }
+                    break;
+                case Key.Escape:
+                    Cancel();
+                    keyEventArgs.Handled = true;
+                    break;
             }
         }
     }

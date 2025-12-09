@@ -30,6 +30,16 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             set { SetValue(SelectedColorIndexProperty, value); }
         }
 
+        public static readonly DependencyProperty ShowRgbTextProperty =
+            DependencyProperty.Register("ShowRgbText", typeof(bool), typeof(ColorPickerButton),
+                new PropertyMetadata(false, OnShowRgbTextChanged));
+
+        public bool ShowRgbText
+        {
+            get { return (bool)GetValue(ShowRgbTextProperty); }
+            set { SetValue(ShowRgbTextProperty, value); }
+        }
+
         public event EventHandler<Color>? ColorChanged;
 
         private bool _isInternalUpdate = false;
@@ -63,8 +73,6 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         {
             var colorPickerButton = d as ColorPickerButton;
             if (colorPickerButton?._isInternalUpdate == true) return;
-
-            // No need to sync with ColorPicker since it's now in a separate window
         }
 
         private static void OnSelectedColorIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -73,6 +81,12 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             if (colorPickerButton?._isInternalUpdate == true) return;
 
             colorPickerButton?.UpdateColorFromIndex();
+        }
+
+        private static void OnShowRgbTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var colorPickerButton = d as ColorPickerButton;
+            colorPickerButton?.UpdateButtonStyle();
         }
 
         private void UpdateColorFromIndex()
@@ -88,6 +102,12 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
                     _isInternalUpdate = false;
                 }
             }
+        }
+
+        private void UpdateButtonStyle()
+        {
+            // This method will be used to update the button's visual state when ShowRgbText changes
+            // The actual style switching will be handled in XAML through triggers
         }
 
         private Color? GetColorByIndex(int index)
@@ -361,19 +381,14 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             return ret;
         }
 
-        private void SyncWithColorPicker()
-        {
-            // No longer needed as ColorPicker is in a separate window
-        }
-
         private void MainButton_Click(object sender, RoutedEventArgs e)
         {
             // Create and show color picker window
             var colorPickerWindow = new ColorPickerWindow();
-            
+
             // Get the parent window
             var parentWindow = Window.GetWindow(this);
-            
+
             // Set up event handlers
             colorPickerWindow.ColorSelected += (s, color) =>
             {
@@ -397,21 +412,6 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
 
             // Show the color picker window
             colorPickerWindow.ShowColorPicker(SelectedColor, SelectedColorIndex, parentWindow);
-        }
-
-        private void ColorPicker_Confirmed(object sender, EventArgs e)
-        {
-            // This method is no longer used but kept for compatibility
-        }
-
-        private void ColorPicker_Cancelled(object sender, EventArgs e)
-        {
-            // This method is no longer used but kept for compatibility
-        }
-
-        private void ColorPicker_ColorChanged(object sender, Color e)
-        {
-            // This method is no longer used but kept for compatibility
         }
 
         public CustomPopupPlacement[] CustomPopupPlacementCallback(Size popupSize, Size targetSize, Point offset)
@@ -447,6 +447,28 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
                 return brush.Color;
             }
             return Colors.Black;
+        }
+    }
+
+    /// <summary>
+    /// Converter to convert Color to RGB string format (r, g, b)
+    /// </summary>
+    public class ColorToRgbStringConverter : IValueConverter
+    {
+        public static readonly ColorToRgbStringConverter Instance = new ColorToRgbStringConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Color color)
+            {
+                return $"({color.R}, {color.G}, {color.B})";
+            }
+            return "(0, 0, 0)";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }
