@@ -1,36 +1,23 @@
 ﻿using DPUnity.Windows;
-using DPUnity.Windows.Services;
-using DPUnity.Wpf.Controls.Controls.DialogService;
+using DPUnity.Wpf.Common.Controls;
+using DPUnity.Wpf.Common.Models;
+using DPUnity.Wpf.Common.Windows;
 using DPUnity.Wpf.Controls.Controls.InputForms.Forms;
-using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms
 {
-    public interface IDPInputService
-    {
-        Task<InputTextResult> ShowTextInput(string title, string defaultText);
-        Task<InputNumericResult> ShowNumericInput(string title, double? defaultValue = null, bool allowDecimal = true, double? minValue = null, double? maxValue = null, bool allowEmpty = false);
-        Task<InputComboBoxResult> ShowSelectInput(string title, List<IInputObject> itemSource, IInputObject? defaultSelection = null);
-        Task<InputMultiSelectResult> ShowMultiSelect(string title, List<IInputObject> itemSource);
-        Task<InputBooleanResult> ShowBooleanInput(string title, string trueContent = "True", string falseContent = "False", bool defaultValue = false);
-        Task<InputReplaceResult> ShowReplaceInput(string title, string findText = "", string replaceText = "");
-        Task<InputDataGridReplaceResult> ShowDataGridReplaceInput(string title, List<DataGridColumn> columns, string findText = "", string replaceText = "");
-        ProcessViewModel ShowProcess(string title, bool hideParent = true);
-        ProcessViewModel ShowProcess2(string title, bool hideParent = true);
-        ProcessViewModel ShowProcess3(string title, bool hideParent = true);
-
-        Task<InputConfirmDeleteResult> ShowInputConfirmDelete(string title, string message = "Are you sure you want to delete this item?", string confirmString = "DELETE");
-    }
-
-    public class DPInputService : IDPInputService
+    public class DPInputService : IInputService
     {
         private readonly IWindowService _windowService;
-        public DPInputService(IWindowService windowService)
+        private readonly IDialogService _dialogService;
+
+        public DPInputService(IWindowService windowService, IDialogService dialogService)
         {
             _windowService = windowService;
+            _dialogService = dialogService;
         }
 
         public async Task<InputTextResult> ShowTextInput(string title, string defaultText)
@@ -228,7 +215,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             return new InputDataGridReplaceResult(Result, [], string.Empty, string.Empty);
         }
 
-        public ProcessViewModel ShowProcess(string title, bool hideParent = true)
+        public IProcessViewModel ShowProcess(string title, bool hideParent = true)
         {
             var windowOptions = new WindowOptions()
             {
@@ -241,11 +228,11 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             };
             var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
             {
-                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+                return _dialogService.ShowAsk($"Bạn có muốn dừng tiến trình đang chạy không?").GetAwaiter().GetResult() == true;
             }, windowOptions, hideParent);
             return viewModel;
         }
-        public ProcessViewModel ShowProcess2(string title, bool hideParent = true)
+        public IProcessViewModel ShowProcess2(string title, bool hideParent = true)
         {
             var windowOptions = new WindowOptions()
             {
@@ -256,9 +243,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                 Height = 175,
                 Title = title,
             };
-            var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
+            var viewModel = _windowService.OpenProcess<Forms.ProcessPage>( () =>
             {
-                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+                return _dialogService.ShowAsk($"Bạn có muốn dừng tiến trình đang chạy không?").GetAwaiter().GetResult() == true;
             }, windowOptions, hideParent);
             if (viewModel is ProcessViewModel vm)
             {
@@ -267,7 +254,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             return viewModel;
         }
 
-        public ProcessViewModel ShowProcess3(string title, bool hideParent = true)
+        public IProcessViewModel ShowProcess3(string title, bool hideParent = true)
         {
             var windowOptions = new WindowOptions()
             {
@@ -280,7 +267,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             };
             var viewModel = _windowService.OpenProcess<Forms.ProcessPage>(() =>
             {
-                return DPDialog.Ask($"Bạn có muốn dừng tiến trình đang chạy không?") == true;
+                return _dialogService.ShowAsk($"Bạn có muốn dừng tiến trình đang chạy không?").GetAwaiter().GetResult() == true;
             }, windowOptions, hideParent);
             if (viewModel is ProcessViewModel vm)
             {

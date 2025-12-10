@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DPUnity.Windows;
-using DPUnity.Windows.Services;
+using DPUnity.Wpf.Common.Models;
+using DPUnity.Wpf.Common.Windows;
 using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows.Input;

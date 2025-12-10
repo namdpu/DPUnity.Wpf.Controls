@@ -1,8 +1,10 @@
-﻿namespace DPUnity.Wpf.Controls.Controls.FileDialogs
+﻿using DPUnity.Wpf.Common.Controls;
+
+namespace DPUnity.Wpf.Controls.Controls.FileDialogs
 {
-    public class FileDialog
+    public class FileDialog : IFileDialog
     {
-        public static string? PickFile(string filter = "All files (*.*)|*.*", string initialPath = "")
+        public string? PickFile(string filter = "All files (*.*)|*.*", string initialPath = "")
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -17,7 +19,7 @@
             return null;
         }
 
-        public static List<string>? PickMultiFile(string filter = "All files (*.*)|*.*", string initialPath = "")
+        public List<string>? PickMultiFile(string filter = "All files (*.*)|*.*", string initialPath = "")
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -33,7 +35,7 @@
             return null;
         }
 
-        public static string? PickFolder(string initialPath = "")
+        public string? PickFolder(string initialPath = "")
         {
 #if NET8_0_OR_GREATER
             // Sử dụng OpenFolderDialog cho .NET 8.0 trở lên
@@ -62,7 +64,7 @@
             return null;
         }
 
-        public static string SaveFile(string filter = "All files (*.*)|*.*", string initialPath = "", string defaultFileName = "new_file")
+        public string SaveFile(string filter = "All files (*.*)|*.*", string initialPath = "", string defaultFileName = "new_file")
         {
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog
             {

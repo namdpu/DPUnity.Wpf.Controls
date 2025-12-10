@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DPUnity.Windows;
-using DPUnity.Windows.Services;
+using DPUnity.Wpf.Common.Controls;
+using DPUnity.Wpf.Common.Windows;
 using DPUnity.Wpf.Controls.Helpers;
 using DPUnity.Wpf.UI.Controls.PackIcon;
 using System.Windows;
 using System.Windows.Media;
-using static DPUnity.Wpf.Controls.Controls.DialogService.DPDialog;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
 {
