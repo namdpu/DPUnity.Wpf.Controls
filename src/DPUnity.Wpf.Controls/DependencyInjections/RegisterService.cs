@@ -1,6 +1,8 @@
 ﻿using DPUnity.Windows;
+using DPUnity.Wpf.Common.Controls;
 using DPUnity.Wpf.Controls.Controls.DialogService;
 using DPUnity.Wpf.Controls.Controls.DialogService.Views;
+using DPUnity.Wpf.Controls.Controls.FileDialogs;
 using DPUnity.Wpf.Controls.Controls.InputForms;
 using DPUnity.Wpf.Controls.Controls.InputForms.Forms;
 using DPUnity.Wpf.Controls.Interfaces;
@@ -12,10 +14,11 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
     {
         public static IServiceCollection AddDPUControls(this IServiceCollection services)
         {
-            services.AddScoped<IDPInputService, DPInputService>();
             services.AddWindowWpf<IDPDialogWindow, DPDialogWindowUI>();
-            services.AddScoped<IDPDialogService, DPDialogService>();
-
+            services.AddScoped<IInputService, DPInputService>();
+            services.AddScoped<IDialogService, DPDialogService>();
+            services.AddScoped<IFileDialog, FileDialog>();
+            
             #region Input forms
             services.AddScoped<TextInputPage>();
             services.AddScoped<TextInputViewModel>();

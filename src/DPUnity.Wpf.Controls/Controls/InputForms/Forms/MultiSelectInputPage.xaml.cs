@@ -1,5 +1,5 @@
 ﻿using DPUnity.Windows;
-using DPUnity.Wpf.Controls.Controls.InputForms.Interfaces;
+using DPUnity.Wpf.Common.Models;
 using System.Windows.Controls;
 
 namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms

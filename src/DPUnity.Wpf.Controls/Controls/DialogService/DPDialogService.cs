@@ -1,22 +1,14 @@
 using DPUnity.Windows;
-using DPUnity.Windows.Services;
+using DPUnity.Wpf.Common.Controls;
+using DPUnity.Wpf.Common.Windows;
 using DPUnity.Wpf.Controls.Controls.DialogService.Views;
 using DPUnity.Wpf.Controls.Interfaces;
 using System.Windows;
-using static DPUnity.Wpf.Controls.Controls.DialogService.DPDialog;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService
 {
-    public interface IDPDialogService
-    {
-        Task<bool?> ShowInfo(string message, string? title = null);
-        Task<bool?> ShowSuccess(string message, string? title = null);
-        Task<bool?> ShowError(string message, string? title = null);
-        Task<bool?> ShowWarning(string message, string? title = null);
-        Task<bool?> ShowAsk(string message, string? title = null);
-    }
 
-    public class DPDialogService : IDPDialogService
+    public class DPDialogService : IDialogService
     {
         private readonly IWindowService _windowService;
 

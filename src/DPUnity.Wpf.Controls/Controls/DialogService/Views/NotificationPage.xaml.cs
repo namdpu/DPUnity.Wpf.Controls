@@ -1,7 +1,7 @@
 ﻿using DPUnity.Windows;
+using DPUnity.Wpf.Common.Controls;
 using System.Windows;
 using System.Windows.Input;
-using static DPUnity.Wpf.Controls.Controls.DialogService.DPDialog;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
 {

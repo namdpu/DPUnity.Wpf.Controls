@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DPUnity.Windows;
-using DPUnity.Windows.Services;
+using DPUnity.Wpf.Common.Windows;
 using System.Globalization;
 using System.Windows.Input;
 

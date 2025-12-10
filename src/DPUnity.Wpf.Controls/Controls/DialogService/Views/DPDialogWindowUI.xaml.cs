@@ -1,5 +1,5 @@
 ﻿using DPUnity.Windows;
-using DPUnity.Windows.Services;
+using DPUnity.Wpf.Common.Windows;
 using DPUnity.Wpf.Controls.Interfaces;
 using DPUnity.Wpf.UI.Helpers;
 using DPUnity.Wpf.UI.Styles;
@@ -17,7 +17,8 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
     {
         public DPDialogWindowUI(IServiceProvider serviceProvider)
         {
-            _ = DPThemeManager.GetCurrentThemeName();
+            var dPThemeManager = serviceProvider.GetRequiredService<IDPThemeManager>();
+            dPThemeManager.GetCurrentThemeName();
 
             LoadResourceDictionaries();
             InitializeComponent();
@@ -36,7 +37,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService.Views
         public Window Window => (System.Windows.Window)this;
         public bool IsDialog { get; private set; } = false;
 
-        public void SetWindowOptions(WindowOptions? windowOptions)
+        public void SetWindowOptions(IWindowOptions? windowOptions)
         {
             windowOptions ??= new WindowOptions();
             this.MinWidth = windowOptions.MinWidth;
