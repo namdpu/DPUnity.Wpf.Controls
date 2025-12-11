@@ -1,68 +1,188 @@
-using DPUnity.Windows;
+﻿using DPUnity.Windows;
 using DPUnity.Wpf.Common.Controls;
 using DPUnity.Wpf.Common.Windows;
 using DPUnity.Wpf.Controls.Controls.DialogService.Views;
 using DPUnity.Wpf.Controls.Interfaces;
+using HandyControl.Controls;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
 
 namespace DPUnity.Wpf.Controls.Controls.DialogService
 {
-
+    public enum NotificationType
+    {
+        Information,
+        Success,
+        Error,
+        Warning,
+        Ask
+    }
     public class DPDialogService : IDialogService
     {
-        private readonly IWindowService _windowService;
+        private const double ASK_HEIGHT_INCREASE = 100;
+        private const double MIN_WIDTH = 300;
+        private const double MIN_HEIGHT = 100;
+        private const double MAX_HEIGHT = 600;
+        private const double LINE_HEIGHT = 14 * 1.5;
+        private const double WIDTH_HEIGHT_RATIO_LIMIT = 2.0;
+        private const double WIDTH_DECREASE_FACTOR = 0.95;
+        private const double HEIGHT_INCREASE_FACTOR = 1.05;
+        private const double BASE_HEIGHT_PADDING = 20;
+        private const double MESSAGE_LENGTH_FACTOR = 5;
+        private readonly IWindowManager _windowManager;
 
-        public DPDialogService(IWindowService windowService)
+        public DPDialogService(IWindowManager windowManager)
         {
-            _windowService = windowService;
+            _windowManager = windowManager;
+        }
+
+        #region Weak Notification
+        /// <summary>
+        /// Shows a weak notification with the specified message and type.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <returns> true </returns>
+        public async Task<bool?> WeakInfo(string message)
+        {
+            return await ShowWeakNotification(message, NotificationType.Information);
         }
 
         /// <summary>
-        /// Hiển thị notification với thông tin
+        /// Shows a weak notification with the specified message and type.
         /// </summary>
-        public async Task<bool?> ShowInfo(string message, string? title = null)
+        /// <param name="message">The message to display.</param>
+        /// <returns> true </returns>
+        public async Task<bool?> WeakSuccess(string message)
         {
-            return await ShowNotification(message, NotificationType.Information, title);
+            return await ShowWeakNotification(message, NotificationType.Success);
         }
 
         /// <summary>
-        /// Hiển thị notification thành công
+        /// Shows a weak notification with the specified message and type.
         /// </summary>
-        public async Task<bool?> ShowSuccess(string message, string? title = null)
+        /// <param name="message">The message to display.</param>
+        /// <returns> true </returns>
+        public async Task<bool?> WeakError(string message)
         {
-            return await ShowNotification(message, NotificationType.Success, title);
+            return await ShowWeakNotification(message, NotificationType.Error);
+        }
+        /// <summary>
+        /// Shows a weak notification with the specified message and type.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <returns> true </returns>
+        public async Task<bool?> WeakWarning(string message)
+        {
+            return await ShowWeakNotification(message, NotificationType.Warning);
         }
 
         /// <summary>
-        /// Hiển thị notification lỗi
+        /// Shows a weak notification with the specified message and type.
         /// </summary>
-        public async Task<bool?> ShowError(string message, string? title = null)
+        /// <param name="message">The message to display.</param>
+        /// <returns> True if the user confirmed the action; null if the action was canceled, otherwise, false.</returns>
+        public async Task<bool?> WeakAsk(string message)
         {
-            return await ShowNotification(message, NotificationType.Error, title);
+            return await ShowWeakNotification(message, NotificationType.Ask);
+        }
+        #endregion
+
+
+        #region Show Notification
+        /// <summary>
+        /// Shows a notification with a infomation message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
+        public bool? ShowInfo(string message, string? title = null, System.Windows.Window? owner = null)
+        {
+            return ShowNotification(message, NotificationType.Information, owner, title);
         }
 
         /// <summary>
-        /// Hiển thị notification cảnh báo
+        /// Shows a notification with a success message.
         /// </summary>
-        public async Task<bool?> ShowWarning(string message, string? title = null)
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
+        public bool? ShowSuccess(string message, string? title = null, System.Windows.Window? owner = null)
         {
-            return await ShowNotification(message, NotificationType.Warning, title);
+            return ShowNotification(message, NotificationType.Success, owner, title);
         }
 
         /// <summary>
-        /// Hiển thị notification xác nhận (Yes/No)
+        /// Shows a notification with a error message.
         /// </summary>
-        public async Task<bool?> ShowAsk(string message, string? title = null)
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
+        public bool? ShowError(string message, string? title = null, System.Windows.Window? owner = null)
         {
-            return await ShowNotification(message, NotificationType.Ask, title);
+            return ShowNotification(message, NotificationType.Error, owner, title);
         }
 
+
+        /// <summary>
+        /// Shows a notification with a warning message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True</returns>
+        public bool? ShowWarning(string message, string? title = null, System.Windows.Window? owner = null)
+        {
+            return ShowNotification(message, NotificationType.Warning, owner, title);
+        }
+
+        /// <summary>
+        /// Shows a notification asking the user to confirm an action.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="owner">The owner window.</param>
+        /// <param name="title">The title of the notification window.</param>
+        /// <returns>True if the user confirmed the action; null if the action was canceled, otherwise, false.</returns>
+        public bool? ShowAsk(string message, string? title = null, System.Windows.Window? owner = null)
+        {
+            return ShowNotification(message, NotificationType.Ask, owner, title);
+        }
+        #endregion
 
         #region Private Methods
-        /// <summary>
-        /// Hiển thị notification với type tùy chỉnh
-        /// </summary>
-        private async Task<bool?> ShowNotification(string message, NotificationType type, string? title = null)
+        private async Task<bool?> ShowWeakNotification(string message, NotificationType type = NotificationType.Information)
+        {
+            switch (type)
+            {
+                case NotificationType.Success:
+                    Growl.Success(message);
+                    return true;
+                case NotificationType.Error:
+                    Growl.Error(message);
+                    return true;
+                case NotificationType.Warning:
+                    Growl.Warning(message);
+                    return true;
+                case NotificationType.Information:
+                    Growl.Info(message);
+                    return true;
+                case NotificationType.Ask:
+                    var tcs = new TaskCompletionSource<bool>();
+                    Growl.Ask(message, isConfirmed =>
+                    {
+                        tcs.SetResult(isConfirmed);
+                        return true;
+                    });
+                    return await tcs.Task;
+                default:
+                    Growl.Info(message);
+                    return true;
+            }
+        }
+
+        private bool? ShowNotification(string message, NotificationType type, System.Windows.Window? owner = null, string? title = null)
         {
             try
             {
@@ -76,24 +196,21 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
                     Title = title ?? GetDefaultTitle(type),
                     ResizeMode = ResizeMode.NoResize
                 };
-                var (result, viewModel) = await _windowService.OpenWindowDialogAsync<IDPDialogWindow, NotificationPage, NotificationViewModel>(
-                    windowOptions,
-                    false,
-                    (vm) =>
+                NotificationViewModel? viewModel = null;
+                _windowManager.ShowDialog<IDPDialogWindow, NotificationPage>(windowOptions, (vm) =>
+                {
+                    if (vm is NotificationViewModel nvm)
                     {
-                        if (vm is NotificationViewModel notificationVM)
-                        {
-                            notificationVM.Initialize(message, type, title);
-                        }
-                    });
+                        nvm.Initialize(message, type, title);
+                        viewModel = nvm;
+                    }
+                });
 
-                // Trả về kết quả
                 if (viewModel != null)
                 {
                     return viewModel.DialogResult;
                 }
-
-                return result == MessageResult.OK ? true : null;
+                return false;
             }
             catch (Exception ex)
             {
@@ -109,20 +226,19 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             double height;
             int newLineCount = message.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
             if (newLineCount == 0) newLineCount = 1; // Đảm bảo ít nhất 1 dòng
-            double lineHeight = 14 * 1.5;
-            double desiredHeight = Math.Min(600, 20 + newLineCount * lineHeight); // Chiều cao tối đa 600, tối thiểu 100
-            double desiredWidth = Math.Max(desiredHeight * 2, 5 * message.Length / newLineCount);
-            while (desiredWidth > 2 * desiredHeight)
+            double desiredHeight = Math.Min(MAX_HEIGHT, BASE_HEIGHT_PADDING + newLineCount * LINE_HEIGHT);
+            double desiredWidth = Math.Max(desiredHeight * WIDTH_HEIGHT_RATIO_LIMIT, MESSAGE_LENGTH_FACTOR * message.Length / newLineCount);
+            while (desiredWidth > WIDTH_HEIGHT_RATIO_LIMIT * desiredHeight)
             {
-                desiredHeight *= 1.05;
-                desiredWidth *= 0.95;
+                desiredHeight *= HEIGHT_INCREASE_FACTOR;
+                desiredWidth *= WIDTH_DECREASE_FACTOR;
             }
             if (type == NotificationType.Ask)
             {
-                desiredHeight += 100; // Tăng thêm chiều cao 100 nếu type là Ask do có nút Yes/No
+                desiredHeight += ASK_HEIGHT_INCREASE; // Tăng thêm chiều cao ASK_HEIGHT_INCREASE nếu type là Ask do có nút Yes/No
             }
-            width = Math.Max(300, desiredWidth);
-            height = Math.Max(100, desiredHeight);
+            width = Math.Max(MIN_WIDTH, desiredWidth);
+            height = Math.Max(MIN_HEIGHT, desiredHeight);
             return (width, height);
         }
 
@@ -142,5 +258,7 @@ namespace DPUnity.Wpf.Controls.Controls.DialogService
             };
         }
         #endregion
+
+
     }
 }

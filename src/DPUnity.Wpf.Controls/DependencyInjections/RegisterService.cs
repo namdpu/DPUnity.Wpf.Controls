@@ -1,5 +1,6 @@
 ﻿using DPUnity.Windows;
 using DPUnity.Wpf.Common.Controls;
+using DPUnity.Wpf.Common.Windows;
 using DPUnity.Wpf.Controls.Controls.DialogService;
 using DPUnity.Wpf.Controls.Controls.DialogService.Views;
 using DPUnity.Wpf.Controls.Controls.FileDialogs;
@@ -18,7 +19,8 @@ namespace DPUnity.Wpf.Controls.DependencyInjections
             services.AddScoped<IInputService, DPInputService>();
             services.AddScoped<IDialogService, DPDialogService>();
             services.AddScoped<IFileDialog, FileDialog>();
-            
+            services.AddScoped<IProcessViewModel, ProcessViewModel>();
+            services.AddScoped<IProcessPage, ProcessPage>();
             #region Input forms
             services.AddScoped<TextInputPage>();
             services.AddScoped<TextInputViewModel>();
