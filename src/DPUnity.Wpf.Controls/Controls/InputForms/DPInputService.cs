@@ -217,7 +217,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
             return new InputComboBoxResult(Result, null);
         }
 
-        public async Task<InputMultiSelectResult> ShowMultiSelectInput(string title, List<IInputObject> itemSource, nint owner = 0)
+        public async Task<InputMultiSelectResult> ShowMultiSelectInput(string title, List<IInputObject> itemSource, List<IInputObject>? selectedItems = null, nint owner = 0)
         {
             var options = new WindowOptions()
             {
@@ -235,6 +235,7 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms
                    if (vm is MultiSelectInputViewModel viewModel)
                    {
                        viewModel.ItemsSource = new ObservableCollection<IInputObject>(itemSource);
+                       viewModel.SelectedItems = new ObservableCollection<IInputObject>(selectedItems ?? []);
                    }
                });
             if (Result == MessageResult.OK && ViewModel is not null)
