@@ -20,11 +20,32 @@
         
         <Button.Style>
             <Style TargetType="Button">
-                <Setter Property="Width" Value="50" />
+                <Setter Property="Width" Value="28" />
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding ShowRgbText, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="True">
-                        <Setter Property="Width" Value="90" />
-                    </DataTrigger>
+                    <!-- Only Index -->
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding ShowIndex, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="True" />
+                            <Condition Binding="{Binding ShowRgbText, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="False" />
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Width" Value="52" />
+                    </MultiDataTrigger>
+                    <!-- Only RGB Text -->
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding ShowIndex, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="False" />
+                            <Condition Binding="{Binding ShowRgbText, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="True" />
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Width" Value="130" />
+                    </MultiDataTrigger>
+                    <!-- Both Index and RGB Text -->
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding ShowIndex, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="True" />
+                            <Condition Binding="{Binding ShowRgbText, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="True" />
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Width" Value="160" />
+                    </MultiDataTrigger>
                 </Style.Triggers>
             </Style>
         </Button.Style>
@@ -45,8 +66,29 @@
                     
                     <!-- Content Panel -->
                     <StackPanel Orientation="Horizontal" 
-                                HorizontalAlignment="Center"
+                                HorizontalAlignment="Left"
                                 VerticalAlignment="Center">
+                        
+                        <!-- Index Text -->
+                        <TextBlock x:Name="indexText"
+                                   Text="{Binding SelectedColorIndex, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}, StringFormat={}{0:D3}}"
+                                   FontFamily="Consolas"
+                                   FontSize="11"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   VerticalAlignment="Center"
+                                   MinWidth="24"
+                                   Margin="0,0,4,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ShowIndex, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         
                         <!-- Color Rectangle -->
                         <Border Width="14"
@@ -63,8 +105,11 @@
                         <!-- RGB Text -->
                         <TextBlock x:Name="rgbText"
                                    Text="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=local:ColorPickerButton}, Converter={x:Static local:ColorToRgbStringConverter.Instance}}"
+                                   FontFamily="Consolas"
+                                   FontSize="11"
                                    Foreground="{TemplateBinding Foreground}"
-                                   VerticalAlignment="Center">
+                                   VerticalAlignment="Center"
+                                   MinWidth="90">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -87,6 +132,9 @@
                                 Property="BorderBrush"
                                 Value="{DynamicResource PrimaryBrush}" />
                         <Setter TargetName="rgbText"
+                                Property="Foreground"
+                                Value="{DynamicResource PrimaryBrush}" />
+                        <Setter TargetName="indexText"
                                 Property="Foreground"
                                 Value="{DynamicResource PrimaryBrush}" />
                     </Trigger>

@@ -40,6 +40,16 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
             set { SetValue(ShowRgbTextProperty, value); }
         }
 
+        public static readonly DependencyProperty ShowIndexProperty =
+            DependencyProperty.Register("ShowIndex", typeof(bool), typeof(ColorPickerButton),
+                new PropertyMetadata(false, OnShowIndexChanged));
+
+        public bool ShowIndex
+        {
+            get { return (bool)GetValue(ShowIndexProperty); }
+            set { SetValue(ShowIndexProperty, value); }
+        }
+
         public event EventHandler<Color>? ColorChanged;
 
         private bool _isInternalUpdate = false;
@@ -84,6 +94,12 @@ namespace DPUnity.Wpf.Controls.Controls.ColorPickers
         }
 
         private static void OnShowRgbTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var colorPickerButton = d as ColorPickerButton;
+            colorPickerButton?.UpdateButtonStyle();
+        }
+
+        private static void OnShowIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var colorPickerButton = d as ColorPickerButton;
             colorPickerButton?.UpdateButtonStyle();
