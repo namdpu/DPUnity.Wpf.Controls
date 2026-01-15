@@ -160,6 +160,8 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
 
         /// <summary>
         /// Kiểm tra xem việc nhập ký tự mới có tạo ra giá trị hợp lệ hay không
+        /// Cho phép các trạng thái trung gian khi nhập (ví dụ: "0" khi muốn nhập "0.5")
+        /// Validation cuối cùng sẽ được thực hiện bởi CanSubmit/ValidateInput
         /// </summary>
         public bool IsValidInputForRange(string currentText, string newInput, int caretIndex)
         {
@@ -178,13 +180,9 @@ namespace DPUnity.Wpf.Controls.Controls.InputForms.Forms
                 CultureInfo.InvariantCulture, out double value))
                 return true; // Nếu không parse được thì để cho logic khác xử lý
 
-            // Kiểm tra range
-            if (MinValue.HasValue && value < MinValue.Value)
-                return false;
-
-            if (MaxValue.HasValue && value > MaxValue.Value)
-                return false;
-
+            // Cho phép nhập các giá trị trung gian (không kiểm tra range ở đây)
+            // Range sẽ được kiểm tra trong ValidateInput khi submit
+            // Điều này cho phép người dùng nhập "0" khi muốn nhập "0.5" (ngay cả khi min = 0.01)
             return true;
         }
 
